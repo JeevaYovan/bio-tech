@@ -130,6 +130,31 @@ curl -s https://rathika.in/robots.txt
 
 ---
 
+## Subpath preview vs apex production
+
+The deploy workflow supports two modes via the `DEPLOY_TARGET` repo
+variable (Settings → Variables → Actions):
+
+| `DEPLOY_TARGET` | URL | baseHref | CNAME | When |
+|---|---|---|---|---|
+| _unset_ or `subpath` | `https://JeevaYovan.github.io/bio-tech/` | `/bio-tech/` | omitted | **Default — preview before DNS** |
+| `apex` | `https://rathika.in` | `/` | `rathika.in` | **After DNS resolves** |
+
+Workflow:
+
+1. **Right after first push (no DNS yet):** workflow builds with
+   `--base-href=/bio-tech/` and strips the CNAME so GitHub Pages
+   doesn't try to provision a cert for an unresolved domain. Site
+   shows up at the subpath URL with all assets working.
+2. **Once you've registered `rathika.in` and DNS is pointing at
+   GitHub Pages** (DEPLOY.md §3-§4), set the repo variable
+   `DEPLOY_TARGET = apex` (Settings → Variables → Actions →
+   New repository variable). The next push (or a manual
+   workflow_dispatch) rebuilds with `--base-href=/` + CNAME, and
+   GitHub Pages will start serving at `https://rathika.in`.
+
+You don't need to edit any code to switch — only the repo variable.
+
 ## Continuous deployment
 
 The workflow at `.github/workflows/deploy.yml` (added in Phase 9) runs

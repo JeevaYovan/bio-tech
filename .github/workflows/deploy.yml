@@ -12,6 +12,17 @@
 #
 # Required Pages settings (one-time, at Settings → Pages):
 #   Source: GitHub Actions  (NOT "Deploy from a branch")
+#
+# Repository variables (Settings → Variables → Actions):
+#   DEPLOY_TARGET — set to "apex" once DNS is wired and rathika.in
+#                   resolves to GitHub Pages. Default ("subpath" or
+#                   unset) deploys to https://JeevaYovan.github.io/bio-tech/
+#                   with assets prefixed at /bio-tech/ and no CNAME so
+#                   the cert provisioner doesn't try to issue for an
+#                   unresolved domain.
+#                   Once DEPLOY_TARGET=apex is set, the build switches
+#                   to baseHref=/ and writes a CNAME of "rathika.in"
+#                   into the deployed output.
 
 name: Deploy
 
@@ -22,15 +33,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# GITHUB_TOKEN permissions for actions/deploy-pages@v4.
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment to skip runs that finish before the
-# in-progress one. Don't cancel in-progress because a half-deployed Pages
-# is worse than a slightly stale one.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -59,7 +66,6 @@ jobs:
           @klaro:registry=https://development.zubera.one/klaro-design-ui/~npm/
           //development.zubera.one/klaro-design-ui/~npm/:_authToken=${KLARO_NPM_TOKEN}
           NPMRC
-          # Substitute the secret in (avoids leaking it in logs)
           sed -i "s|\${KLARO_NPM_TOKEN}|${KLARO_NPM_TOKEN}|" "$HOME/.npmrc"
         env:
           KLARO_NPM_TOKEN: ${{ secrets.KLARO_NPM_TOKEN }}
@@ -67,26 +73,42 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Resolve deploy target
+        id: target
+        run: |
+          if [ "${{ vars.DEPLOY_TARGET }}" = "apex" ]; then
+            echo "mode=apex"        >> "$GITHUB_OUTPUT"
+            echo "base_href=/"      >> "$GITHUB_OUTPUT"
+            echo "skip_cname=false" >> "$GITHUB_OUTPUT"
+            echo "Building for apex domain (rathika.in)"
+          else
+            echo "mode=subpath"            >> "$GITHUB_OUTPUT"
+            echo "base_href=/bio-tech/"    >> "$GITHUB_OUTPUT"
+            echo "skip_cname=true"         >> "$GITHUB_OUTPUT"
+            echo "Building for github.io subpath (preview)"
+          fi
+
       - name: Build (production, static prerender)
-        run: npm run build
+        run: npm run build -- --base-href=${{ steps.target.outputs.base_href }}
+        env:
+          SKIP_CNAME: ${{ steps.target.outputs.skip_cname }}
 
       - name: Verify build artefacts
         run: |
-          test -f dist/rathika/browser/index.html      || (echo "❌ Missing index.html"; exit 1)
-          test -f dist/rathika/browser/404.html        || (echo "❌ Missing 404.html"; exit 1)
-          test -f dist/rathika/browser/.nojekyll       || (echo "❌ Missing .nojekyll"; exit 1)
-          test -f dist/rathika/browser/CNAME           || (echo "❌ Missing CNAME"; exit 1)
-          test -f dist/rathika/browser/sitemap.xml     || (echo "❌ Missing sitemap.xml"; exit 1)
-          test -f dist/rathika/browser/robots.txt      || (echo "❌ Missing robots.txt"; exit 1)
-          echo "✓ All required artefacts present"
+          test -f dist/rathika/browser/index.html      || (echo "Missing index.html"; exit 1)
+          test -f dist/rathika/browser/404.html        || (echo "Missing 404.html"; exit 1)
+          test -f dist/rathika/browser/.nojekyll       || (echo "Missing .nojekyll"; exit 1)
+          test -f dist/rathika/browser/sitemap.xml     || (echo "Missing sitemap.xml"; exit 1)
+          test -f dist/rathika/browser/robots.txt      || (echo "Missing robots.txt"; exit 1)
+          if [ "${{ steps.target.outputs.mode }}" = "apex" ]; then
+            test -f dist/rathika/browser/CNAME         || (echo "Missing CNAME for apex deploy"; exit 1)
+          fi
+          echo "All required artefacts present"
           echo "Routes prerendered: $(find dist/rathika/browser -name 'index.html' | wc -l)"
 
       - name: Lighthouse CI gate
         run: npx --yes @lhci/cli@0.14.x autorun
         env:
-          # Optional — set this secret to enable PR comments with the
-          # Lighthouse scores. If unset, lhci still runs and asserts but
-          # doesn't post to the PR.
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: Upload Pages artefact
@@ -103,6 +125,7 @@ jobs:
             echo ""
             echo "- Trigger: \`${{ github.event_name }}\` on \`${{ github.ref_name }}\`"
             echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Deploy target: \`${{ steps.target.outputs.mode }}\` (baseHref=\`${{ steps.target.outputs.base_href }}\`)"
             if [ -d dist/rathika/browser ]; then
               echo "- Routes prerendered: $(find dist/rathika/browser -name 'index.html' | wc -l)"
               echo "- Total dist size: $(du -sh dist/rathika/browser | cut -f1)"
@@ -133,6 +156,6 @@ jobs:
             echo "### Deployment"
             echo ""
             echo "- Live URL: ${{ steps.deployment.outputs.page_url }}"
-            echo "- Custom domain (after DNS): https://rathika.in"
+            echo "- Custom domain (after DNS + repo var DEPLOY_TARGET=apex): https://rathika.in"
             echo "- Commit: \`${{ github.sha }}\`"
           } >> "$GITHUB_STEP_SUMMARY"

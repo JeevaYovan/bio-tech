@@ -5,16 +5,24 @@
  * has:
  *   - 404.html  (SPA fallback for any unprerendered URL)
  *   - .nojekyll (prevents GitHub Pages from running Jekyll)
- *   - CNAME     (custom domain rathika.in)
+ *   - CNAME     (custom domain rathika.in) — unless SKIP_CNAME=true
  *
  * .nojekyll and CNAME come from /public/ via Angular's asset pipeline,
  * so this script is mostly belt-and-braces.
+ *
+ * Env vars:
+ *   SKIP_CNAME=true  — strip CNAME from the output. Use this for the
+ *                      initial preview deploy at github.io/<repo>/
+ *                      before DNS is wired. Once DNS resolves and the
+ *                      custom domain is live, drop this env var to ship
+ *                      the apex deploy at rathika.in.
  */
 
-import { copyFileSync, existsSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const DIST = resolve(process.cwd(), 'dist/rathika/browser');
+const SKIP_CNAME = process.env.SKIP_CNAME === 'true';
 
 if (!existsSync(DIST)) {
   console.error(`[postbuild] ${DIST} not found. Did the build succeed?`);
@@ -37,7 +45,14 @@ if (!existsSync(nojekyll)) {
 }
 
 const cname = join(DIST, 'CNAME');
-if (!existsSync(cname)) {
+if (SKIP_CNAME) {
+  if (existsSync(cname)) {
+    unlinkSync(cname);
+    console.log(`[postbuild] Removed CNAME (SKIP_CNAME=true)`);
+  } else {
+    console.log(`[postbuild] No CNAME to remove (SKIP_CNAME=true)`);
+  }
+} else if (!existsSync(cname)) {
   writeFileSync(cname, 'rathika.in');
   console.log(`[postbuild] Wrote CNAME → rathika.in`);
 }
