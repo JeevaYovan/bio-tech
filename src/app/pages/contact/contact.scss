@@ -1,0 +1,253 @@
+:host { display: block; }
+
+.section-eyebrow {
+  font-size: var(--type-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-block-end: var(--space-3);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+.contact-hero {
+  padding: var(--space-12) 0 var(--space-8);
+  &__inner {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-px);
+  }
+  &__title {
+    font-size: var(--type-display);
+    line-height: 1.05;
+    margin-block-end: var(--space-5);
+    letter-spacing: -0.02em;
+  }
+  &__lead {
+    font-size: var(--type-lg);
+    color: var(--color-ink);
+    max-width: 60ch;
+  }
+}
+
+.contact-channels {
+  padding: var(--space-8) 0 var(--space-12);
+  &__inner {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-px);
+  }
+}
+
+.channels {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr;
+  @media (min-width: 768px) { grid-template-columns: repeat(3, 1fr); }
+}
+
+.channel {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-md);
+
+  &--whatsapp {
+    background: color-mix(in srgb, var(--color-tint) 50%, var(--color-bg-card) 50%);
+    border-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-rule) 75%);
+  }
+
+  &__eyebrow {
+    font-size: var(--type-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  &__label {
+    font-family: var(--font-display);
+    font-size: var(--type-xl);
+    color: var(--color-primary-deep);
+    margin: 0;
+  }
+
+  &__cta {
+    margin-block-start: var(--space-3);
+    display: inline-flex;
+    align-self: start;
+    align-items: center;
+    background: var(--color-accent);
+    color: var(--color-bg-card);
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 120ms ease;
+    &:hover { background: color-mix(in srgb, var(--color-accent) 85%, var(--color-ink) 15%); color: var(--color-bg-card); }
+  }
+
+  &__link {
+    font-size: var(--type-lg);
+    color: var(--color-primary);
+    text-decoration: none;
+    margin-block-start: var(--space-2);
+    word-break: break-all;
+    &:hover { color: var(--color-primary-deep); text-decoration: underline; text-underline-offset: 3px; }
+
+    &--email { font-size: var(--type-base); }
+  }
+
+  &__hint {
+    font-size: var(--type-sm);
+    color: var(--color-muted);
+    margin-block-start: var(--space-2);
+    margin-block-end: 0;
+  }
+}
+
+.contact-location {
+  padding: var(--space-12) 0;
+  border-block-start: 1px solid var(--color-rule);
+  border-block-end: 1px solid var(--color-rule);
+  background: color-mix(in srgb, var(--color-tint) 20%, var(--color-bg) 80%);
+
+  &__inner {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-px);
+    header {
+      margin-block-end: var(--space-8);
+      h2 { max-width: 22ch; }
+    }
+  }
+
+  &__layout {
+    display: grid;
+    gap: var(--space-8);
+    @media (min-width: 1024px) {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+  }
+}
+
+.map-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 12 / 7;
+  }
+
+  &__attribution {
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    border-block-start: 1px solid var(--color-rule);
+    font-size: var(--type-xs);
+    color: var(--color-muted);
+    letter-spacing: 0.02em;
+  }
+}
+
+.address-card {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-md);
+
+  &__address {
+    font-style: normal;
+    line-height: 1.7;
+    font-size: var(--type-base);
+    color: var(--color-ink);
+    strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: var(--type-lg);
+      color: var(--color-primary-deep);
+      margin-block-end: var(--space-2);
+    }
+  }
+
+  &__hours {
+    margin: 0;
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--color-rule);
+    font-size: var(--type-sm);
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+
+  &__hours-label {
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: var(--type-xs);
+  }
+}
+
+.map-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  font-size: var(--type-sm);
+  li a {
+    color: var(--color-primary);
+    text-decoration: none;
+    border-block-end: 1px solid var(--color-primary);
+    padding-block-end: 1px;
+    &:hover { color: var(--color-primary-deep); border-color: var(--color-primary-deep); }
+  }
+}
+
+.contact-tips {
+  padding: var(--space-12) 0 var(--space-16);
+  &__inner {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-px);
+    h2 { max-width: 26ch; margin-block-end: var(--space-6); }
+  }
+}
+
+.tips {
+  padding-inline-start: 1.5rem;
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--type-base);
+  color: var(--color-ink);
+  max-width: 60ch;
+
+  li code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    color: var(--color-primary-deep);
+    background: color-mix(in srgb, var(--color-tint) 50%, transparent);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+}

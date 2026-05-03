@@ -26,6 +26,16 @@ export const routes: Routes = [
     title: productTitle,
   },
   {
+    path: 'about',
+    loadComponent: () => import('./pages/about/about'),
+    title: 'Our Story — Banana Fiber Tableware from Tamil Nadu | Rathika',
+  },
+  {
+    path: 'contact',
+    loadComponent: () => import('./pages/contact/contact'),
+    title: 'Contact Rathika Biotech Products, Neelambur, Coimbatore',
+  },
+  {
     path: '**',
     redirectTo: '',
   },
