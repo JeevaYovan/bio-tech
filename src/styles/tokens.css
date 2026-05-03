@@ -1,0 +1,76 @@
+/* ======================================================================
+   Rathika brand tokens (§9 palette — exact hex values)
+   These OVERRIDE Klaro's emerald defaults. Every override should be
+   recorded in docs/design/theme-overrides.md with rationale.
+   ====================================================================== */
+
+:root {
+  /* Brand palette — banana leaf greens + earth + cream */
+  --rathika-green-900: #1F3A2B;
+  --rathika-green-700: #2F5D3F;
+  --rathika-green-500: #5B8A6A;
+  --rathika-green-100: #E8F0E5;
+  --rathika-earth-700: #6B4423;
+  --rathika-earth-500: #A07550;
+  --rathika-cream:     #F8F4EC;
+  --rathika-ink:       #1A1A1A;
+  --rathika-paper:     #FFFFFF;
+  --rathika-rule:      #D9D2C2;
+  --rathika-accent:    #B8533A;
+
+  /* Semantic aliases — use these in component CSS, not the brand vars */
+  --color-bg:           var(--rathika-cream);
+  --color-bg-card:      var(--rathika-paper);
+  --color-ink:          var(--rathika-ink);
+  --color-primary:      var(--rathika-green-700);
+  --color-primary-deep: var(--rathika-green-900);
+  --color-secondary:    var(--rathika-green-500);
+  --color-tint:         var(--rathika-green-100);
+  --color-earth:        var(--rathika-earth-700);
+  --color-earth-soft:   var(--rathika-earth-500);
+  --color-rule:         var(--rathika-rule);
+  --color-muted:        #6B6B6B;
+  --color-accent:       var(--rathika-accent);
+
+  /* Type families — system fallbacks for now; real WOFF2 wired in Phase 4 */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-tamil:   'Tiro Tamil', 'Noto Sans Tamil', sans-serif;
+
+  /* Type scale — major-third (1.25) for editorial contrast */
+  --type-xs:   0.75rem;
+  --type-sm:   0.875rem;
+  --type-base: 1rem;
+  --type-lg:   1.125rem;
+  --type-xl:   1.25rem;
+  --type-2xl:  1.5rem;
+  --type-3xl:  2rem;
+  --type-4xl:  2.5rem;
+  --type-5xl:  3.25rem;
+  --type-6xl:  4rem;
+  --type-display: clamp(2.5rem, 7vw, 5rem);
+
+  /* Spacing — 4px base */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Radii — modest, per §9 anti-pattern (no rounded-2xl on cards) */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* Layout */
+  --content-max:   68ch;
+  --container-max: 1200px;
+  --container-px:  1.5rem;
+}

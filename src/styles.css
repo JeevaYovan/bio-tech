@@ -1,0 +1,24 @@
+/* ======================================================================
+   Rathika Biotech Products — global stylesheet entry
+   --------------------------------------------------
+   Order matters:
+   1. Tailwind base/utilities (Klaro requires Tailwind v4)
+   2. Klaro design system tokens (oklch primitives + semantics)
+   3. Our brand tokens (overrides Klaro toward §9 palette)
+   4. Font face declarations (real fonts ship in Phase 4)
+   5. Reset + body defaults
+   ====================================================================== */
+
+@import "tailwindcss";
+
+/* Klaro design system — primitives, semantics, animations, base */
+@import "@klaro/theme";
+
+/* Our brand tokens (overrides on top of Klaro) */
+@import "./styles/tokens.css";
+
+/* Font face declarations */
+@import "./styles/fonts.css";
+
+/* Reset + body defaults */
+@import "./styles/base.css";

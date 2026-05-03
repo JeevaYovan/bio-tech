@@ -1,0 +1,41 @@
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" role="banner">
+  <a routerLink="/" class="brand" aria-label="Rathika Biotech Products — Home">
+    <span class="brand__name">Rathika</span>
+    <span class="brand__sub">Biotech Products</span>
+  </a>
+
+  <nav class="site-nav" aria-label="Primary">
+    <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+  </nav>
+
+  <a [href]="waUrl" class="header-cta" rel="noopener" aria-label="Order via WhatsApp">
+    Order on WhatsApp
+  </a>
+</header>
+
+<main id="main" tabindex="-1">
+  <router-outlet />
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="site-footer__inner">
+    <address class="site-footer__address">
+      <strong>Rathika Biotech Products</strong><br />
+      1/447 Avinashi Road, Neelambur<br />
+      Coimbatore – 641026, Tamil Nadu, India
+    </address>
+
+    <ul class="site-footer__contact" aria-label="Contact">
+      <li><a href="tel:+919080966792" aria-label="Call +91 90809 66792">+91 90809 66792</a></li>
+      <li><a [href]="waUrl" aria-label="Order via WhatsApp" rel="noopener">WhatsApp</a></li>
+      <li><a href="mailto:rathikabiotechproducts&#64;gmail.com">rathikabiotechproducts&#64;gmail.com</a></li>
+    </ul>
+
+    <p class="site-footer__meta">
+      &copy; {{ currentYear }} Rathika Biotech Products.
+      <span lang="ta">இயற்கை · iyarkai · nature</span>
+    </p>
+  </div>
+</footer>

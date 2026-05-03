@@ -3,15 +3,17 @@
 .claude/auto-memory/
 .claude/.session/
 
-# Build
-dist/
-.angular/
-.nx/cache
-.nx/workspace-data
-tmp/
+# Build output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+/.angular/cache
 
 # Deps
-node_modules/
+/node_modules
+npm-debug.log
+yarn-error.log
 
 # Env
 .env
@@ -19,16 +21,39 @@ node_modules/
 !.env.example
 
 # Tests
-coverage/
+/coverage
 playwright-report/
 test-results/
+__screenshots__/
+testem.log
+.lighthouseci/
 
-# OS / editors
+# IDEs (allow shared configs, ignore personal)
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*
+
+# OS
 .DS_Store
 Thumbs.db
-.vscode/
-.idea/
 *.swp
+
+# Misc
+.sass-cache/
+/connect.lock
+/libpeerconnection.log
+/typings
 
 # Raw brand inputs (process into src/assets/brand/ as web-optimized AVIF/WebP)
 inputs/
