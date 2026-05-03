@@ -106,7 +106,7 @@ export class SeoService {
       '@type': 'Organization',
       name: 'Rathika Biotech Products',
       url: SITE_ORIGIN,
-      logo: `${SITE_ORIGIN}/assets/brand/logo-256.jpg`,
+      logo: `${SITE_ORIGIN}/assets/brand/logo-256.png`,
       sameAs: [],
       address: this.postalAddress(),
       contactPoint: {
@@ -126,7 +126,7 @@ export class SeoService {
       '@type': 'LocalBusiness',
       name: 'Rathika Biotech Products',
       image: `${SITE_ORIGIN}/${DEFAULT_OG_IMAGE}`,
-      logo: `${SITE_ORIGIN}/assets/brand/logo-256.jpg`,
+      logo: `${SITE_ORIGIN}/assets/brand/logo-256.png`,
       url: SITE_ORIGIN,
       telephone: '+91-90809-66792',
       email: 'rathikabiotechproducts@gmail.com',

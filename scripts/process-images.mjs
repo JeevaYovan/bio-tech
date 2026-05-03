@@ -100,6 +100,32 @@ const MANIFEST = [
     widths: [400, 800],
     note: 'Normal plate — round flat plates stacked workshop interior (image #22)',
   },
+
+  // --- Workshop gallery (about page) ---
+  {
+    src: 'WhatsApp Image 2026-05-03 at 2.01.21 PM (1).jpeg',
+    dst: 'workshop/nested-plates-spoons',
+    widths: [400, 800],
+    note: 'Nested square plates with two spoons centered (image #10)',
+  },
+  {
+    src: 'WhatsApp Image 2026-05-03 at 2.01.21 PM.jpeg',
+    dst: 'workshop/square-box-four-spoons',
+    widths: [400, 800],
+    note: 'Square box with four spoons radiating outward (image #12)',
+  },
+  {
+    src: 'WhatsApp Image 2026-05-03 at 2.01.23 PM.jpeg',
+    dst: 'workshop/bowls-cluster-sunlit',
+    widths: [400, 800],
+    note: 'Cluster of bowls with spoons on sunlit cement floor (image #17)',
+  },
+  {
+    src: 'WhatsApp Image 2026-05-03 at 2.01.26 PM.jpeg',
+    dst: 'workshop/packing-partition-plates',
+    widths: [400, 800],
+    note: 'Open cardboard box of partition plates — production / packing (image #24)',
+  },
 ];
 
 const FORMATS = [

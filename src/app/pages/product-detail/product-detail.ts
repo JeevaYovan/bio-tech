@@ -72,7 +72,7 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
     const { product } = vm;
     const ogImage = product.content.media.hasPhoto
       ? `assets/${product.content.media.imageSlug}-800.jpg`
-      : 'assets/brand/logo-256.jpg';
+      : 'assets/brand/logo-256.png';
 
     this.seo.applyRouteSeo({
       description: product.content.description,
