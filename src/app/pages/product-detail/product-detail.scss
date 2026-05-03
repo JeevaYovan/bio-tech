@@ -1,0 +1,172 @@
+:host { display: block; }
+
+.detail {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: var(--space-8) var(--container-px) var(--space-16);
+
+  &__crumbs {
+    margin-block-end: var(--space-8);
+    font-size: var(--type-sm);
+    color: var(--color-muted);
+    ol {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
+    }
+    li {
+      display: inline-flex; align-items: center;
+      &:not(:last-child)::after { content: '/'; margin-inline-start: var(--space-2); color: var(--color-rule); }
+      &[aria-current="page"] { color: var(--color-ink); }
+    }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  }
+
+  &__inner {
+    display: grid;
+    gap: var(--space-10);
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+      align-items: start;
+    }
+  }
+
+  &__media {
+    img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius-md); }
+  }
+
+  &__placeholder {
+    aspect-ratio: 4 / 5;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: var(--space-10);
+    background: color-mix(in srgb, var(--color-tint) 50%, var(--color-bg-card) 50%);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-md);
+  }
+
+  &__placeholder-eyebrow {
+    font-size: var(--type-sm);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  &__placeholder-name {
+    font-family: var(--font-display);
+    font-size: var(--type-3xl);
+    color: var(--color-primary-deep);
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  &__placeholder-size {
+    font-size: var(--type-base);
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  &__body {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  &__category {
+    font-size: var(--type-sm);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: var(--type-4xl);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--color-primary-deep);
+  }
+
+  &__size {
+    font-size: var(--type-lg);
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  &__price {
+    font-family: var(--font-display);
+    font-size: var(--type-3xl);
+    color: var(--color-accent);
+    margin: var(--space-3) 0 var(--space-5);
+    line-height: 1;
+  }
+
+  &__description {
+    color: var(--color-ink);
+    line-height: 1.65;
+    max-width: 60ch;
+    margin: 0 0 var(--space-6);
+  }
+
+  &__spec {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: var(--space-6);
+    row-gap: var(--space-2);
+    padding-block-start: var(--space-5);
+    border-block-start: 1px solid var(--color-rule);
+    margin-block-end: var(--space-8);
+    font-size: var(--type-sm);
+
+    dt {
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: var(--type-xs);
+      align-self: center;
+    }
+    dd {
+      margin: 0;
+      color: var(--color-ink);
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+        color: var(--color-primary-deep);
+      }
+    }
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: var(--type-base);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 120ms ease;
+
+  &--accent {
+    background: var(--color-accent);
+    color: var(--color-bg-card);
+    &:hover { background: color-mix(in srgb, var(--color-accent) 85%, var(--color-ink) 15%); color: var(--color-bg-card); }
+  }
+  &--large { padding: 1rem 1.75rem; font-size: var(--type-lg); }
+}
+
+.detail-missing {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: var(--space-16) var(--container-px);
+
+  h1 { margin-block-end: var(--space-4); }
+  a { color: var(--color-primary); }
+}

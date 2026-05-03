@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { findProductBySlug, formatINR, type Product } from '../../../data/products';
 
 interface FeaturedSpec {
@@ -84,6 +85,7 @@ function buildFeatured(spec: FeaturedSpec): Featured {
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

@@ -1,0 +1,61 @@
+<section class="catalog" aria-labelledby="catalog-title">
+  <header class="catalog__head">
+    <p class="catalog__eyebrow">Full catalog</p>
+    <h1 id="catalog-title">Tableware made from farm waste</h1>
+    <p class="catalog__lead">
+      Fourteen products manufactured at our Neelambur workshop. All prices in INR.
+      Bulk orders welcome on WhatsApp.
+    </p>
+  </header>
+
+  <div class="catalog__filters" role="group" aria-label="Filter by category">
+    @for (tab of filterTabs; track tab.value) {
+      <button
+        type="button"
+        class="filter-pill"
+        [class.is-active]="filter() === tab.value"
+        [attr.aria-pressed]="filter() === tab.value"
+        (click)="setFilter(tab.value)">
+        {{ tab.label }} <span class="filter-pill__count">({{ tab.count }})</span>
+      </button>
+    }
+  </div>
+
+  <ul class="catalog__grid" role="list">
+    @for (p of visibleProducts(); track p.slug) {
+      <li class="product-card">
+        <a class="product-card__link" [routerLink]="['/products', p.slug]">
+          @if (p.hasPhoto) {
+            <picture class="product-card__media">
+              <source type="image/avif"
+                      [attr.srcset]="p.avifSrcset"
+                      sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+              <source type="image/webp"
+                      [attr.srcset]="p.webpSrcset"
+                      sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+              <img
+                [src]="p.fallback"
+                [attr.srcset]="p.jpgSrcset"
+                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
+                [attr.width]="p.width"
+                [attr.height]="p.height"
+                loading="lazy" decoding="async"
+                [attr.alt]="p.alt" />
+            </picture>
+          } @else {
+            <div class="product-card__placeholder" aria-hidden="true">
+              <p class="product-card__placeholder-eyebrow">Studio photo coming soon</p>
+              <p class="product-card__placeholder-name">{{ p.name }}</p>
+              <p class="product-card__placeholder-size">{{ p.size }}</p>
+            </div>
+          }
+          <div class="product-card__body">
+            <h2 class="product-card__name">{{ p.name }}</h2>
+            <p class="product-card__size">{{ p.size }}</p>
+            <p class="product-card__price">{{ p.priceLabel }}</p>
+          </div>
+        </a>
+      </li>
+    }
+  </ul>
+</section>

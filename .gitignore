@@ -58,3 +58,4 @@ Thumbs.db
 # Raw brand inputs (process into src/assets/brand/ as web-optimized AVIF/WebP)
 inputs/
 /lh.json
+/lh-*.json

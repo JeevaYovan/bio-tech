@@ -1,0 +1,69 @@
+@let vm = view();
+
+@if (vm) {
+  <article class="detail" aria-labelledby="detail-title">
+    <nav class="detail__crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="/products">Products</a></li>
+        <li aria-current="page">{{ vm.product.name }}</li>
+      </ol>
+    </nav>
+
+    <div class="detail__inner">
+      <div class="detail__media">
+        @if (vm.image) {
+          <picture>
+            <source type="image/avif"
+                    [attr.srcset]="vm.image.avifSrcset"
+                    sizes="(min-width: 1024px) 50vw, 100vw" />
+            <source type="image/webp"
+                    [attr.srcset]="vm.image.webpSrcset"
+                    sizes="(min-width: 1024px) 50vw, 100vw" />
+            <img
+              [src]="vm.image.fallback"
+              [attr.srcset]="vm.image.jpgSrcset"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              [attr.width]="vm.image.width"
+              [attr.height]="vm.image.height"
+              loading="eager" fetchpriority="high" decoding="sync"
+              [attr.alt]="vm.image.alt" />
+          </picture>
+        } @else {
+          <div class="detail__placeholder" aria-hidden="true">
+            <p class="detail__placeholder-eyebrow">Studio photo coming soon</p>
+            <p class="detail__placeholder-name">{{ vm.product.name }}</p>
+            <p class="detail__placeholder-size">{{ vm.product.size }}</p>
+          </div>
+        }
+      </div>
+
+      <div class="detail__body">
+        <p class="detail__category">{{ vm.product.category }}</p>
+        <h1 id="detail-title" class="detail__name">{{ vm.product.name }}</h1>
+        <p class="detail__size">{{ vm.product.size }}</p>
+        <p class="detail__price">{{ vm.priceLabel }}</p>
+
+        <p class="detail__description">{{ vm.product.content.description }}</p>
+
+        <dl class="detail__spec">
+          <dt>Material</dt>
+          <dd>{{ vm.product.content.material }}</dd>
+          <dt>Used in</dt>
+          <dd>{{ vm.product.content.uses.join(' · ') }}</dd>
+          <dt>SKU</dt>
+          <dd><code>{{ vm.product.slug }}</code></dd>
+        </dl>
+
+        <a [href]="vm.waUrl" rel="noopener" class="btn btn--accent btn--large">
+          Order on WhatsApp
+        </a>
+      </div>
+    </div>
+  </article>
+} @else {
+  <section class="detail-missing" aria-labelledby="missing-title">
+    <h1 id="missing-title">Product not found</h1>
+    <p>We couldn't find that product. <a routerLink="/products">Back to the catalog</a>.</p>
+  </section>
+}

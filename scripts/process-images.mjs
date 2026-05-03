@@ -88,6 +88,18 @@ const MANIFEST = [
     widths: [400, 800],
     note: 'Vinayagar statue 6 inch — in bagasse bowl (image #9)',
   },
+  {
+    src: 'WhatsApp Image 2026-05-03 at 2.01.23 PM (2).jpeg',
+    dst: 'products/ice-cream-bowl-4in',
+    widths: [400, 800],
+    note: 'Ice cream bowl 4 inch — multi-color showcase composition (image #16)',
+  },
+  {
+    src: 'WhatsApp Image 2026-05-03 at 2.01.25 PM.jpeg',
+    dst: 'products/normal-plate',
+    widths: [400, 800],
+    note: 'Normal plate — round flat plates stacked workshop interior (image #22)',
+  },
 ];
 
 const FORMATS = [
