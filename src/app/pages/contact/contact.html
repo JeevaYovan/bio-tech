@@ -17,7 +17,7 @@
       <li class="channel channel--whatsapp">
         <p class="channel__eyebrow">Primary</p>
         <p class="channel__label">WhatsApp</p>
-        <a [href]="waUrl" rel="noopener" class="channel__cta">Order on WhatsApp</a>
+        <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="channel__cta">Order on WhatsApp</a>
         <p class="channel__hint">Same-day reply during working hours</p>
       </li>
       <li class="channel">
@@ -105,8 +105,8 @@
         </address>
 
         <ul class="map-links" role="list">
-          <li><a [href]="osmUrl" rel="noopener">View on OpenStreetMap</a></li>
-          <li><a [href]="googleMapsUrl" rel="noopener">View on Google Maps</a></li>
+          <li><a [href]="osmUrl" target="_blank" rel="noopener noreferrer">View on OpenStreetMap</a></li>
+          <li><a [href]="googleMapsUrl" target="_blank" rel="noopener noreferrer">View on Google Maps</a></li>
         </ul>
 
         <p class="address-card__hours">
@@ -119,14 +119,3 @@
   </div>
 </section>
 
-<section class="contact-tips" aria-labelledby="tips-title">
-  <div class="contact-tips__inner">
-    <h2 id="tips-title">When you message us, please include</h2>
-    <ol class="tips" role="list">
-      <li>Product slugs and quantities (for example: <code>tea-cup-100ml</code> × 2 cartons)</li>
-      <li>Delivery PIN code or city, so we can quote freight</li>
-      <li>By when you need delivery</li>
-      <li>Whether you need a GST invoice</li>
-    </ol>
-  </div>
-</section>

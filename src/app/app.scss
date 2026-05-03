@@ -98,6 +98,11 @@ main { flex: 1 0 auto; }
     color: var(--color-muted);
     margin-block-start: 0.25rem;
 
+    /* Hide on narrow mobile so brand + CTA fit on a single row */
+    @media (max-width: 419px) {
+      display: none;
+    }
+
     @media (min-width: 768px) {
       font-size: 0.6875rem;
     }
@@ -118,10 +123,10 @@ main { flex: 1 0 auto; }
   flex-wrap: wrap;
 
   @media (min-width: 768px) {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     order: 2;
-    margin-inline-start: var(--space-6);
-    margin-inline-end: auto;
+    margin-inline-start: auto;
+    margin-inline-end: var(--space-5);
     margin-block-start: 0;
     padding-block-start: 0;
     border: none;
@@ -167,19 +172,25 @@ main { flex: 1 0 auto; }
   align-items: center;
   background: var(--color-accent);
   color: var(--color-bg-card);
-  padding: 0.55rem 0.95rem;
+  padding: 0.5rem 0.85rem;
   border-radius: var(--radius-md);
   text-decoration: none;
   font-weight: 500;
-  font-size: var(--type-sm);
+  font-size: 0.8125rem;
   white-space: nowrap;
   margin-inline-start: auto;
   order: 3;
   transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
 
+  @media (min-width: 480px) {
+    padding: 0.55rem 1rem;
+    font-size: var(--type-sm);
+  }
+
   @media (min-width: 768px) {
     padding: 0.625rem 1.125rem;
+    font-size: var(--type-sm);
     order: 4;
     margin-inline-start: 0;
   }
