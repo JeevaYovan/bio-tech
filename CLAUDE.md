@@ -139,8 +139,11 @@ route.
 - `@docs/design/theme-overrides.md`  every Klaro token override + rationale
 - `@docs/design/pages.md`            page inventory
 - `@docs/design/inspiration.md`      references AND anti-references
-- `@DEPLOY.md`                       (post-scaffold) GH Pages + DNS setup
-- `@SEO_LAUNCH.md`                   (post-scaffold) post-launch off-site checklist
+- `@README.md`                       project overview, quick start, layout
+- `@DEPLOY.md`                       GH Pages + DNS setup, troubleshooting
+- `@SEO_LAUNCH.md`                   post-launch off-site checklist
+- `@lighthouserc.json`               CI Lighthouse thresholds
+- `Dockerfile` + `docker-compose.yml` — local production preview only
 
 ## Workflow
 - Plan mode (Shift+Tab) before any change > 50 lines or touching

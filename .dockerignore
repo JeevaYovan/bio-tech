@@ -1,0 +1,30 @@
+# The Dockerfile only COPYs dist/rathika/browser/ + nginx.conf, but a
+# clean .dockerignore keeps the build context small if anyone changes
+# that.
+
+.git/
+.github/
+.claude/
+.vscode/
+.angular/
+node_modules/
+inputs/
+src/
+docs/
+scripts/
+public/
+*.md
+package.json
+package-lock.json
+tsconfig*.json
+angular.json
+postcss.config.js
+.eslintrc*
+.prettierrc
+.npmrc
+.nvmrc
+.editorconfig
+.gitignore
+.dockerignore
+lh*.json
+.axe-results/

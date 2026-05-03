@@ -1,0 +1,14 @@
+# Local production preview only — NOT the deploy path.
+#
+# Build the static site first:
+#   npm run build
+# Then bring it up:
+#   docker compose up --build
+# Open http://localhost:8080
+services:
+  rathika-preview:
+    build: .
+    container_name: rathika-preview
+    ports:
+      - "8080:80"
+    restart: "no"
