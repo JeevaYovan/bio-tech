@@ -167,10 +167,22 @@ main {
     border-block-start: 1px solid var(--color-rule);
     color: var(--color-muted);
     font-size: var(--type-xs);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
 
     [lang="ta"] {
-      margin-inline-start: var(--space-2);
       letter-spacing: 0.05em;
+      margin-inline-start: auto;
     }
+  }
+
+  &__privacy {
+    color: var(--color-muted);
+    text-decoration: none;
+    border-block-end: 1px dotted var(--color-rule);
+    padding-block-end: 1px;
+    &:hover { color: var(--color-primary); border-color: var(--color-primary); }
   }
 }

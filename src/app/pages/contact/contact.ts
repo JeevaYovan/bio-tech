@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-contact',
@@ -6,7 +7,18 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
-export default class ContactComponent {
+export default class ContactComponent implements OnInit {
+  private readonly seo = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seo.applyRouteSeo({
+      description:
+        'Contact Rathika Biotech Products in Neelambur, Coimbatore. WhatsApp +91 90809 66792 for biodegradable tableware orders. Phone, email, and workshop address.',
+      canonicalPath: '/contact/',
+      ogTitle: 'Contact Rathika Biotech Products, Neelambur, Coimbatore',
+    });
+  }
+
   protected readonly waUrl =
     'https://wa.me/919080966792?text=Hi%20Rathika%2C%20I%27d%20like%20to%20place%20an%20order.';
   protected readonly phone = '+91 90809 66792';

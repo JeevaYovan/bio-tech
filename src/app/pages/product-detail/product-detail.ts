@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,12 +6,10 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { formatINR } from '../../../data/products';
 import { getProductView, type ProductView } from '../../../data/product-content';
-
-const SITE_ORIGIN = 'https://rathika.in';
+import { SeoService, SITE_ORIGIN } from '../../services/seo.service';
 
 interface ImageBundle {
   readonly avifSrcset: string;
@@ -40,8 +37,7 @@ interface ViewModel {
 })
 export default class ProductDetailComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
-  private readonly meta = inject(Meta);
-  private readonly doc = inject(DOCUMENT);
+  private readonly seo = inject(SeoService);
 
   protected readonly view = computed<ViewModel | null>(() => {
     const slug = this.route.snapshot.paramMap.get('slug') ?? '';
@@ -74,32 +70,26 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
     const vm = this.view();
     if (!vm) return;
     const { product } = vm;
-    const desc = this.shortenDescription(product.content.description);
-    this.meta.updateTag({ name: 'description', content: desc });
-    this.meta.updateTag({ property: 'og:type', content: 'product' });
-    this.meta.updateTag({ property: 'og:title', content: `${product.name} (${product.size}) — Rathika Biotech` });
-    this.meta.updateTag({ property: 'og:description', content: desc });
-    const imageUrl = product.content.media.hasPhoto
-      ? `${SITE_ORIGIN}/assets/${product.content.media.imageSlug}-800.jpg`
-      : `${SITE_ORIGIN}/assets/brand/logo-256.jpg`;
-    this.meta.updateTag({ property: 'og:image', content: imageUrl });
-    this.meta.updateTag({ property: 'og:url', content: `${SITE_ORIGIN}/products/${product.slug}/` });
-    this.upsertCanonical(`${SITE_ORIGIN}/products/${product.slug}/`);
-    this.injectJsonLd('product', this.productSchema(product, imageUrl));
-    this.injectJsonLd('breadcrumb', this.breadcrumbSchema(product));
+    const ogImage = product.content.media.hasPhoto
+      ? `assets/${product.content.media.imageSlug}-800.jpg`
+      : 'assets/brand/logo-256.jpg';
+
+    this.seo.applyRouteSeo({
+      description: product.content.description,
+      canonicalPath: `/products/${product.slug}/`,
+      ogImage,
+      ogType: 'product',
+      ogTitle: `${product.name} (${product.size}) — Rathika Biotech`,
+    });
+
+    const fullImageUrl = `${SITE_ORIGIN}/${ogImage}`;
+    this.seo.injectJsonLd('jsonld-product', this.productSchema(product, fullImageUrl));
+    this.seo.injectJsonLd('jsonld-breadcrumb', this.breadcrumbSchema(product));
   }
 
   ngOnDestroy(): void {
-    this.removeJsonLd('product');
-    this.removeJsonLd('breadcrumb');
-    this.removeCanonical();
-  }
-
-  private shortenDescription(d: string): string {
-    if (d.length <= 160) return d;
-    const cut = d.slice(0, 157);
-    const lastSpace = cut.lastIndexOf(' ');
-    return cut.slice(0, lastSpace > 100 ? lastSpace : cut.length).trim() + '…';
+    this.seo.removeJsonLd('jsonld-product');
+    this.seo.removeJsonLd('jsonld-breadcrumb');
   }
 
   private productSchema(p: ProductView, imageUrl: string) {
@@ -146,33 +136,5 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
         { '@type': 'ListItem', position: 3, name: p.name,     item: `${SITE_ORIGIN}/products/${p.slug}/` },
       ],
     };
-  }
-
-  private injectJsonLd(kind: 'product' | 'breadcrumb', schema: object): void {
-    const id = `jsonld-${kind}`;
-    this.doc.getElementById(id)?.remove();
-    const script = this.doc.createElement('script');
-    script.id = id;
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schema);
-    this.doc.head.appendChild(script);
-  }
-
-  private removeJsonLd(kind: 'product' | 'breadcrumb'): void {
-    this.doc.getElementById(`jsonld-${kind}`)?.remove();
-  }
-
-  private upsertCanonical(href: string): void {
-    let link = this.doc.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!link) {
-      link = this.doc.createElement('link');
-      link.rel = 'canonical';
-      this.doc.head.appendChild(link);
-    }
-    link.href = href;
-  }
-
-  private removeCanonical(): void {
-    this.doc.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.remove();
   }
 }

@@ -36,6 +36,11 @@ export const routes: Routes = [
     title: 'Contact Rathika Biotech Products, Neelambur, Coimbatore',
   },
   {
+    path: 'privacy',
+    loadComponent: () => import('./pages/privacy/privacy'),
+    title: 'Privacy notice — Rathika Biotech Products',
+  },
+  {
     path: '**',
     redirectTo: '',
   },

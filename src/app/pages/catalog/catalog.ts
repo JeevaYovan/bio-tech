@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   formatINR,
@@ -7,6 +7,7 @@ import {
   type ProductCategory,
 } from '../../../data/products';
 import { getMedia } from '../../../data/product-content';
+import { SeoService } from '../../services/seo.service';
 
 type Filter = 'all' | ProductCategory;
 
@@ -41,8 +42,19 @@ interface FilterTab {
   templateUrl: './catalog.html',
   styleUrl: './catalog.scss',
 })
-export default class CatalogComponent {
+export default class CatalogComponent implements OnInit {
+  private readonly seo = inject(SeoService);
+
   protected readonly filter = signal<Filter>('all');
+
+  ngOnInit(): void {
+    this.seo.applyRouteSeo({
+      description:
+        'Full catalog of Rathika Biotech biodegradable tableware: 14 plates, bowls, cups, spoons, parcel boxes, and decorative statues. INR pricing. Bulk orders on WhatsApp.',
+      canonicalPath: '/products/',
+      ogTitle: 'Eco-Friendly Plates, Cups & Bowls | Rathika Biotech Coimbatore',
+    });
+  }
 
   protected readonly filterTabs: ReadonlyArray<FilterTab> = (() => {
     const all: FilterTab = { value: 'all', label: 'All', count: products.length };

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { findProductBySlug, formatINR, type Product } from '../../../data/products';
+import { SeoService } from '../../services/seo.service';
 
 interface FeaturedSpec {
   slug: string;
@@ -89,9 +90,20 @@ function buildFeatured(spec: FeaturedSpec): Featured {
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export default class HomeComponent {
+export default class HomeComponent implements OnInit {
+  private readonly seo = inject(SeoService);
+
   protected readonly waUrl =
     'https://wa.me/919080966792?text=Hi%20Rathika%2C%20I%27d%20like%20to%20place%20an%20order.';
+
+  ngOnInit(): void {
+    this.seo.applyRouteSeo({
+      description:
+        'Rathika Biotech Products — biodegradable plates, bowls, cups, and spoons made from banana fiber, sugarcane bagasse, and rice husk. Manufactured in Neelambur, Coimbatore.',
+      canonicalPath: '/',
+      ogTitle: 'Rathika Biotech Products | Biodegradable Tableware, Coimbatore',
+    });
+  }
 
   protected readonly featured: ReadonlyArray<Featured> = FEATURED_SPECS.map(buildFeatured);
 
