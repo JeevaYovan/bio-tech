@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(ls:*)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(npx nx:*)",
+      "Bash(npx lighthouse:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npx vitest:*)",
+      "Read(**)",
+      "Glob(**)",
+      "Grep(**)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'f=\"$CLAUDE_FILE_PATH\"; case \"$f\" in *.ts|*.html|*.css|*.scss|*.md|*.mdx|*.json) cd \"$CLAUDE_PROJECT_DIR\" && npx prettier --write \"$f\" 2>/dev/null ;; esac; exit 0'"
+          }
+        ]
+      }
+    ]
+  },
+  "autoMemoryEnabled": true,
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  }
+}
