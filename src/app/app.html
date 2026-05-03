@@ -1,9 +1,17 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header" role="banner">
-  <a routerLink="/" class="brand">
-    <span class="brand__name">Rathika</span>
-    <span class="brand__sub">Biotech Products</span>
+  <a routerLink="/" class="brand" aria-label="Rathika Biotech Products home">
+    <svg class="brand__mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="20" cy="20" r="19" fill="#2F5D3F"/>
+      <path d="M 20 30 C 11 30, 11 17, 20 12 C 29 17, 29 30, 20 30 Z" fill="#F8F4EC"/>
+      <line x1="20" y1="12" x2="20" y2="30" stroke="#2F5D3F" stroke-width="0.9" stroke-linecap="round"/>
+      <path d="M 14 23 Q 20 19 26 23" stroke="#2F5D3F" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+    </svg>
+    <span class="brand__lockup">
+      <span class="brand__name">Rathika</span>
+      <span class="brand__sub">Biotech Products</span>
+    </span>
   </a>
 
   <nav class="site-nav" aria-label="Primary">
@@ -37,9 +45,8 @@
     </ul>
 
     <p class="site-footer__meta">
-      &copy; {{ currentYear }} Rathika Biotech Products.
+      <span>&copy; {{ currentYear }} Rathika Biotech Products.</span>
       <a routerLink="/privacy" class="site-footer__privacy">Privacy</a>
-      <span lang="ta">இயற்கை · iyarkai · nature</span>
     </p>
   </div>
 </footer>

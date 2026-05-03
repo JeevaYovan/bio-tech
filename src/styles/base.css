@@ -45,6 +45,12 @@ h2 { font-size: var(--type-3xl); }
 h3 { font-size: var(--type-2xl); }
 h4 { font-size: var(--type-xl); }
 
+@media (max-width: 480px) {
+  h1 { font-size: var(--type-4xl); }
+  h2 { font-size: var(--type-2xl); }
+  h3 { font-size: var(--type-xl); }
+}
+
 p { max-width: var(--content-max); }
 
 a {
@@ -57,6 +63,7 @@ a:hover { color: var(--color-primary-deep); }
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+  transition: outline-offset 120ms ease;
 }
 
 ::selection {
@@ -64,7 +71,43 @@ a:hover { color: var(--color-primary-deep); }
   color: var(--color-primary-deep);
 }
 
-/* Tamil text — applied via [lang="ta"] attribute */
-[lang="ta"] {
-  font-family: var(--font-tamil);
+/* ======================================================================
+   Animations (motion-safe, brand-aligned, subtle)
+   --------------------------------------------------------------------
+   - Page-load fade — fires on first paint
+   - Scroll-driven section reveals — progressive enhancement via
+     animation-timeline: view(); browsers without it just see content
+   - Reduced-motion reset — already in @media block above (overrides
+     animation-duration to 0.01ms)
+   ====================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Page-load fade — body fades in on first paint */
+  body {
+    animation: rt-page-in 320ms ease-out both;
+  }
+
+  @keyframes rt-page-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Scroll-driven section reveals (Chrome 115+, Edge 115+, supported in
+     Safari 17.4+ behind a flag and rolling out). Browsers without
+     animation-timeline just see content immediately — graceful fallback. */
+  @supports (animation-timeline: view()) {
+    section,
+    article {
+      animation: rt-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 60%;
+    }
+    @keyframes rt-reveal {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Hero never fades in via scroll (it's already on screen) */
+    .hero { animation: none; }
+  }
 }

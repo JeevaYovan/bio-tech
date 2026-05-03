@@ -27,5 +27,5 @@ export default class ContactComponent implements OnInit {
   protected readonly emailHref = 'mailto:rathikabiotechproducts@gmail.com';
   protected readonly osmUrl = 'https://www.openstreetmap.org/?mlat=11.0779&mlon=77.0006#map=16/11.0779/77.0006';
   protected readonly googleMapsUrl =
-    'https://www.google.com/maps/search/?api=1&query=Rathika+Biotech+Products+1%2F447+Avinashi+Road+Neelambur+Coimbatore';
+    'https://www.google.com/maps?q=11.0779,77.0006&z=15';
 }

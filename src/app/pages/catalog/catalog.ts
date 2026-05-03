@@ -3,10 +3,9 @@ import { RouterLink } from '@angular/router';
 import {
   formatINR,
   productCategories,
-  products,
   type ProductCategory,
 } from '../../../data/products';
-import { getMedia } from '../../../data/product-content';
+import { displayableProducts, getMedia } from '../../../data/product-content';
 import { SeoService } from '../../services/seo.service';
 
 type Filter = 'all' | ProductCategory;
@@ -50,25 +49,25 @@ export default class CatalogComponent implements OnInit {
   ngOnInit(): void {
     this.seo.applyRouteSeo({
       description:
-        'Full catalog of Rathika Biotech biodegradable tableware: 14 plates, bowls, cups, spoons, parcel boxes, and decorative statues. INR pricing. Bulk orders on WhatsApp.',
+        'Full catalog of Rathika Biotech biodegradable tableware — plates, bowls, cups, spoons, parcel boxes, and decorative statues. INR pricing. Bulk orders welcome on WhatsApp.',
       canonicalPath: '/products/',
       ogTitle: 'Eco-Friendly Plates, Cups & Bowls | Rathika Biotech Coimbatore',
     });
   }
 
   protected readonly filterTabs: ReadonlyArray<FilterTab> = (() => {
-    const all: FilterTab = { value: 'all', label: 'All', count: products.length };
+    const all: FilterTab = { value: 'all', label: 'All', count: displayableProducts.length };
     const byCat = productCategories.map<FilterTab>((c) => ({
       value: c,
       label: titleCase(c),
-      count: products.filter((p) => p.category === c).length,
+      count: displayableProducts.filter((p) => p.category === c).length,
     }));
     return [all, ...byCat];
   })();
 
   protected readonly visibleProducts = computed<ReadonlyArray<CatalogItem>>(() => {
     const f = this.filter();
-    const filtered = f === 'all' ? products : products.filter((p) => p.category === f);
+    const filtered = f === 'all' ? displayableProducts : displayableProducts.filter((p) => p.category === f);
     return filtered.map<CatalogItem>((p) => {
       const media = getMedia(p.slug);
       const hasPhoto = !!media?.hasPhoto && !!media.imageSlug;

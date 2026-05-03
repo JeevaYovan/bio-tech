@@ -5,14 +5,22 @@
  * per PROMPT.md §6. Each description is 80-150 words per §7d. Verify
  * sizes/prices/slugs against products.ts (which is the single source of
  * truth for that data, sourced verbatim from PROMPT.md §11).
+ *
+ * `displayable: false` removes a SKU from the catalog and skips its
+ * detail prerender. We use that to hide SKUs that don't have a real
+ * studio photo yet, and SKUs that would otherwise reuse another SKU's
+ * photo (visually duplicate). The product still exists in products.ts —
+ * faithful to PROMPT.md §11 — but it doesn't appear in the live UI
+ * until photography is supplied.
  */
 
-import type { Product } from './products';
-import { findProductBySlug } from './products';
+import { findProductBySlug, products, type Product } from './products';
 
 export interface ProductMedia {
   /** True when we have a real studio/lifestyle photo for this SKU. */
   readonly hasPhoto: boolean;
+  /** True when this SKU should appear in /products and have a detail page. */
+  readonly displayable: boolean;
   /** Image asset slug under public/assets/, e.g. 'products/tea-cup-100ml'. */
   readonly imageSlug?: string;
   /** Intrinsic dimensions of the 400w image (used for width/height attrs to prevent CLS). */
@@ -31,76 +39,90 @@ export interface ProductContent {
 const MEDIA: Record<string, ProductMedia> = {
   'ice-cream-bowl-4in': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/ice-cream-bowl-4in',
     intrinsic: { w: 400, h: 352 },
     alt: 'Six 4-inch biodegradable ice cream bowls in different natural colors arranged with spoons',
   },
   'parcel-box-300ml': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/parcel-box-300ml',
     intrinsic: { w: 400, h: 300 },
     alt: 'Round 300 ml biodegradable parcel box with matching lid',
   },
   'parcel-box-500ml': {
-    hasPhoto: true,
-    imageSlug: 'products/parcel-box-300ml',
-    intrinsic: { w: 400, h: 300 },
-    alt: 'Round biodegradable parcel box, same shape as the 300 ml in 500 ml capacity',
+    // Hidden — would reuse the 300 ml photo; visually duplicate. Re-enable
+    // when 500 ml gets its own product photography.
+    hasPhoto: false,
+    displayable: false,
+    alt: '',
   },
   'partition-10x12': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/partition-10x12',
     intrinsic: { w: 400, h: 469 },
     alt: 'Stack of 10 by 12 inch partition plates with embossed Rathika logo on the top plate',
   },
   'rectangle-box-300ml': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/rectangle-box-300ml',
     intrinsic: { w: 400, h: 300 },
     alt: 'Rectangular biodegradable parcel box with a bagasse spoon laid diagonally inside',
   },
   'rectangle-box-500ml': {
-    hasPhoto: true,
-    imageSlug: 'products/rectangle-box-300ml',
-    intrinsic: { w: 400, h: 300 },
-    alt: 'Rectangular biodegradable parcel box, same shape as the 300 ml in 500 ml capacity',
+    // Hidden — would reuse the 300 ml photo. Re-enable with own photography.
+    hasPhoto: false,
+    displayable: false,
+    alt: '',
   },
   'tea-cup-100ml': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/tea-cup-100ml',
     intrinsic: { w: 400, h: 534 },
     alt: 'Three 100 ml biodegradable tea cups stacked on a stone surface',
   },
   'straw-8in': {
+    // Hidden — no studio photo yet.
     hasPhoto: false,
+    displayable: false,
     alt: '',
   },
   'normal-plate': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/normal-plate',
     intrinsic: { w: 400, h: 300 },
     alt: 'Stack of biodegradable round dinner plates on a workshop table',
   },
   'plate-5in': {
     hasPhoto: false,
+    displayable: false,
     alt: '',
   },
   'plate-7in': {
     hasPhoto: false,
+    displayable: false,
     alt: '',
   },
   'spoon-5in': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/spoon-5in',
     intrinsic: { w: 400, h: 300 },
     alt: 'Row of nested 5-inch biodegradable spoons in warm side light',
   },
   'elephant-statue-6in': {
     hasPhoto: false,
+    displayable: false,
     alt: '',
   },
   'vinayagar-statue-6in': {
     hasPhoto: true,
+    displayable: true,
     imageSlug: 'products/vinayagar-statue-6in',
     intrinsic: { w: 400, h: 425 },
     alt: 'Six-inch Vinayagar statue seated in a bagasse bowl, top-down composition',
@@ -215,3 +237,8 @@ export function getProductView(slug: string): ProductView | undefined {
 export function getMedia(slug: string): ProductMedia | undefined {
   return MEDIA[slug];
 }
+
+/** Products that should appear in the live catalog and have detail pages. */
+export const displayableProducts: ReadonlyArray<Product> = products.filter(
+  (p) => MEDIA[p.slug]?.displayable === true,
+);
