@@ -1,7 +1,7 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header" role="banner">
-  <a routerLink="/" class="brand" aria-label="Rathika Biotech Products — Home">
+  <a routerLink="/" class="brand">
     <span class="brand__name">Rathika</span>
     <span class="brand__sub">Biotech Products</span>
   </a>
@@ -10,7 +10,7 @@
     <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
   </nav>
 
-  <a [href]="waUrl" class="header-cta" rel="noopener" aria-label="Order via WhatsApp">
+  <a [href]="waUrl" class="header-cta" rel="noopener">
     Order on WhatsApp
   </a>
 </header>
@@ -28,8 +28,8 @@
     </address>
 
     <ul class="site-footer__contact" aria-label="Contact">
-      <li><a href="tel:+919080966792" aria-label="Call +91 90809 66792">+91 90809 66792</a></li>
-      <li><a [href]="waUrl" aria-label="Order via WhatsApp" rel="noopener">WhatsApp</a></li>
+      <li><a href="tel:+919080966792">+91 90809 66792</a></li>
+      <li><a [href]="waUrl" rel="noopener">Order on WhatsApp</a></li>
       <li><a href="mailto:rathikabiotechproducts&#64;gmail.com">rathikabiotechproducts&#64;gmail.com</a></li>
     </ul>
 

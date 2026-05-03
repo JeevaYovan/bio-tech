@@ -1,17 +1,177 @@
-<section class="hero">
-  <p class="hero__eyebrow">Coimbatore · Tamil Nadu</p>
-  <h1 class="hero__title">
-    Biodegradable tableware<br />
-    from banana fiber and rice husk.
-  </h1>
-  <p class="hero__lead">
-    We manufacture plates, bowls, cups, and spoons from agricultural by-products
-    that would otherwise be burned. Strong, food-safe, and back to the soil
-    in weeks.
-  </p>
-  <p class="hero__sub" lang="ta">இயற்கை · iyarkai · nature</p>
+<!-- ===================== HERO ===================== -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__inner">
+    <div class="hero__copy">
+      <p class="hero__eyebrow">Manufactured in Neelambur, Coimbatore</p>
+      <h1 id="hero-title" class="hero__title">
+        Crafted from the earth.<br />
+        Returns to the earth.
+      </h1>
+      <p class="hero__lead">
+        We manufacture biodegradable plates, bowls, cups, and spoons from banana
+        fiber, sugarcane bagasse, and rice husk — agricultural by-products that
+        would otherwise be burned.
+      </p>
+      <div class="hero__ctas">
+        <a [href]="waUrl" rel="noopener" class="btn btn--accent">
+          Order on WhatsApp
+        </a>
+        <a href="#featured" class="btn btn--ghost">See featured products</a>
+      </div>
+      <p class="hero__sub" lang="ta">இயற்கை · iyarkai · nature</p>
+    </div>
+    <picture class="hero__media">
+      <source
+        type="image/avif"
+        srcset="assets/lifestyle/hero-tea-cup-haystack-768.avif 768w,
+                assets/lifestyle/hero-tea-cup-haystack-1280.avif 1280w"
+        sizes="(min-width: 1024px) 60vw, 100vw" />
+      <source
+        type="image/webp"
+        srcset="assets/lifestyle/hero-tea-cup-haystack-768.webp 768w,
+                assets/lifestyle/hero-tea-cup-haystack-1280.webp 1280w"
+        sizes="(min-width: 1024px) 60vw, 100vw" />
+      <img
+        src="assets/lifestyle/hero-tea-cup-haystack-1280.jpg"
+        srcset="assets/lifestyle/hero-tea-cup-haystack-768.jpg 768w,
+                assets/lifestyle/hero-tea-cup-haystack-1280.jpg 1280w"
+        sizes="(min-width: 1024px) 60vw, 100vw"
+        width="1024" height="1024"
+        loading="eager" fetchpriority="high" decoding="sync"
+        alt="A single bagasse tea cup standing in a wheat field at golden hour, with a haystack on the horizon" />
+    </picture>
+  </div>
 </section>
 
-<section class="placeholder">
-  <p><strong>Phase 3 scaffold.</strong> Hero photography, six pillars, featured products, and CTA layouts arrive in Phase 4.</p>
+<!-- ===================== STORY ===================== -->
+<section class="story" aria-labelledby="story-title">
+  <div class="story__inner">
+    <div class="story__copy">
+      <p class="section-eyebrow">Our story</p>
+      <h2 id="story-title">From farm waste to your table</h2>
+      <p>
+        Across Tamil Nadu, banana stems, sugarcane bagasse, and rice husk are
+        routinely burned after harvest — one of the largest sources of
+        agricultural air pollution in the region. We upcycle those by-products
+        into tableware that replaces single-use plastic and paper plates.
+      </p>
+      <p>
+        The materials are stronger than they look, food-safe by virtue of being
+        chemical-free, and biodegrade within weeks of being discarded. We close
+        the loop, support the circular economy, and give farmers a second
+        revenue stream from what they used to set on fire.
+      </p>
+    </div>
+    <picture class="story__media">
+      <source
+        type="image/avif"
+        srcset="assets/lifestyle/story-fiber-texture-600.avif 600w,
+                assets/lifestyle/story-fiber-texture-1200.avif 1200w"
+        sizes="(min-width: 1024px) 40vw, 100vw" />
+      <source
+        type="image/webp"
+        srcset="assets/lifestyle/story-fiber-texture-600.webp 600w,
+                assets/lifestyle/story-fiber-texture-1200.webp 1200w"
+        sizes="(min-width: 1024px) 40vw, 100vw" />
+      <img
+        src="assets/lifestyle/story-fiber-texture-600.jpg"
+        srcset="assets/lifestyle/story-fiber-texture-600.jpg 600w,
+                assets/lifestyle/story-fiber-texture-1200.jpg 1200w"
+        sizes="(min-width: 1024px) 40vw, 100vw"
+        width="1200" height="967"
+        loading="lazy" decoding="async"
+        alt="Close-up macro of natural fiber texture showing rice husk and bagasse strands" />
+    </picture>
+  </div>
+</section>
+
+<!-- ===================== SIX PILLARS ===================== -->
+<section class="pillars" aria-labelledby="pillars-title">
+  <div class="pillars__inner">
+    <header class="pillars__head">
+      <p class="section-eyebrow">Why this tableware</p>
+      <h2 id="pillars-title">Six reasons our products are different</h2>
+    </header>
+    <ol class="pillars__list" role="list">
+      @for (pillar of pillars; track pillar.n) {
+        <li class="pillar">
+          <p class="pillar__num" aria-hidden="true">{{ pillar.n }}</p>
+          <h3 class="pillar__title">{{ pillar.title }}</h3>
+          <p class="pillar__body">{{ pillar.body }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== FEATURED PRODUCTS ===================== -->
+<section id="featured" class="featured" aria-labelledby="featured-title">
+  <div class="featured__inner">
+    <header class="featured__head">
+      <p class="section-eyebrow">From the catalog</p>
+      <h2 id="featured-title">Hand-pressed in our Neelambur workshop</h2>
+      <p class="featured__sub">Prices in INR. Bulk orders welcome on WhatsApp.</p>
+    </header>
+    <ul class="product-grid" role="list">
+      @for (p of featured; track p.slug) {
+        <li class="product-card">
+          <picture class="product-card__media">
+            <source
+              type="image/avif"
+              [attr.srcset]="p.avifSrcset"
+              sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+            <source
+              type="image/webp"
+              [attr.srcset]="p.webpSrcset"
+              sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+            <img
+              [src]="p.fallback"
+              [attr.srcset]="p.jpgSrcset"
+              sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
+              [attr.width]="p.intrinsic.w"
+              [attr.height]="p.intrinsic.h"
+              loading="lazy" decoding="async"
+              [attr.alt]="p.alt" />
+          </picture>
+          <div class="product-card__body">
+            <h3 class="product-card__name">{{ p.name }}</h3>
+            <p class="product-card__size">{{ p.size }}</p>
+            <p class="product-card__price">{{ formatPrice(p.price) }}</p>
+          </div>
+        </li>
+      }
+    </ul>
+    <p class="featured__more">
+      <span aria-hidden="true">→</span>
+      <a [href]="waUrl" rel="noopener">Ask about the full catalog on WhatsApp</a>
+    </p>
+  </div>
+</section>
+
+<!-- ===================== WHERE USED ===================== -->
+<section class="where-used" aria-labelledby="where-title">
+  <div class="where-used__inner">
+    <p class="section-eyebrow">Where it's used</p>
+    <h2 id="where-title">From kitchens to weddings</h2>
+    <ul class="where-used__list" role="list">
+      @for (place of whereUsed; track place) {
+        <li>{{ place }}</li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="home-cta" aria-labelledby="cta-title">
+  <div class="home-cta__inner">
+    <p class="section-eyebrow">Order today</p>
+    <h2 id="cta-title">Place an order on WhatsApp</h2>
+    <p class="home-cta__lead">
+      We respond during working hours, typically same-day. Bulk orders for
+      restaurants, weddings, and events are welcome — just message us.
+    </p>
+    <a [href]="waUrl" rel="noopener" class="btn btn--accent btn--large">
+      Order on WhatsApp
+    </a>
+  </div>
 </section>
