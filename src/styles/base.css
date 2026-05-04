@@ -82,19 +82,12 @@ a:hover { color: var(--color-primary-deep); }
    ====================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Page-load fade — body fades in on first paint */
-  body {
-    animation: rt-page-in 320ms ease-out both;
-  }
-
-  @keyframes rt-page-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
   /* Scroll-driven section reveals (Chrome 115+, Edge 115+, supported in
      Safari 17.4+ behind a flag and rolling out). Browsers without
-     animation-timeline just see content immediately — graceful fallback. */
+     animation-timeline just see content immediately — graceful fallback.
+     We deliberately don't animate the body's opacity on page-load: it
+     was confusing Lighthouse-CI's headless Chromium into reporting
+     NO_FCP on slow runners. */
   @supports (animation-timeline: view()) {
     section,
     article {
