@@ -17,7 +17,9 @@
       <li class="channel channel--whatsapp">
         <p class="channel__eyebrow">Primary</p>
         <p class="channel__label">WhatsApp</p>
-        <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="channel__cta">Order on WhatsApp</a>
+        <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="channel__cta">
+          Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
+        </a>
         <p class="channel__hint">Same-day reply during working hours</p>
       </li>
       <li class="channel">
@@ -44,50 +46,43 @@
     </header>
 
     <div class="contact-location__layout">
-      <div class="map-card" role="img"
-           aria-label="Approximate map of Rathika Biotech Products' workshop on Avinashi Road, Neelambur, Coimbatore">
-        <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <div class="map-card" role="img" aria-label="Stylised map of the Neelambur workshop location.">
+        <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="map-svg">
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#D9D2C2" stroke-width="0.5" />
+              <path d="M 40 0 L 0 0 0 40" fill="none" class="map-svg__grid" stroke-width="0.5" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="#F8F4EC" />
+          <rect width="100%" height="100%" class="map-svg__bg" />
           <rect width="100%" height="100%" fill="url(#grid)" />
 
-          <!-- Avinashi Road (horizontal) -->
-          <line x1="0" y1="178" x2="600" y2="190" stroke="#A07550" stroke-width="3" stroke-linecap="round" opacity="0.55" />
-          <text x="36" y="170" font-family="Georgia, serif" font-size="11" letter-spacing="0.12em" fill="#6B4423">AVINASHI ROAD</text>
+          <line x1="0" y1="178" x2="600" y2="190" class="map-svg__road" stroke-width="3" stroke-linecap="round" opacity="0.55" />
+          <text x="36" y="170" class="map-svg__label" font-size="11" letter-spacing="0.12em">AVINASHI ROAD</text>
 
-          <!-- Cross streets -->
-          <line x1="118" y1="0" x2="132" y2="350" stroke="#A07550" stroke-width="1.4" stroke-linecap="round" opacity="0.3" />
-          <line x1="412" y1="0" x2="426" y2="350" stroke="#A07550" stroke-width="1.4" stroke-linecap="round" opacity="0.3" />
+          <line x1="118" y1="0" x2="132" y2="350" class="map-svg__road" stroke-width="1.4" stroke-linecap="round" opacity="0.3" />
+          <line x1="412" y1="0" x2="426" y2="350" class="map-svg__road" stroke-width="1.4" stroke-linecap="round" opacity="0.3" />
 
-          <!-- Subtle blocks -->
-          <rect x="170" y="220" width="80" height="60" rx="2" fill="#E8F0E5" opacity="0.6" />
-          <rect x="350" y="220" width="50" height="60" rx="2" fill="#E8F0E5" opacity="0.6" />
-          <rect x="180" y="60"  width="100" height="60" rx="2" fill="#E8F0E5" opacity="0.6" />
-          <rect x="320" y="60"  width="80"  height="60" rx="2" fill="#E8F0E5" opacity="0.6" />
+          <rect x="170" y="220" width="80" height="60" rx="2" class="map-svg__block" opacity="0.6" />
+          <rect x="350" y="220" width="50" height="60" rx="2" class="map-svg__block" opacity="0.6" />
+          <rect x="180" y="60"  width="100" height="60" rx="2" class="map-svg__block" opacity="0.6" />
+          <rect x="320" y="60"  width="80"  height="60" rx="2" class="map-svg__block" opacity="0.6" />
 
-          <!-- Compass -->
           <g transform="translate(548, 38)">
-            <circle r="16" fill="#FFFFFF" stroke="#2F5D3F" stroke-width="1" />
-            <text y="5" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="14" fill="#2F5D3F">N</text>
+            <circle r="16" class="map-svg__compass-bg map-svg__compass-stroke" stroke-width="1" />
+            <text y="5" text-anchor="middle" class="map-svg__compass-label" font-weight="700" font-size="14">N</text>
           </g>
 
-          <!-- Marker -->
           <g transform="translate(300, 180)">
-            <circle r="22" fill="none" stroke="#B8533A" stroke-width="0.5" opacity="0.25" />
-            <circle r="14" fill="none" stroke="#B8533A" stroke-width="1" opacity="0.45" />
-            <circle r="8"  fill="#B8533A" />
-            <circle r="2.5" fill="#FFFFFF" />
+            <circle r="22" fill="none" class="map-svg__pin-ring" stroke-width="0.5" opacity="0.25" />
+            <circle r="14" fill="none" class="map-svg__pin-ring" stroke-width="1" opacity="0.45" />
+            <circle r="8"  class="map-svg__pin" />
+            <circle r="2.5" class="map-svg__pin-dot" />
           </g>
 
-          <!-- Caption -->
-          <text x="300" y="232" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="500" fill="#1F3A2B">
+          <text x="300" y="232" text-anchor="middle" class="map-svg__caption" font-weight="500" font-size="13">
             Rathika Biotech Products
           </text>
-          <text x="300" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#6B6B6B" letter-spacing="0.04em">
+          <text x="300" y="250" text-anchor="middle" class="map-svg__coords" font-size="10" letter-spacing="0.04em">
             11.0779&#176; N &middot; 77.0006&#176; E
           </text>
         </svg>
@@ -98,15 +93,15 @@
 
       <div class="address-card">
         <address class="address-card__address">
-          <strong>Rathika Biotech Products</strong>
+          <strong>Rathika Biotech Products</strong><br />
           1/447 Avinashi Road, Neelambur<br />
           Coimbatore – 641026<br />
           Tamil Nadu, India
         </address>
 
         <ul class="map-links" role="list">
-          <li><a [href]="osmUrl" target="_blank" rel="noopener noreferrer">View on OpenStreetMap</a></li>
-          <li><a [href]="googleMapsUrl" target="_blank" rel="noopener noreferrer">View on Google Maps</a></li>
+          <li><a [href]="osmUrl" target="_blank" rel="noopener noreferrer">View on OpenStreetMap<span class="visually-hidden"> (opens in new tab)</span></a></li>
+          <li><a [href]="googleMapsUrl" target="_blank" rel="noopener noreferrer">View on Google Maps<span class="visually-hidden"> (opens in new tab)</span></a></li>
         </ul>
 
         <p class="address-card__hours">
@@ -118,4 +113,3 @@
     </div>
   </div>
 </section>
-

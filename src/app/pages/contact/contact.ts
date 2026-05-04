@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { SeoService } from '../../services/seo.service';
+import {
+  EMAIL,
+  EMAIL_HREF,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  WA_URL,
+} from '../../shared/constants';
 
 @Component({
   selector: 'app-contact',
@@ -10,6 +17,14 @@ import { SeoService } from '../../services/seo.service';
 export default class ContactComponent implements OnInit {
   private readonly seo = inject(SeoService);
 
+  protected readonly waUrl = WA_URL;
+  protected readonly phone = PHONE_DISPLAY;
+  protected readonly phoneHref = PHONE_HREF;
+  protected readonly email = EMAIL;
+  protected readonly emailHref = EMAIL_HREF;
+  protected readonly osmUrl = 'https://www.openstreetmap.org/?mlat=11.0779&mlon=77.0006#map=16/11.0779/77.0006';
+  protected readonly googleMapsUrl = 'https://www.google.com/maps?q=11.0779,77.0006&z=15';
+
   ngOnInit(): void {
     this.seo.applyRouteSeo({
       description:
@@ -18,14 +33,4 @@ export default class ContactComponent implements OnInit {
       ogTitle: 'Contact Rathika Biotech Products, Neelambur, Coimbatore',
     });
   }
-
-  protected readonly waUrl =
-    'https://wa.me/919080966792?text=Hi%20Rathika%2C%20I%27d%20like%20to%20place%20an%20order.';
-  protected readonly phone = '+91 90809 66792';
-  protected readonly phoneHref = 'tel:+919080966792';
-  protected readonly email = 'rathikabiotechproducts@gmail.com';
-  protected readonly emailHref = 'mailto:rathikabiotechproducts@gmail.com';
-  protected readonly osmUrl = 'https://www.openstreetmap.org/?mlat=11.0779&mlon=77.0006#map=16/11.0779/77.0006';
-  protected readonly googleMapsUrl =
-    'https://www.google.com/maps?q=11.0779,77.0006&z=15';
 }

@@ -33,16 +33,16 @@ const MANIFEST = [
   {
     src: 'WhatsApp Image 2026-05-03 at 2.01.18 PM.jpeg',
     dst: 'lifestyle/hero-tea-cup-haystack',
-    widths: [768, 1280, 1920],
-    note: 'Hero — tea cup in haystack at golden hour (image #5)',
+    widths: [768, 1280],
+    note: 'Hero — tea cup beside haystack at golden hour (image #5). Source caps at 1024×1024 — 1920w would be a duplicate.',
   },
 
   // --- Story / About-style imagery ---
   {
     src: 'WhatsApp Image 2026-05-03 at 2.01.22 PM (1).jpeg',
     dst: 'lifestyle/story-fiber-texture',
-    widths: [600, 1200],
-    note: 'Macro of natural fiber texture (image #13)',
+    widths: [600, 800, 1200],
+    note: 'Macro of natural fiber texture (image #13). 800w added for DPR=2 mobile to avoid the 1200w download.',
   },
   {
     src: 'WhatsApp Image 2026-05-03 at 2.01.24 PM.jpeg',
@@ -164,7 +164,7 @@ async function processOne(entry) {
   return { generated, missing: false };
 }
 
-console.log(`Processing ${MANIFEST.length} source images → src/assets/...`);
+console.log(`Processing ${MANIFEST.length} source images → public/assets/...`);
 let total = 0;
 let missingCount = 0;
 for (const entry of MANIFEST) {

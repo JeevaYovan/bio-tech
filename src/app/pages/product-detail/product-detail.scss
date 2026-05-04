@@ -18,7 +18,13 @@
       &:not(:last-child)::after { content: '/'; margin-inline-start: var(--space-2); color: var(--color-rule); }
       &[aria-current="page"] { color: var(--color-ink); }
     }
-    a { color: var(--color-primary); text-decoration: none; }
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      /* Touch target ≥ 24 px tall (WCAG 2.5.8) */
+      padding-block: 0.25rem;
+      display: inline-block;
+    }
     a:hover { text-decoration: underline; }
   }
 
@@ -33,7 +39,18 @@
   }
 
   &__media {
-    img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius-md); }
+    /* Detail pages show the product at its natural aspect ratio — no
+       forced 4:5 cover that would chop landscape product photos
+       (parcel boxes, spoons, etc.). The intrinsic width/height attrs
+       on the <img> prevent CLS. */
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      max-height: 70vh;
+      border-radius: var(--radius-md);
+      background: var(--color-tint);
+    }
   }
 
   &__placeholder {

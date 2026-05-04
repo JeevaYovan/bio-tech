@@ -8,14 +8,6 @@
   margin-block-end: var(--space-3);
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0);
-  white-space: nowrap; border: 0;
-}
-
 .contact-hero {
   padding: var(--space-12) 0 var(--space-8);
   &__inner {
@@ -104,6 +96,8 @@
     text-decoration: none;
     margin-block-start: var(--space-2);
     word-break: break-all;
+    /* Touch target ≥ 24 px tall */
+    padding-block: 0.2rem;
     &:hover { color: var(--color-primary-deep); text-decoration: underline; text-underline-offset: 3px; }
 
     &--email { font-size: var(--type-base); }
@@ -167,6 +161,26 @@
   }
 }
 
+/* Map SVG — colors driven by brand tokens via CSS classes (no
+   hardcoded hex inside the SVG markup). */
+.map-svg {
+  font-family: var(--font-display);
+
+  &__bg          { fill: var(--color-bg); }
+  &__grid        { stroke: var(--color-rule); }
+  &__road        { stroke: var(--color-earth-soft); }
+  &__label       { fill: var(--color-earth); font-family: var(--font-display); }
+  &__block       { fill: var(--color-tint); }
+  &__compass-bg  { fill: var(--color-bg-card); }
+  &__compass-stroke { stroke: var(--color-primary); }
+  &__compass-label  { fill: var(--color-primary); font-family: var(--font-display); }
+  &__pin         { fill: var(--color-accent); }
+  &__pin-ring    { stroke: var(--color-accent); }
+  &__pin-dot     { fill: var(--color-bg-card); }
+  &__caption     { fill: var(--color-primary-deep); font-family: var(--font-display); }
+  &__coords      { fill: var(--color-muted); font-family: var(--font-body); }
+}
+
 .address-card {
   display: grid;
   gap: var(--space-5);
@@ -185,7 +199,7 @@
       font-family: var(--font-display);
       font-size: var(--type-lg);
       color: var(--color-primary-deep);
-      margin-block-end: var(--space-2);
+      margin-block-end: var(--space-1);
     }
   }
 
@@ -212,42 +226,15 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--space-3) var(--space-4);
   font-size: var(--type-sm);
   li a {
     color: var(--color-primary);
     text-decoration: none;
     border-block-end: 1px solid var(--color-primary);
-    padding-block-end: 1px;
+    /* Touch target ≥ 24 px tall (WCAG 2.5.8) */
+    padding-block: 0.3rem;
+    display: inline-block;
     &:hover { color: var(--color-primary-deep); border-color: var(--color-primary-deep); }
-  }
-}
-
-.contact-tips {
-  padding: var(--space-12) 0 var(--space-16);
-  &__inner {
-    max-width: var(--container-max);
-    margin-inline: auto;
-    padding-inline: var(--container-px);
-    h2 { max-width: 26ch; margin-block-end: var(--space-6); }
-  }
-}
-
-.tips {
-  padding-inline-start: 1.5rem;
-  margin: 0;
-  display: grid;
-  gap: var(--space-3);
-  font-size: var(--type-base);
-  color: var(--color-ink);
-  max-width: 60ch;
-
-  li code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.9em;
-    color: var(--color-primary-deep);
-    background: color-mix(in srgb, var(--color-tint) 50%, transparent);
-    padding: 0.1em 0.35em;
-    border-radius: 3px;
   }
 }

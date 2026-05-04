@@ -60,10 +60,19 @@ a {
 }
 a:hover { color: var(--color-primary-deep); }
 
+/* Focus indicator. Outline is constant, only the offset transitions on
+   pointer interaction — but we gate the transition behind motion-safe
+   so reduced-motion users get an instant indicator without any frame
+   where the inner edge sits flush against the element. */
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-  transition: outline-offset 120ms ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :focus-visible {
+    transition: outline-offset 120ms ease;
+  }
 }
 
 ::selection {
@@ -71,23 +80,28 @@ a:hover { color: var(--color-primary-deep); }
   color: var(--color-primary-deep);
 }
 
+/* Visually hidden utility — used for sr-only "(opens in new tab)"
+   suffixes and screen-reader-only headings. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ======================================================================
    Animations (motion-safe, brand-aligned, subtle)
-   --------------------------------------------------------------------
-   - Page-load fade — fires on first paint
-   - Scroll-driven section reveals — progressive enhancement via
-     animation-timeline: view(); browsers without it just see content
-   - Reduced-motion reset — already in @media block above (overrides
-     animation-duration to 0.01ms)
    ====================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Scroll-driven section reveals (Chrome 115+, Edge 115+, supported in
-     Safari 17.4+ behind a flag and rolling out). Browsers without
-     animation-timeline just see content immediately — graceful fallback.
-     We deliberately don't animate the body's opacity on page-load: it
-     was confusing Lighthouse-CI's headless Chromium into reporting
-     NO_FCP on slow runners. */
+  /* Scroll-driven section reveals (Chrome 115+, Edge 115+, Safari 17.4+
+     behind a flag). Browsers without animation-timeline support see
+     content immediately — graceful fallback. */
   @supports (animation-timeline: view()) {
     section,
     article {

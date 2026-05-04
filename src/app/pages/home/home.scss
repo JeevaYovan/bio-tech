@@ -20,9 +20,7 @@
   font-size: var(--type-base);
   text-decoration: none;
   border: 1px solid transparent;
-  transition: background 160ms ease, color 160ms ease, border-color 160ms ease,
-              transform 160ms ease, box-shadow 160ms ease;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
 
   &--accent {
     background: var(--color-accent);
@@ -30,19 +28,13 @@
     &:hover {
       background: color-mix(in srgb, var(--color-accent) 88%, var(--color-ink) 12%);
       color: var(--color-bg-card);
-      @media (prefers-reduced-motion: no-preference) {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 14px rgba(184, 83, 58, 0.28);
-      }
     }
-    &:active { transform: translateY(0); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04); }
   }
 
   &--ghost {
     background: transparent;
     color: var(--color-primary-deep);
     border-color: var(--color-rule);
-    box-shadow: none;
     &:hover {
       border-color: var(--color-primary);
       color: var(--color-primary-deep);
@@ -60,7 +52,6 @@
 
 .hero {
   padding: var(--space-12) 0 var(--space-16);
-  overflow: hidden; /* contain ken-burns */
 
   &__inner {
     max-width: var(--container-max);
@@ -77,8 +68,8 @@
   &__media {
     order: 1;
     @media (min-width: 1024px) { order: 2; }
-    overflow: hidden;
     border-radius: var(--radius-md);
+    overflow: hidden;
 
     img {
       width: 100%;
@@ -86,11 +77,6 @@
       aspect-ratio: 1 / 1;
       object-fit: cover;
       display: block;
-
-      /* Slow ken-burns drift on the hero photograph */
-      @media (prefers-reduced-motion: no-preference) {
-        animation: rt-ken-burns 18s ease-out forwards;
-      }
     }
   }
 
@@ -129,11 +115,6 @@
   }
 }
 
-@keyframes rt-ken-burns {
-  from { transform: scale(1) translate3d(0, 0, 0); }
-  to   { transform: scale(1.045) translate3d(-1.5%, -1%, 0); }
-}
-
 /* ===== STORY ===== */
 
 .story {
@@ -151,12 +132,15 @@
     p { margin-block-end: var(--space-4); max-width: 56ch; }
     h2 { margin-block-end: var(--space-6); max-width: 18ch; }
   }
-  &__media img {
-    width: 100%; height: auto;
-    aspect-ratio: 5 / 4;
-    object-fit: cover;
+  &__media {
+    overflow: hidden;
     border-radius: var(--radius-md);
-    transition: transform 600ms ease-out;
+    img {
+      width: 100%; height: auto;
+      aspect-ratio: 5 / 4;
+      object-fit: cover;
+      transition: transform 600ms ease-out;
+    }
   }
   @media (prefers-reduced-motion: no-preference) {
     &__media:hover img { transform: scale(1.02); }
@@ -195,15 +179,13 @@
   gap: var(--space-3);
   padding-block-start: var(--space-4);
   border-block-start: 2px solid var(--color-primary);
-  transition: transform 320ms ease-out, border-color 240ms ease;
 
   &__num {
     font-family: var(--font-display);
     font-size: var(--type-2xl);
-    color: var(--color-accent);
+    color: var(--color-primary);
     letter-spacing: 0.04em;
     line-height: 1;
-    transition: transform 320ms ease-out;
   }
 
   &__title {
@@ -218,15 +200,6 @@
     font-size: var(--type-base);
     line-height: 1.55;
     margin: 0;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    &:hover {
-      border-block-start-color: var(--color-accent);
-    }
-    &:hover .pillar__num {
-      transform: translateX(2px);
-    }
   }
 }
 
@@ -256,7 +229,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     a {
       color: var(--color-primary-deep);
       text-decoration: underline;
@@ -264,7 +237,6 @@
       transition: color 160ms ease;
       &:hover { color: var(--color-accent); }
     }
-    span { color: var(--color-primary); }
     &-or { color: var(--color-rule); }
   }
 }
@@ -274,7 +246,7 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: var(--space-6) var(--space-6);
+  gap: var(--space-6);
   grid-template-columns: 1fr;
   @media (min-width: 640px) { grid-template-columns: 1fr 1fr; }
   @media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
@@ -288,6 +260,14 @@
   display: flex;
   flex-direction: column;
   transition: border-color 240ms ease, transform 240ms ease, box-shadow 240ms ease;
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
 
   &__media {
     display: block;
@@ -330,7 +310,7 @@
   &__price {
     margin-block-start: var(--space-2);
     font-family: var(--font-display);
-    font-size: var(--type-2xl);
+    font-size: var(--type-xl);
     color: var(--color-accent);
     line-height: 1;
   }
@@ -338,8 +318,6 @@
   @media (prefers-reduced-motion: no-preference) {
     &:hover {
       border-color: var(--color-primary);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(31, 58, 43, 0.08);
 
       .product-card__media img { transform: scale(1.04); }
       .product-card__name { color: var(--color-accent); }
@@ -363,36 +341,32 @@
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    column-gap: var(--space-6);
+    column-gap: var(--space-5);
     row-gap: var(--space-3);
     font-family: var(--font-display);
-    font-size: var(--type-2xl);
+    font-size: var(--type-xl);
     color: var(--color-primary-deep);
 
-    @media (max-width: 640px) {
-      font-size: var(--type-xl);
-      column-gap: var(--space-5);
+    @media (min-width: 768px) {
+      column-gap: var(--space-6);
+      font-size: var(--type-2xl);
     }
 
+    /* Use a flexbox-friendly inline separator that doesn't dangle on
+       wrap. The dot lives after each item except the last. */
     li {
-      position: relative;
-      padding-inline-end: var(--space-6);
+      display: inline-flex;
+      align-items: center;
 
-      @media (max-width: 640px) {
-        padding-inline-end: var(--space-5);
-      }
+      &:not(:last-child)::after {
+        content: '·';
+        margin-inline-start: var(--space-5);
+        color: var(--color-rule);
 
-      &::after {
-        content: '';
-        position: absolute;
-        inset-inline-end: 0;
-        inset-block-start: 50%;
-        translate: 0 -50%;
-        width: 1px;
-        height: 1.2em;
-        background: var(--color-rule);
+        @media (min-width: 768px) {
+          margin-inline-start: var(--space-6);
+        }
       }
-      &:last-child::after { display: none; }
     }
   }
 }

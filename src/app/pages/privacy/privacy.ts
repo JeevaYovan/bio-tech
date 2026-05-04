@@ -17,6 +17,7 @@ export default class PrivacyComponent implements OnInit {
       description:
         'Rathika Biotech Products privacy notice. We do not run cookies, analytics trackers, or third-party scripts on this site. Direct contact only via WhatsApp, phone, and email.',
       canonicalPath: '/privacy/',
+      ogTitle: 'Privacy notice — Rathika Biotech Products',
     });
   }
 }

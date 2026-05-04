@@ -14,7 +14,7 @@
       </p>
       <div class="hero__ctas">
         <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
-          Order on WhatsApp
+          Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
         </a>
         <a href="#featured" class="btn btn--ghost">See featured products</a>
       </div>
@@ -37,7 +37,7 @@
         sizes="(min-width: 1024px) 60vw, 100vw"
         width="1024" height="1024"
         loading="eager" fetchpriority="high" decoding="sync"
-        alt="A single bagasse tea cup standing in a wheat field at golden hour, with a haystack on the horizon" />
+        alt="A bagasse tea cup beside a haystack at the edge of a paddy field at golden hour" />
     </picture>
   </div>
 </section>
@@ -65,16 +65,19 @@
       <source
         type="image/avif"
         srcset="assets/lifestyle/story-fiber-texture-600.avif 600w,
+                assets/lifestyle/story-fiber-texture-800.avif 800w,
                 assets/lifestyle/story-fiber-texture-1200.avif 1200w"
         sizes="(min-width: 1024px) 40vw, 100vw" />
       <source
         type="image/webp"
         srcset="assets/lifestyle/story-fiber-texture-600.webp 600w,
+                assets/lifestyle/story-fiber-texture-800.webp 800w,
                 assets/lifestyle/story-fiber-texture-1200.webp 1200w"
         sizes="(min-width: 1024px) 40vw, 100vw" />
       <img
         src="assets/lifestyle/story-fiber-texture-600.jpg"
         srcset="assets/lifestyle/story-fiber-texture-600.jpg 600w,
+                assets/lifestyle/story-fiber-texture-800.jpg 800w,
                 assets/lifestyle/story-fiber-texture-1200.jpg 1200w"
         sizes="(min-width: 1024px) 40vw, 100vw"
         width="1200" height="967"
@@ -91,7 +94,7 @@
       <p class="section-eyebrow">Why this tableware</p>
       <h2 id="pillars-title">Six reasons our products are different</h2>
     </header>
-    <ol class="pillars__list" role="list">
+    <ol class="pillars__list">
       @for (pillar of pillars; track pillar.n) {
         <li class="pillar">
           <p class="pillar__num" aria-hidden="true">{{ pillar.n }}</p>
@@ -108,43 +111,44 @@
   <div class="featured__inner">
     <header class="featured__head">
       <p class="section-eyebrow">From the catalog</p>
-      <h2 id="featured-title">Hand-pressed in our Neelambur workshop</h2>
-      <p class="featured__sub">Prices in INR. Bulk orders welcome on WhatsApp.</p>
+      <h2 id="featured-title">A selection from the workshop</h2>
+      <p class="featured__sub">Prices in INR. Tap any product for details, or message us on WhatsApp.</p>
     </header>
     <ul class="product-grid" role="list">
       @for (p of featured; track p.slug) {
         <li class="product-card">
-          <picture class="product-card__media">
-            <source
-              type="image/avif"
-              [attr.srcset]="p.avifSrcset"
-              sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-            <source
-              type="image/webp"
-              [attr.srcset]="p.webpSrcset"
-              sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-            <img
-              [src]="p.fallback"
-              [attr.srcset]="p.jpgSrcset"
-              sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
-              [attr.width]="p.intrinsic.w"
-              [attr.height]="p.intrinsic.h"
-              loading="lazy" decoding="async"
-              [attr.alt]="p.alt" />
-          </picture>
-          <div class="product-card__body">
-            <h3 class="product-card__name">{{ p.name }}</h3>
-            <p class="product-card__size">{{ p.size }}</p>
-            <p class="product-card__price">{{ formatPrice(p.price) }}</p>
-          </div>
+          <a class="product-card__link" [routerLink]="['/products', p.slug]">
+            <picture class="product-card__media">
+              <source
+                type="image/avif"
+                [attr.srcset]="p.avifSrcset"
+                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+              <source
+                type="image/webp"
+                [attr.srcset]="p.webpSrcset"
+                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+              <img
+                [src]="p.fallback"
+                [attr.srcset]="p.jpgSrcset"
+                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
+                [attr.width]="p.intrinsic.w"
+                [attr.height]="p.intrinsic.h"
+                loading="lazy" decoding="async"
+                [attr.alt]="p.alt" />
+            </picture>
+            <div class="product-card__body">
+              <p class="product-card__name">{{ p.name }}</p>
+              <p class="product-card__size">{{ p.size }}</p>
+              <p class="product-card__price">{{ formatPrice(p.price) }}</p>
+            </div>
+          </a>
         </li>
       }
     </ul>
     <p class="featured__more">
-      <span aria-hidden="true">→</span>
       <a routerLink="/products">See the full catalog</a>
       <span class="featured__more-or" aria-hidden="true">·</span>
-      <a [href]="waUrl" target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer">Ask on WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a>
     </p>
   </div>
 </section>
@@ -172,7 +176,7 @@
       restaurants, weddings, and events are welcome — just message us.
     </p>
     <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent btn--large">
-      Order on WhatsApp
+      Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
     </a>
   </div>
 </section>

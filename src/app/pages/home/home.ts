@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { RouterLink } from '@angular/router';
 import { findProductBySlug, formatINR, type Product } from '../../../data/products';
 import { SeoService } from '../../services/seo.service';
+import { WA_URL } from '../../shared/constants';
 
 interface FeaturedSpec {
   slug: string;
@@ -65,10 +66,11 @@ const FEATURED_SPECS: ReadonlyArray<FeaturedSpec> = [
   },
 ];
 
-function buildFeatured(spec: FeaturedSpec): Featured {
+function buildFeatured(spec: FeaturedSpec): Featured | null {
   const product = findProductBySlug(spec.slug);
   if (!product) {
-    throw new Error(`Featured product slug not found in canonical data: ${spec.slug}`);
+    console.warn(`[home] Featured slug not found: ${spec.slug} — skipping`);
+    return null;
   }
   const base = `assets/${spec.imageSlug}`;
   return {
@@ -93,8 +95,7 @@ function buildFeatured(spec: FeaturedSpec): Featured {
 export default class HomeComponent implements OnInit {
   private readonly seo = inject(SeoService);
 
-  protected readonly waUrl =
-    'https://wa.me/919080966792?text=Hi%20Rathika%2C%20I%27d%20like%20to%20place%20an%20order.';
+  protected readonly waUrl = WA_URL;
 
   ngOnInit(): void {
     this.seo.applyRouteSeo({
@@ -105,7 +106,8 @@ export default class HomeComponent implements OnInit {
     });
   }
 
-  protected readonly featured: ReadonlyArray<Featured> = FEATURED_SPECS.map(buildFeatured);
+  protected readonly featured: ReadonlyArray<Featured> =
+    FEATURED_SPECS.map(buildFeatured).filter((x): x is Featured => x !== null);
 
   protected readonly pillars: ReadonlyArray<Pillar> = [
     {

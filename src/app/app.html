@@ -16,14 +16,27 @@
   </a>
 
   <nav class="site-nav" aria-label="Primary">
-    <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-    <a routerLink="/products" routerLinkActive="is-active">Products</a>
-    <a routerLink="/about" routerLinkActive="is-active">About</a>
-    <a routerLink="/contact" routerLinkActive="is-active">Contact</a>
+    <a routerLink="/"
+       routerLinkActive="is-active"
+       #homeRla="routerLinkActive"
+       [routerLinkActiveOptions]="{ exact: true }"
+       [attr.aria-current]="homeRla.isActive ? 'page' : null">Home</a>
+    <a routerLink="/products"
+       routerLinkActive="is-active"
+       #productsRla="routerLinkActive"
+       [attr.aria-current]="productsRla.isActive ? 'page' : null">Products</a>
+    <a routerLink="/about"
+       routerLinkActive="is-active"
+       #aboutRla="routerLinkActive"
+       [attr.aria-current]="aboutRla.isActive ? 'page' : null">About</a>
+    <a routerLink="/contact"
+       routerLinkActive="is-active"
+       #contactRla="routerLinkActive"
+       [attr.aria-current]="contactRla.isActive ? 'page' : null">Contact</a>
   </nav>
 
   <a [href]="waUrl" class="header-cta" target="_blank" rel="noopener noreferrer">
-    Order on WhatsApp
+    Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
   </a>
 </header>
 
@@ -31,17 +44,17 @@
   <router-outlet />
 </main>
 
-<footer class="site-footer" role="contentinfo">
+<footer class="site-footer">
   <div class="site-footer__inner">
     <address class="site-footer__address">
-      <strong>Rathika Biotech Products</strong><br />
+      <strong>Rathika Biotech Products</strong>
       1/447 Avinashi Road, Neelambur<br />
       Coimbatore – 641026, Tamil Nadu, India
     </address>
 
     <ul class="site-footer__contact" aria-label="Contact">
       <li><a href="tel:+919080966792">+91 90809 66792</a></li>
-      <li><a [href]="waUrl" target="_blank" rel="noopener noreferrer">Order on WhatsApp</a></li>
+      <li><a [href]="waUrl" target="_blank" rel="noopener noreferrer">Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a></li>
       <li><a href="mailto:rathikabiotechproducts&#64;gmail.com">rathikabiotechproducts&#64;gmail.com</a></li>
     </ul>
 
