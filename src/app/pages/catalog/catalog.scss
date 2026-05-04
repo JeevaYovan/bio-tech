@@ -61,10 +61,16 @@
   }
 
   &__sticky {
+    /* Sits *below* the sticky page header on scroll. Header is
+       ~60 px on mobile / ~72 px on desktop (padding + brand mark +
+       border). Without this offset, scrolling on /products parks
+       the filter row behind the page header and search input
+       becomes unreachable. */
     position: sticky;
-    top: 0;
+    top: 60px;
     z-index: 10;
-    background: var(--color-bg);
+    background: color-mix(in srgb, var(--color-bg) 95%, transparent);
+    backdrop-filter: blur(8px);
     margin: 0 calc(var(--container-px) * -1);
     padding: var(--space-3) var(--container-px);
     border-block-end: 1px solid var(--color-rule);
@@ -72,9 +78,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    backdrop-filter: blur(6px);
 
     @media (min-width: 768px) {
+      top: 72px;
       flex-direction: row;
       align-items: center;
       gap: var(--space-5);
@@ -127,7 +133,38 @@
       /* 16px to prevent iOS zoom-on-focus per §6b. */
       font-size: 16px;
       color: var(--color-ink);
+      min-width: 0;
       &::placeholder { color: var(--color-muted); }
+      /* Hide the browser's native ✕ in WebKit so we can show our own,
+         which fits the rounded pill aesthetic. */
+      &::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+    }
+
+    &-clear {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition:
+        background-color var(--rt-dur-150) var(--rt-ease-out),
+        color var(--rt-dur-150) var(--rt-ease-out);
+      svg { width: 12px; height: 12px; }
+      &:hover {
+        background: var(--color-tint);
+        color: var(--color-primary-deep);
+      }
+      &:active { transform: scale(0.92); }
     }
   }
 
