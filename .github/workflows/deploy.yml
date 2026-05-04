@@ -61,14 +61,45 @@ jobs:
           cache: 'npm'
 
       - name: Configure private @klaro npm registry
-        run: |
-          cat > "$HOME/.npmrc" <<'NPMRC'
-          @klaro:registry=https://development.zubera.one/klaro-design-ui/~npm/
-          //development.zubera.one/klaro-design-ui/~npm/:_authToken=${KLARO_NPM_TOKEN}
-          NPMRC
-          sed -i "s|\${KLARO_NPM_TOKEN}|${KLARO_NPM_TOKEN}|" "$HOME/.npmrc"
         env:
           KLARO_NPM_TOKEN: ${{ secrets.KLARO_NPM_TOKEN }}
+        run: |
+          # Fail-fast with a clear message if the secret isn't set.
+          if [ -z "$KLARO_NPM_TOKEN" ]; then
+            echo "::error::KLARO_NPM_TOKEN secret is not set or empty."
+            echo "Add it at: https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "  Name:  KLARO_NPM_TOKEN"
+            echo "  Value: the token from your local ~/.npmrc"
+            exit 1
+          fi
+
+          # Write a clean ~/.npmrc with the token directly (no here-doc tricks).
+          {
+            printf '%s\n' "@klaro:registry=https://development.zubera.one/klaro-design-ui/~npm/"
+            printf '//development.zubera.one/klaro-design-ui/~npm/:_authToken=%s\n' "$KLARO_NPM_TOKEN"
+          } > "$HOME/.npmrc"
+          echo "Wrote ~/.npmrc ($(wc -l < $HOME/.npmrc) lines, token redacted)."
+
+          # Probe the registry with the token to verify it works BEFORE npm ci.
+          # Saves debugging the cryptic E401 from npm if the token is wrong.
+          probe_status=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer $KLARO_NPM_TOKEN" \
+            "https://development.zubera.one/klaro-design-ui/~npm/@klaro%2Fui" || echo "000")
+          case "$probe_status" in
+            200|304)
+              echo "OK Registry probe returned HTTP $probe_status — auth verified."
+              ;;
+            401|403)
+              echo "::error::Registry rejected the token (HTTP $probe_status)."
+              echo "The KLARO_NPM_TOKEN secret value is wrong or expired. Generate a new"
+              echo "one from the OneDev npm registry UI and update the GitHub secret."
+              exit 1
+              ;;
+            *)
+              echo "::warning::Registry probe returned HTTP $probe_status (unexpected)."
+              echo "Continuing to npm ci — if it 401s, the token is the issue."
+              ;;
+          esac
 
       - name: Install dependencies
         run: npm ci
