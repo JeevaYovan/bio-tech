@@ -18,7 +18,7 @@ import {
 } from '../../../data/products';
 import { displayableProducts, getMedia } from '../../../data/product-content';
 import { SeoService } from '../../services/seo.service';
-import { whatsappOrderUrlForProduct } from '../../shared/constants';
+import { WA_URL, whatsappOrderUrlForProduct } from '../../shared/constants';
 import { HorizontalSliderComponent } from '../../shared/horizontal-slider/horizontal-slider';
 import { HorizontalSliderItemDirective } from '../../shared/horizontal-slider/horizontal-slider-item.directive';
 
@@ -65,6 +65,10 @@ export default class CatalogComponent implements OnInit {
 
   protected readonly filter = signal<Filter>('all');
   protected readonly query = signal<string>('');
+  /** Generic "ask about anything not visible" WA prefill — used in the
+      catalog header so buyers know SKUs without studio photos can still
+      be ordered (PROMPT.md §11 lists 14, only 8 have photos right now). */
+  protected readonly askUrl = WA_URL;
   /** Tracks first emission of queryParams so we don't scroll on initial
       navigation (Angular's scrollPositionRestoration already does that
       for full route changes). We only scroll when query params change

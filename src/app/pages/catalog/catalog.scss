@@ -33,8 +33,14 @@
   &__lead {
     font-size: var(--type-lg);
     color: var(--color-ink);
-    max-width: 50ch;
+    max-width: 60ch;
     @media (max-width: 480px) { font-size: var(--type-base); }
+    a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      &:hover { color: var(--color-primary-deep); }
+    }
   }
 
   &__featured {
