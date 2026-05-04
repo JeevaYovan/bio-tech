@@ -74,7 +74,10 @@
 /* ===== HERO ===== */
 
 .hero {
-  padding: var(--space-12) 0 var(--space-12);
+  /* Mobile rhythm: tighter top/bottom — image is already big, no need
+     for extra space around it. Desktop opens up. */
+  padding: var(--space-5) 0 var(--space-10);
+  @media (min-width: 768px)  { padding-block: var(--space-10) var(--space-12); }
   @media (min-width: 1024px) { padding: var(--space-16) 0; }
 
   &__inner {
@@ -82,9 +85,13 @@
     margin-inline: auto;
     padding-inline: var(--container-px);
     display: grid;
-    gap: var(--space-10);
+    gap: var(--space-6);
     align-items: center;
-    @media (min-width: 1024px) { grid-template-columns: 1fr 1.2fr; gap: var(--space-12); }
+    @media (min-width: 768px)  { gap: var(--space-8); }
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-12);
+    }
   }
 
   &__copy { order: 2; @media (min-width: 1024px) { order: 1; } }
@@ -92,16 +99,21 @@
   &__media {
     order: 1;
     @media (min-width: 1024px) { order: 2; }
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     overflow: hidden;
     position: relative;
+    box-shadow: 0 4px 24px rgba(31, 58, 43, 0.10);
 
     img {
       width: 100%;
       height: auto;
-      aspect-ratio: 1 / 1;
+      /* Mobile 4:3 — saves ~30% vertical space vs the old 1:1 so the
+         hero title + lede + CTAs fit above the fold on a 375×812.
+         Desktop uses the natural 1:1 portrait composition. */
+      aspect-ratio: 4 / 3;
       object-fit: cover;
       display: block;
+      @media (min-width: 1024px) { aspect-ratio: 1 / 1; }
     }
 
     /* Animation #2 — Ken Burns. Desktop only; mobile gets a static
@@ -119,31 +131,50 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-primary);
-    margin-block-end: var(--space-5);
+    margin-block-end: var(--space-3);
     font-weight: 600;
+    @media (min-width: 768px) { margin-block-end: var(--space-5); }
   }
 
   &__title {
     font-family: var(--font-display);
     color: var(--color-primary-deep);
-    margin-block-end: var(--space-6);
-    max-width: 14ch;
+    /* Mobile floor 32 px (down from the global 40 px) so the headline
+       fits in 3 lines max on a 375 px viewport. Desktop unchanged. */
+    font-size: clamp(2rem, 6.4vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-block-end: var(--space-4);
+    max-width: 16ch;
+    @media (min-width: 768px) { margin-block-end: var(--space-6); }
   }
 
   &__lead {
-    font-size: var(--type-lg);
+    font-size: var(--type-base);
     color: var(--color-ink);
-    max-width: 52ch;
-    margin-block-end: var(--space-8);
+    line-height: 1.6;
+    max-width: 38ch;
+    margin-block-end: var(--space-5);
 
-    @media (max-width: 480px) { font-size: var(--type-base); }
+    @media (min-width: 768px) {
+      font-size: var(--type-lg);
+      max-width: 52ch;
+      margin-block-end: var(--space-8);
+    }
   }
 
   &__ctas {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-    margin-block-end: var(--space-4);
+
+    /* Mobile: primary CTA goes full-width to fill the thumb zone, ghost
+       sits inline below. Tablet+ both go inline. */
+    .btn--accent {
+      flex: 1 1 100%;
+      justify-content: center;
+      @media (min-width: 480px) { flex: 0 0 auto; }
+    }
   }
 }
 
@@ -157,6 +188,7 @@
 .trust-strip {
   background: color-mix(in srgb, var(--color-tint) 35%, var(--color-bg) 65%);
   border-block: 1px solid var(--color-rule);
+  /* Mobile: claims wrap onto multiple rows; tablet+ they sit one-line. */
   padding: var(--space-4) var(--container-px);
 
   &__list {
@@ -165,14 +197,25 @@
     padding: 0;
     max-width: var(--container-max);
     margin-inline: auto;
+    /* Mobile-first: horizontal scroll-snap row so claims stay one
+       line each — modern e-commerce pattern (Swiggy/Amazon trust band).
+       Tablet+ they fan out as a flexbox row. */
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4) var(--space-6);
-    align-items: center;
-    justify-content: center;
+    gap: var(--space-3);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar { display: none; }
+    scroll-snap-type: x proximity;
     font-size: var(--type-sm);
     color: var(--color-primary-deep);
 
+    @media (min-width: 480px) {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-3) var(--space-6);
+      overflow: visible;
+    }
     @media (min-width: 768px) {
       justify-content: space-between;
       flex-wrap: nowrap;
@@ -182,6 +225,8 @@
   &__item {
     display: inline-flex;
     align-items: center;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
     gap: var(--space-2);
     white-space: nowrap;
     font-weight: 500;
@@ -203,20 +248,22 @@
    right-edge fade target. */
 
 .cat-slider {
-  padding: var(--space-12) 0 var(--space-10);
+  padding: var(--space-10) 0 var(--space-8);
   --slider-fade-color: var(--color-bg);
+  @media (min-width: 768px)  { padding: var(--space-12) 0 var(--space-10); }
   @media (min-width: 1024px) { padding: var(--space-16) 0 var(--space-12); }
 
   &__head {
     max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-px);
-    margin-block-end: var(--space-6);
+    margin-block-end: var(--space-5);
     display: flex;
     align-items: end;
     justify-content: space-between;
     gap: var(--space-4);
     h2 { max-width: 22ch; margin: 0; }
+    @media (min-width: 768px) { margin-block-end: var(--space-6); }
   }
 
   &__seeall {
@@ -246,7 +293,8 @@
 .cat-card {
   position: relative;
   display: block;
-  width: 200px;
+  /* Mobile: 180px wide so two cards fit on a 375px viewport with peek. */
+  width: 180px;
   aspect-ratio: 4 / 5;
   border-radius: 20px;
   overflow: hidden;
@@ -260,7 +308,8 @@
     transform var(--rt-dur-200) var(--rt-ease-out),
     box-shadow var(--rt-dur-200) var(--rt-ease-out);
 
-  @media (min-width: 768px) { width: 240px; }
+  @media (min-width: 480px)  { width: 200px; }
+  @media (min-width: 768px)  { width: 240px; }
   @media (min-width: 1024px) { width: 260px; }
 
   /* Image fills the whole card; the overlay + copy float on top. */
@@ -373,24 +422,32 @@
 /* ===== STORY ===== */
 
 .story {
-  padding: var(--space-12) 0;
+  padding: var(--space-10) 0;
   border-block-start: 1px solid var(--color-rule);
+  @media (min-width: 768px)  { padding: var(--space-12) 0; }
   @media (min-width: 1024px) { padding: var(--space-16) 0; }
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-px);
     display: grid;
-    gap: var(--space-10);
-    @media (min-width: 1024px) { grid-template-columns: 1.2fr 1fr; gap: var(--space-12); align-items: center; }
+    gap: var(--space-6);
+    @media (min-width: 768px)  { gap: var(--space-8); }
+    @media (min-width: 1024px) {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--space-12);
+      align-items: center;
+    }
   }
   &__copy {
     p { margin-block-end: var(--space-4); max-width: 56ch; }
-    h2 { margin-block-end: var(--space-6); max-width: 18ch; }
+    h2 { margin-block-end: var(--space-5); max-width: 18ch; }
+    @media (min-width: 768px) { h2 { margin-block-end: var(--space-6); } }
   }
   &__media {
     overflow: hidden;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 12px rgba(31, 58, 43, 0.06);
     img {
       width: 100%; height: auto;
       aspect-ratio: 5 / 4;
@@ -402,9 +459,10 @@
 /* ===== HOW IT'S MADE ===== */
 
 .how {
-  padding: var(--space-16) 0;
+  padding: var(--space-12) 0;
   background: var(--color-primary-deep);
   color: var(--color-bg-card);
+  @media (min-width: 1024px) { padding: var(--space-16) 0; }
 
   &__inner {
     max-width: var(--container-max);
@@ -413,9 +471,10 @@
   }
 
   &__head {
-    margin-block-end: var(--space-10);
+    margin-block-end: var(--space-8);
     h2 { color: var(--color-bg-card); max-width: 22ch; }
     .section-eyebrow { color: color-mix(in srgb, var(--color-bg-card) 70%, transparent); }
+    @media (min-width: 768px) { margin-block-end: var(--space-10); }
   }
 
   &__steps {
@@ -423,13 +482,10 @@
     padding: 0;
     margin: 0;
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-6);
     grid-template-columns: 1fr;
-    /* Vertical timeline mobile, horizontal three-up desktop per §9 home #5. */
-    @media (min-width: 1024px) {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-8);
-    }
+    @media (min-width: 768px) { gap: var(--space-8); }
+    @media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); }
   }
 }
 
@@ -479,7 +535,8 @@
 /* ===== SIX PILLARS ===== */
 
 .pillars {
-  padding: var(--space-12) 0;
+  padding: var(--space-10) 0;
+  @media (min-width: 768px)  { padding: var(--space-12) 0; }
   @media (min-width: 1024px) { padding: var(--space-16) 0; }
 
   &__inner {
@@ -488,17 +545,18 @@
     padding-inline: var(--container-px);
   }
   &__head {
-    margin-block-end: var(--space-10);
+    margin-block-end: var(--space-8);
     h2 { max-width: 22ch; }
+    @media (min-width: 768px) { margin-block-end: var(--space-10); }
   }
   &__list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    gap: var(--space-8) var(--space-10);
+    gap: var(--space-6) var(--space-8);
     grid-template-columns: 1fr;
-    @media (min-width: 640px) { grid-template-columns: 1fr 1fr; }
+    @media (min-width: 640px)  { grid-template-columns: 1fr 1fr; gap: var(--space-8) var(--space-10); }
     @media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); }
   }
 }
@@ -536,10 +594,11 @@
 /* ===== FEATURED PRODUCTS ===== */
 
 .featured {
-  padding: var(--space-12) 0;
+  padding: var(--space-10) 0;
   background: color-mix(in srgb, var(--color-tint) 30%, var(--color-bg) 70%);
   border-block-start: 1px solid var(--color-rule);
   border-block-end: 1px solid var(--color-rule);
+  @media (min-width: 768px)  { padding: var(--space-12) 0; }
   @media (min-width: 1024px) { padding: var(--space-16) 0; }
 
   &__inner {
@@ -548,16 +607,18 @@
     padding-inline: var(--container-px);
   }
   &__head {
-    margin-block-end: var(--space-10);
+    margin-block-end: var(--space-8);
     h2 { max-width: 24ch; }
+    @media (min-width: 768px) { margin-block-end: var(--space-10); }
   }
   &__sub {
     color: var(--color-muted);
     margin-block-start: var(--space-2);
   }
   &__more {
-    margin-block-start: var(--space-10);
+    margin-block-start: var(--space-8);
     font-size: var(--type-base);
+    @media (min-width: 768px) { margin-block-start: var(--space-10); }
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -669,14 +730,16 @@
 /* ===== WHERE USED ===== */
 
 .where-used {
-  padding: var(--space-12) 0;
+  padding: var(--space-10) 0;
+  @media (min-width: 768px)  { padding: var(--space-12) 0; }
   @media (min-width: 1024px) { padding: var(--space-16) 0; }
 
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-px);
-    h2 { max-width: 22ch; margin-block-end: var(--space-8); }
+    h2 { max-width: 22ch; margin-block-end: var(--space-6); }
+    @media (min-width: 768px) { h2 { margin-block-end: var(--space-8); } }
   }
 
   &__list {
@@ -685,14 +748,16 @@
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    column-gap: var(--space-5);
-    row-gap: var(--space-3);
+    column-gap: var(--space-4);
+    row-gap: var(--space-2);
     font-family: var(--font-display);
-    font-size: var(--type-xl);
+    font-size: var(--type-lg);
     color: var(--color-primary-deep);
+    line-height: 1.4;
 
     @media (min-width: 768px) {
       column-gap: var(--space-6);
+      row-gap: var(--space-3);
       font-size: var(--type-2xl);
     }
 
@@ -702,7 +767,7 @@
 
       &:not(:last-child)::after {
         content: '·';
-        margin-inline-start: var(--space-5);
+        margin-inline-start: var(--space-4);
         color: var(--color-rule);
 
         @media (min-width: 768px) {
@@ -716,9 +781,10 @@
 /* ===== CTA BAND — terracotta accent ===== */
 
 .home-cta {
-  padding: var(--space-12) 0;
+  padding: var(--space-10) 0;
   background: var(--color-accent);
   color: var(--color-bg-card);
+  @media (min-width: 768px)  { padding: var(--space-12) 0; }
   @media (min-width: 1024px) { padding: var(--space-16) 0; }
 
   &__inner {
