@@ -113,3 +113,68 @@
     </div>
   </div>
 </section>
+
+<!-- ===================== INQUIRY FORM ===================== -->
+<section class="contact-form" aria-labelledby="form-title">
+  <div class="contact-form__inner">
+    <header>
+      <p class="section-eyebrow">Quick inquiry</p>
+      <h2 id="form-title">Send us a WhatsApp message</h2>
+      <p class="contact-form__lead">
+        Fill these in and we'll open WhatsApp with the message ready — no
+        backend, no email signup. You review and tap send.
+      </p>
+    </header>
+
+    <form class="inquiry-form" (submit)="$event.preventDefault()" novalidate>
+      <label class="inquiry-field">
+        <span class="inquiry-field__label">Your name</span>
+        <input
+          type="text"
+          name="name"
+          autocomplete="name"
+          required
+          [value]="formName()"
+          (input)="onFieldInput('name', $any($event.target).value)" />
+      </label>
+
+      <label class="inquiry-field">
+        <span class="inquiry-field__label">Phone <span class="inquiry-field__optional">(optional)</span></span>
+        <input
+          type="tel"
+          name="phone"
+          autocomplete="tel"
+          inputmode="tel"
+          [value]="formPhone()"
+          (input)="onFieldInput('phone', $any($event.target).value)" />
+      </label>
+
+      <label class="inquiry-field inquiry-field--full">
+        <span class="inquiry-field__label">Message</span>
+        <textarea
+          name="message"
+          rows="4"
+          required
+          placeholder="What you'd like to order — quantities, delivery city, any custom requirements"
+          [value]="formMessage()"
+          (input)="onFieldInput('message', $any($event.target).value)"></textarea>
+      </label>
+
+      <div class="inquiry-actions">
+        <a
+          [class.is-disabled]="!canSubmit()"
+          [attr.aria-disabled]="!canSubmit() ? 'true' : null"
+          [attr.tabindex]="canSubmit() ? null : '-1'"
+          [href]="canSubmit() ? waMessageUrl() : null"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn--accent btn--large">
+          Open WhatsApp with this message<span class="visually-hidden"> (opens in new tab)</span>
+        </a>
+        <p class="inquiry-actions__hint">
+          We don't store your message. The button opens WhatsApp pre-filled.
+        </p>
+      </div>
+    </form>
+  </div>
+</section>

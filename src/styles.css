@@ -17,6 +17,9 @@
 /* Our brand tokens (overrides on top of Klaro) */
 @import "./styles/tokens.css";
 
+/* Motion tokens — REBUILD §7 sanctioned animations */
+@import "./styles/motion.css";
+
 /* Font face declarations */
 @import "./styles/fonts.css";
 

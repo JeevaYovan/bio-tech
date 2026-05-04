@@ -1,9 +1,20 @@
 :host { display: block; }
 
+.section-eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-block-end: var(--space-3);
+  font-weight: 600;
+}
+
 .catalog {
   max-width: var(--container-max);
   margin-inline: auto;
-  padding: var(--space-12) var(--container-px) var(--space-16);
+  padding: var(--space-10) var(--container-px) var(--space-16);
+
+  @media (min-width: 1024px) { padding-block-start: var(--space-12); }
 
   &__head {
     margin-block-end: var(--space-10);
@@ -16,23 +27,108 @@
     text-transform: uppercase;
     color: var(--color-primary);
     margin-block-end: var(--space-3);
+    font-weight: 600;
   }
 
   &__lead {
     font-size: var(--type-lg);
     color: var(--color-ink);
     max-width: 50ch;
-
     @media (max-width: 480px) { font-size: var(--type-base); }
   }
 
-  &__filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin-block-end: var(--space-10);
-    padding-block-end: var(--space-6);
+  &__featured {
+    /* Featured slider — full bleed within the page container so the
+       peek of the next card sits flush with the right edge of the page. */
+    margin: 0 calc(var(--container-px) * -1) var(--space-10);
+    padding-block: var(--space-6);
+    background: color-mix(in srgb, var(--color-tint) 35%, var(--color-bg) 65%);
+    border-block: 1px solid var(--color-rule);
+  }
+
+  &__featured-head {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-px);
+    margin-block-end: var(--space-5);
+    h2 { font-size: var(--type-2xl); max-width: 24ch; }
+  }
+
+  &__sticky {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--color-bg);
+    margin: 0 calc(var(--container-px) * -1);
+    padding: var(--space-3) var(--container-px);
     border-block-end: 1px solid var(--color-rule);
+    margin-block-end: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    backdrop-filter: blur(6px);
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-5);
+    }
+  }
+
+  &__chips {
+    display: flex;
+    gap: var(--space-2);
+    /* Mobile: horizontal-scroll chip row per §6c. Desktop: wrap. */
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar { display: none; }
+    flex-wrap: nowrap;
+    @media (min-width: 768px) {
+      flex-wrap: wrap;
+      flex: 1 1 auto;
+      overflow: visible;
+    }
+  }
+
+  &__search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-rule);
+    border-radius: 999px;
+    padding: 0.4rem 0.8rem;
+    transition: border-color var(--rt-dur-150) var(--rt-ease-out);
+    flex: 0 0 auto;
+
+    @media (min-width: 768px) { width: 280px; margin-inline-start: auto; }
+
+    &:focus-within { border-color: var(--color-primary); }
+
+    &-icon {
+      width: 16px;
+      height: 16px;
+      color: var(--color-muted);
+      flex: 0 0 auto;
+    }
+
+    input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      width: 100%;
+      /* 16px to prevent iOS zoom-on-focus per §6b. */
+      font-size: 16px;
+      color: var(--color-ink);
+      &::placeholder { color: var(--color-muted); }
+    }
+  }
+
+  &__empty {
+    color: var(--color-muted);
+    padding-block: var(--space-12);
+    text-align: center;
   }
 
   &__grid {
@@ -42,40 +138,40 @@
     display: grid;
     gap: var(--space-6);
     grid-template-columns: 1fr;
-    @media (min-width: 640px)  { grid-template-columns: 1fr 1fr; }
+    @media (min-width: 640px) { grid-template-columns: 1fr 1fr; }
     @media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
   }
 }
 
+/* ===== Filter pill ===== */
 .filter-pill {
   appearance: none;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.45rem 0.9rem;
+  padding: 0.5rem 1rem;
   border: 1px solid var(--color-rule);
   background: transparent;
   color: var(--color-ink);
   border-radius: 999px;
   font-size: var(--type-sm);
   cursor: pointer;
-  transition: background 200ms ease, border-color 200ms ease,
-              color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  /* §6b — 44×44 effective with 16px line-height + padding 0.5/1. */
+  min-height: 36px;
+  transition:
+    background-color var(--rt-dur-150) var(--rt-ease-out),
+    border-color var(--rt-dur-150) var(--rt-ease-out),
+    color var(--rt-dur-150) var(--rt-ease-out);
 
-  &:hover {
-    border-color: var(--color-primary);
-    @media (prefers-reduced-motion: no-preference) {
-      transform: translateY(-1px);
-    }
-  }
+  &:hover { border-color: var(--color-primary); }
 
-  &:active { transform: translateY(0); }
-
+  /* Animation #11 — toggle on selection (no movement). */
   &.is-active {
     background: var(--color-primary-deep);
     border-color: var(--color-primary-deep);
     color: var(--color-bg-card);
-    box-shadow: 0 2px 8px rgba(31, 58, 43, 0.15);
   }
 
   &__count {
@@ -84,8 +180,84 @@
   }
 
   &.is-active &__count { color: color-mix(in srgb, var(--color-bg-card) 80%, transparent); }
+
+  &:active { transform: scale(0.98); }
 }
 
+/* ===== Featured-slider card (compact, no body chip) ===== */
+.featured-card {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition:
+    border-color var(--rt-dur-200) var(--rt-ease-out),
+    transform var(--rt-dur-200) var(--rt-ease-out),
+    box-shadow var(--rt-dur-200) var(--rt-ease-out);
+
+  @media (min-width: 1024px) { width: 240px; }
+
+  @media (min-width: 1024px) and (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-primary);
+      box-shadow: 0 8px 24px rgba(31, 58, 43, 0.08);
+    }
+  }
+  &:active { transform: scale(0.98); }
+
+  &__media,
+  &__placeholder {
+    display: block;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-tint);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__body {
+    padding: var(--space-3) var(--space-4);
+    display: grid;
+    gap: 2px;
+  }
+
+  &__cat {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: var(--type-base);
+    color: var(--color-primary-deep);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  &__price {
+    margin-block-start: 4px;
+    color: var(--color-accent);
+    font-family: var(--font-display);
+    font-size: var(--type-base);
+    margin-bottom: 0;
+  }
+}
+
+/* ===== Standard product card ===== */
 .product-card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-rule);
@@ -93,7 +265,27 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color 240ms ease, transform 240ms ease, box-shadow 240ms ease;
+  position: relative;
+  transition:
+    border-color var(--rt-dur-200) var(--rt-ease-out),
+    transform var(--rt-dur-200) var(--rt-ease-out),
+    box-shadow var(--rt-dur-200) var(--rt-ease-out);
+
+  &__chip {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    background: color-mix(in srgb, var(--color-bg-card) 92%, transparent);
+    color: var(--color-primary-deep);
+    border: 1px solid var(--color-rule);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
 
   &__link {
     display: flex;
@@ -165,7 +357,7 @@
     line-height: 1.2;
     color: var(--color-primary-deep);
     margin: 0;
-    transition: color 200ms ease;
+    transition: color var(--rt-dur-150) var(--rt-ease-out);
   }
 
   &__size {
@@ -181,9 +373,50 @@
     font-size: var(--type-xl);
     color: var(--color-accent);
     line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
   }
 
-  @media (prefers-reduced-motion: no-preference) {
+  &__per {
+    font-family: var(--font-body);
+    font-size: var(--type-xs);
+    color: var(--color-muted);
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+  }
+
+  /* "Order on WhatsApp" mini-CTA — tap-visible on mobile (always shown
+     in the card body bottom on touch); fade-in on hover for desktop. */
+  &__wa {
+    margin: 0 var(--space-5) var(--space-5);
+    padding: 0.6rem 1rem;
+    background: var(--color-accent);
+    color: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-size: var(--type-sm);
+    text-align: center;
+    transition:
+      background-color var(--rt-dur-150) var(--rt-ease-out),
+      transform var(--rt-dur-100) var(--rt-ease-out),
+      opacity var(--rt-dur-200) var(--rt-ease-out);
+
+    /* Hide on touch desktops or hover-capable, reveal on hover. Mobile
+       always shows. */
+    @media (min-width: 1024px) and (hover: hover) {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--color-accent) 88%, var(--color-ink) 12%);
+      color: var(--color-bg-card);
+    }
+    &:active { transform: scale(0.98); }
+  }
+
+  @media (min-width: 1024px) and (hover: hover) {
     &:hover {
       border-color: var(--color-primary);
       transform: translateY(-2px);
@@ -191,6 +424,10 @@
 
       .product-card__media img { transform: scale(1.04); }
       .product-card__name { color: var(--color-accent); }
+      .product-card__wa { opacity: 1; transform: none; }
     }
   }
+
+  /* Animation #7 — touch press feedback. */
+  &:active { transform: scale(0.98); }
 }

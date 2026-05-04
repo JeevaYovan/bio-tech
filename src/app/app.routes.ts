@@ -36,6 +36,11 @@ export const routes: Routes = [
     title: 'Contact Rathika Biotech Products, Neelambur, Coimbatore',
   },
   {
+    path: 'wholesale',
+    loadComponent: () => import('./pages/wholesale/wholesale'),
+    title: 'Wholesale — Bulk Biodegradable Tableware | Rathika Biotech',
+  },
+  {
     path: 'privacy',
     loadComponent: () => import('./pages/privacy/privacy'),
     title: 'Privacy notice — Rathika Biotech Products',

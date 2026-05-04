@@ -15,6 +15,7 @@
     </span>
   </a>
 
+  <!-- Desktop inline nav (≥768px). Hidden on mobile in favour of drawer. -->
   <nav class="site-nav" aria-label="Primary">
     <a routerLink="/"
        routerLinkActive="is-active"
@@ -25,6 +26,10 @@
        routerLinkActive="is-active"
        #productsRla="routerLinkActive"
        [attr.aria-current]="productsRla.isActive ? 'page' : null">Products</a>
+    <a routerLink="/wholesale"
+       routerLinkActive="is-active"
+       #wholesaleRla="routerLinkActive"
+       [attr.aria-current]="wholesaleRla.isActive ? 'page' : null">Wholesale</a>
     <a routerLink="/about"
        routerLinkActive="is-active"
        #aboutRla="routerLinkActive"
@@ -38,29 +43,162 @@
   <a [href]="waUrl" class="header-cta" target="_blank" rel="noopener noreferrer">
     Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
   </a>
+
+  <!-- Hamburger toggle (mobile only). -->
+  <button
+    #hamburgerBtn
+    type="button"
+    class="hamburger"
+    [class.is-open]="menuOpen()"
+    [attr.aria-expanded]="menuOpen()"
+    aria-controls="primary-drawer"
+    aria-label="Toggle navigation menu"
+    (click)="toggleMenu()">
+    <span class="hamburger__line"></span>
+    <span class="hamburger__line"></span>
+    <span class="hamburger__line"></span>
+  </button>
 </header>
 
-<main id="main" tabindex="-1">
-  <router-outlet />
-</main>
+<!-- Mobile drawer — backdrop + panel from the right. -->
+<div
+  class="mobile-drawer"
+  [class.is-open]="menuOpen()"
+  [attr.aria-hidden]="!menuOpen()">
+  <button
+    type="button"
+    class="mobile-drawer__backdrop"
+    aria-label="Close menu"
+    tabindex="-1"
+    (click)="closeMenu()"></button>
 
-<footer class="site-footer">
-  <div class="site-footer__inner">
-    <address class="site-footer__address">
-      <strong>Rathika Biotech Products</strong>
-      1/447 Avinashi Road, Neelambur<br />
-      Coimbatore – 641026, Tamil Nadu, India
-    </address>
+  <nav
+    id="primary-drawer"
+    class="mobile-drawer__panel"
+    aria-label="Primary mobile"
+    [attr.aria-modal]="menuOpen() ? 'true' : null"
+    role="dialog">
+    <div class="mobile-drawer__head">
+      <span class="mobile-drawer__title">Menu</span>
+      <button
+        #drawerCloseBtn
+        type="button"
+        class="mobile-drawer__close"
+        aria-label="Close menu"
+        (click)="closeMenu()">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
 
-    <ul class="site-footer__contact" aria-label="Contact">
-      <li><a href="tel:+919080966792">+91 90809 66792</a></li>
-      <li><a [href]="waUrl" target="_blank" rel="noopener noreferrer">Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a></li>
-      <li><a href="mailto:rathikabiotechproducts&#64;gmail.com">rathikabiotechproducts&#64;gmail.com</a></li>
+    <ul class="mobile-drawer__list">
+      <li>
+        <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="is-active" (click)="closeMenu()">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 7l6-5 6 5v7H2z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/products" routerLinkActive="is-active" (click)="closeMenu()">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 4h12l-1 9H3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
+          <span>Products</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/wholesale" routerLinkActive="is-active" (click)="closeMenu()">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 5h12v8H2zM2 5l2-3h8l2 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
+          <span>Wholesale</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/about" routerLinkActive="is-active" (click)="closeMenu()">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4" /><path d="M8 6.5v4M8 4.5v.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg>
+          <span>About</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/contact" routerLinkActive="is-active" (click)="closeMenu()">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 5l6 4 6-4M2 5v6h12V5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
+          <span>Contact</span>
+        </a>
+      </li>
     </ul>
 
-    <p class="site-footer__meta">
-      <span>&copy; {{ currentYear }} Rathika Biotech Products.</span>
-      <a routerLink="/privacy" class="site-footer__privacy">Privacy</a>
-    </p>
+    <a [href]="waUrl" class="mobile-drawer__cta" target="_blank" rel="noopener noreferrer" (click)="closeMenu()">
+      Order on WhatsApp
+    </a>
+  </nav>
+</div>
+
+<main id="main" tabindex="-1">
+  <div class="route-shell" [@routeFade]="getRouteKey()">
+    <router-outlet />
+  </div>
+</main>
+
+<app-sticky-whatsapp />
+<app-scroll-top />
+
+<footer class="site-footer" role="contentinfo">
+  <div class="site-footer__inner">
+    <!-- Brand column -->
+    <div class="site-footer__col site-footer__col--brand">
+      <a routerLink="/" class="site-footer__brand" aria-label="Rathika Biotech Products home">
+        <img
+          class="site-footer__mark"
+          src="assets/brand/logo-44.png"
+          srcset="assets/brand/logo-44.png 1x, assets/brand/logo-88.png 2x"
+          width="44" height="44"
+          alt="" aria-hidden="true"
+          loading="lazy" decoding="async" />
+        <span class="site-footer__brandname">Rathika</span>
+      </a>
+      <address class="site-footer__address">
+        Rathika Biotech Products<br />
+        1/447 Avinashi Road, Neelambur<br />
+        Coimbatore – 641026<br />
+        Tamil Nadu, India
+      </address>
+    </div>
+
+    <!-- Catalog column -->
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Catalog</h2>
+      <ul role="list">
+        <li><a [routerLink]="['/products']" [queryParams]="{ category: 'plates' }">Plates</a></li>
+        <li><a [routerLink]="['/products']" [queryParams]="{ category: 'bowls' }">Bowls</a></li>
+        <li><a [routerLink]="['/products']" [queryParams]="{ category: 'cups' }">Cups</a></li>
+        <li><a [routerLink]="['/products']" [queryParams]="{ category: 'boxes' }">Parcel boxes</a></li>
+        <li><a [routerLink]="['/products']" [queryParams]="{ category: 'utensils' }">Utensils</a></li>
+        <li><a [routerLink]="['/products']" [queryParams]="{ category: 'decor' }">Decor</a></li>
+      </ul>
+    </div>
+
+    <!-- Company column -->
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Company</h2>
+      <ul role="list">
+        <li><a routerLink="/about">About</a></li>
+        <li><a routerLink="/wholesale">Wholesale</a></li>
+        <li><a routerLink="/contact">Contact</a></li>
+        <li><a routerLink="/privacy">Privacy</a></li>
+      </ul>
+    </div>
+
+    <!-- Reach us column -->
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Reach us</h2>
+      <ul role="list">
+        <li><a href="tel:+919080966792">+91 90809 66792</a></li>
+        <li><a [href]="waUrl" target="_blank" rel="noopener noreferrer">WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href="mailto:rathikabiotechproducts&#64;gmail.com">Email us</a></li>
+        <li class="site-footer__hours">Mon–Sat · 9 AM – 6 PM IST</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="site-footer__bar">
+    <p>&copy; {{ currentYear }} Rathika Biotech Products. All rights reserved.</p>
   </div>
 </footer>

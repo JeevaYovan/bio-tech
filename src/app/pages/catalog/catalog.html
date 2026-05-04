@@ -8,54 +8,122 @@
     </p>
   </header>
 
-  <div class="catalog__filters" role="group" aria-label="Filter by category">
-    @for (tab of filterTabs; track tab.value) {
-      <button
-        type="button"
-        class="filter-pill"
-        [class.is-active]="filter() === tab.value"
-        [attr.aria-pressed]="filter() === tab.value"
-        (click)="setFilter(tab.value)">
-        {{ tab.label }} <span class="filter-pill__count">({{ tab.count }})</span>
-      </button>
-    }
-  </div>
-
-  <ul class="catalog__grid" role="list">
-    @for (p of visibleProducts(); track p.slug) {
-      <li class="product-card">
-        <a class="product-card__link" [routerLink]="['/products', p.slug]">
+  <!-- ===================== FEATURED SLIDER ===================== -->
+  <section class="catalog__featured" aria-labelledby="featured-title">
+    <div class="catalog__featured-head">
+      <p class="section-eyebrow">Featured</p>
+      <h2 id="featured-title">Most-ordered SKUs this season</h2>
+    </div>
+    <app-horizontal-slider class="catalog__rail" ariaLabel="Featured products">
+      @for (p of allItems(); track p.slug) {
+        <a appHorizontalSliderItem class="featured-card" [routerLink]="['/products', p.slug]">
           @if (p.hasPhoto) {
-            <picture class="product-card__media">
-              <source type="image/avif"
-                      [attr.srcset]="p.avifSrcset"
-                      sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-              <source type="image/webp"
-                      [attr.srcset]="p.webpSrcset"
-                      sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+            <picture class="featured-card__media">
+              <source type="image/avif" [attr.srcset]="p.avifSrcset" sizes="(min-width: 1024px) 280px, 220px" />
+              <source type="image/webp" [attr.srcset]="p.webpSrcset" sizes="(min-width: 1024px) 280px, 220px" />
               <img
                 [src]="p.fallback"
                 [attr.srcset]="p.jpgSrcset"
-                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
-                [attr.width]="p.width"
-                [attr.height]="p.height"
+                sizes="(min-width: 1024px) 280px, 220px"
+                [attr.width]="p.width" [attr.height]="p.height"
                 loading="lazy" decoding="async"
                 [attr.alt]="p.alt" />
             </picture>
           } @else {
-            <div class="product-card__placeholder" aria-hidden="true">
-              <p class="product-card__placeholder-eyebrow">Studio photo coming soon</p>
-              <p class="product-card__placeholder-name">{{ p.name }}</p>
-              <p class="product-card__placeholder-size">{{ p.size }}</p>
-            </div>
+            <div class="featured-card__placeholder" aria-hidden="true"></div>
           }
-          <div class="product-card__body">
-            <p class="product-card__name">{{ p.name }}</p>
-            <p class="product-card__size">{{ p.size }}</p>
-            <p class="product-card__price">{{ p.priceLabel }}</p>
+          <div class="featured-card__body">
+            <p class="featured-card__cat">{{ p.category }}</p>
+            <p class="featured-card__name">{{ p.name }}</p>
+            <p class="featured-card__price">{{ p.priceLabel }}</p>
           </div>
         </a>
-      </li>
-    }
-  </ul>
+      }
+    </app-horizontal-slider>
+  </section>
+
+  <!-- ===================== STICKY FILTER + SEARCH ===================== -->
+  <div class="catalog__sticky" role="group" aria-label="Filter and search">
+    <div class="catalog__chips" role="tablist" aria-label="Filter by category">
+      @for (tab of filterTabs; track tab.value) {
+        <button
+          type="button"
+          role="tab"
+          class="filter-pill"
+          [class.is-active]="filter() === tab.value"
+          [attr.aria-selected]="filter() === tab.value"
+          (click)="setFilter(tab.value)">
+          {{ tab.label }} <span class="filter-pill__count">({{ tab.count }})</span>
+        </button>
+      }
+    </div>
+
+    <label class="catalog__search">
+      <span class="visually-hidden">Search products</span>
+      <svg class="catalog__search-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M11 11L14 14M12.5 7a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <input
+        type="search"
+        placeholder="Search by name or size"
+        autocomplete="off"
+        [value]="query()"
+        (input)="setQuery($any($event.target).value)" />
+    </label>
+  </div>
+
+  @if (visibleProducts().length === 0) {
+    <p class="catalog__empty" role="status">
+      No products match that search. Try clearing the search or pick a different category.
+    </p>
+  } @else {
+    <ul class="catalog__grid" role="list">
+      @for (p of visibleProducts(); track p.slug) {
+        <li class="product-card">
+          <a class="product-card__link" [routerLink]="['/products', p.slug]">
+            <span class="product-card__chip">{{ p.category }}</span>
+            @if (p.hasPhoto) {
+              <picture class="product-card__media">
+                <source type="image/avif"
+                        [attr.srcset]="p.avifSrcset"
+                        sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+                <source type="image/webp"
+                        [attr.srcset]="p.webpSrcset"
+                        sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+                <img
+                  [src]="p.fallback"
+                  [attr.srcset]="p.jpgSrcset"
+                  sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
+                  [attr.width]="p.width"
+                  [attr.height]="p.height"
+                  loading="lazy" decoding="async"
+                  [attr.alt]="p.alt" />
+              </picture>
+            } @else {
+              <div class="product-card__placeholder" aria-hidden="true">
+                <p class="product-card__placeholder-eyebrow">Studio photo coming soon</p>
+                <p class="product-card__placeholder-name">{{ p.name }}</p>
+                <p class="product-card__placeholder-size">{{ p.size }}</p>
+              </div>
+            }
+            <div class="product-card__body">
+              <p class="product-card__name">{{ p.name }}</p>
+              <p class="product-card__size">{{ p.size }}</p>
+              <p class="product-card__price">
+                {{ p.priceLabel }} <span class="product-card__per">per piece</span>
+              </p>
+            </div>
+          </a>
+          <a
+            class="product-card__wa"
+            [href]="p.waUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="'Order ' + p.name + ' on WhatsApp (opens in new tab)'">
+            Order on WhatsApp
+          </a>
+        </li>
+      }
+    </ul>
+  }
 </section>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
+import { WA_URL } from '../../shared/constants';
 
 @Component({
   selector: 'app-about',
@@ -12,8 +13,7 @@ import { SeoService } from '../../services/seo.service';
 export default class AboutComponent implements OnInit {
   private readonly seo = inject(SeoService);
 
-  protected readonly waUrl =
-    'https://wa.me/919080966792?text=Hi%20Rathika%2C%20I%27d%20like%20to%20place%20an%20order.';
+  protected readonly waUrl = WA_URL;
 
   ngOnInit(): void {
     this.seo.applyRouteSeo({

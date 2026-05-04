@@ -36,20 +36,16 @@ p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
 
 h1, h2, h3 {
   font-family: var(--font-display);
-  line-height: 1.15;
   letter-spacing: -0.01em;
   color: var(--color-primary-deep);
 }
-h1 { font-size: var(--type-5xl); }
-h2 { font-size: var(--type-3xl); }
-h3 { font-size: var(--type-2xl); }
-h4 { font-size: var(--type-xl); }
-
-@media (max-width: 480px) {
-  h1 { font-size: var(--type-4xl); }
-  h2 { font-size: var(--type-2xl); }
-  h3 { font-size: var(--type-xl); }
-}
+/* Mobile-first heading scale per REBUILD §8c — clamps replace the old
+   max-width 480 override pattern (which only handled phones, not the
+   awkward 480-768 band). */
+h1 { font-size: var(--type-h1); line-height: 1.05; }
+h2 { font-size: var(--type-h2); line-height: 1.15; }
+h3 { font-size: var(--type-h3); line-height: 1.2; }
+h4 { font-size: var(--type-xl); line-height: 1.25; }
 
 p { max-width: var(--content-max); }
 

@@ -3,24 +3,32 @@
 /* ===== Shared eyebrow + buttons ===== */
 
 .section-eyebrow {
-  font-size: var(--type-sm);
+  font-size: 0.6875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-muted);
   margin-block-end: var(--space-3);
+  font-weight: 600;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.85rem 1.4rem;
   border-radius: var(--radius-md);
   font-weight: 500;
   font-size: var(--type-base);
   text-decoration: none;
   border: 1px solid transparent;
-  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  transition:
+    background-color var(--rt-dur-150) var(--rt-ease-out),
+    color var(--rt-dur-150) var(--rt-ease-out),
+    border-color var(--rt-dur-150) var(--rt-ease-out),
+    transform var(--rt-dur-100) var(--rt-ease-out);
+
+  /* Animation #7 — touch press feedback (mobile equivalent of hover). */
+  &:active { transform: scale(0.97); }
 
   &--accent {
     background: var(--color-accent);
@@ -43,15 +51,31 @@
   }
 
   &--large {
-    padding: 1rem 1.75rem;
+    padding: 1.05rem 1.85rem;
     font-size: var(--type-lg);
+  }
+}
+
+/* ===== Animation #4 — first-viewport scroll reveal =====
+   Each section with .rt-reveal starts translated + transparent, gets
+   the .is-revealed class from the IntersectionObserver in HomeComponent
+   and animates into place.  Disabled under prefers-reduced-motion. */
+.rt-reveal {
+  @media (prefers-reduced-motion: no-preference) {
+    opacity: 0;
+    transform: translateY(var(--rt-translate-reveal));
+    transition:
+      opacity var(--rt-dur-400) var(--rt-ease-out),
+      transform var(--rt-dur-400) var(--rt-ease-out);
+    &.is-revealed { opacity: 1; transform: none; }
   }
 }
 
 /* ===== HERO ===== */
 
 .hero {
-  padding: var(--space-12) 0 var(--space-16);
+  padding: var(--space-12) 0 var(--space-12);
+  @media (min-width: 1024px) { padding: var(--space-16) 0; }
 
   &__inner {
     max-width: var(--container-max);
@@ -70,6 +94,7 @@
     @media (min-width: 1024px) { order: 2; }
     border-radius: var(--radius-md);
     overflow: hidden;
+    position: relative;
 
     img {
       width: 100%;
@@ -78,20 +103,29 @@
       object-fit: cover;
       display: block;
     }
+
+    /* Animation #2 — Ken Burns. Desktop only; mobile gets a static
+       image to save battery + data per §6c. Uses transform only. */
+    @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+      img {
+        animation: rt-kenburns var(--rt-dur-12s) var(--rt-ease-in-out) infinite alternate;
+        transform-origin: center center;
+      }
+    }
   }
 
   &__eyebrow {
-    font-size: var(--type-sm);
+    font-size: 0.6875rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-primary);
     margin-block-end: var(--space-5);
+    font-weight: 600;
   }
 
   &__title {
-    font-size: var(--type-display);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    color: var(--color-primary-deep);
     margin-block-end: var(--space-6);
     max-width: 14ch;
   }
@@ -99,12 +133,10 @@
   &__lead {
     font-size: var(--type-lg);
     color: var(--color-ink);
-    max-width: 50ch;
+    max-width: 52ch;
     margin-block-end: var(--space-8);
 
-    @media (max-width: 480px) {
-      font-size: var(--type-base);
-    }
+    @media (max-width: 480px) { font-size: var(--type-base); }
   }
 
   &__ctas {
@@ -115,11 +147,235 @@
   }
 }
 
+@keyframes rt-kenburns {
+  from { transform: scale(1.0); }
+  to   { transform: scale(1.05); }
+}
+
+/* ===== TRUST STRIP ===== */
+
+.trust-strip {
+  background: color-mix(in srgb, var(--color-tint) 35%, var(--color-bg) 65%);
+  border-block: 1px solid var(--color-rule);
+  padding: var(--space-4) var(--container-px);
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+    align-items: center;
+    justify-content: center;
+    font-size: var(--type-sm);
+    color: var(--color-primary-deep);
+
+    @media (min-width: 768px) {
+      justify-content: space-between;
+      flex-wrap: nowrap;
+    }
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  &__check {
+    width: 16px;
+    height: 16px;
+    color: var(--color-primary);
+    flex: 0 0 auto;
+  }
+}
+
+/* ===== CATEGORY SLIDER (image-first redesign) =====
+   Image fills the entire card, gradient overlay grounds the typography
+   at the bottom — Swiggy/Shopify mobile pattern. Soft shadow on rest,
+   deeper shadow + 1.03 scale on hover/tap. Background tint per category
+   is reserved as a fallback for missing photos and as the slider's
+   right-edge fade target. */
+
+.cat-slider {
+  padding: var(--space-12) 0 var(--space-10);
+  --slider-fade-color: var(--color-bg);
+  @media (min-width: 1024px) { padding: var(--space-16) 0 var(--space-12); }
+
+  &__head {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-px);
+    margin-block-end: var(--space-6);
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    h2 { max-width: 22ch; margin: 0; }
+  }
+
+  &__seeall {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--type-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+    white-space: nowrap;
+    padding-block: 0.4rem;
+    transition: color var(--rt-dur-150) var(--rt-ease-out);
+    svg {
+      width: 14px;
+      height: 14px;
+      transition: transform var(--rt-dur-200) var(--rt-ease-out);
+    }
+    &:hover {
+      color: var(--color-primary-deep);
+      svg { transform: translateX(2px); }
+    }
+  }
+
+  &__rail { display: block; }
+}
+
+.cat-card {
+  position: relative;
+  display: block;
+  width: 200px;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-bg-card);
+  background: var(--cat-tint, var(--color-tint));
+  isolation: isolate;
+  box-shadow: 0 1px 2px rgba(31, 58, 43, 0.05),
+              0 4px 14px rgba(31, 58, 43, 0.08);
+  transition:
+    transform var(--rt-dur-200) var(--rt-ease-out),
+    box-shadow var(--rt-dur-200) var(--rt-ease-out);
+
+  @media (min-width: 768px) { width: 240px; }
+  @media (min-width: 1024px) { width: 260px; }
+
+  /* Image fills the whole card; the overlay + copy float on top. */
+  &__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform-origin: center;
+      transition: transform 600ms var(--rt-ease-out);
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(
+        to top,
+        rgba(31, 58, 43, 0.78) 0%,
+        rgba(31, 58, 43, 0.32) 38%,
+        rgba(31, 58, 43, 0) 62%
+      );
+    pointer-events: none;
+  }
+
+  &__copy {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: 2;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    @media (min-width: 1024px) { padding: var(--space-5); }
+  }
+
+  &__eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-bg-card) 75%, transparent);
+    font-weight: 600;
+  }
+
+  &__label {
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1.1;
+    color: var(--color-bg-card);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    @media (min-width: 1024px) { font-size: 26px; }
+  }
+
+  &__cta {
+    margin-block-start: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+    font-size: var(--type-sm);
+    color: var(--color-bg-card);
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(6px);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition:
+      background-color var(--rt-dur-150) var(--rt-ease-out),
+      transform var(--rt-dur-200) var(--rt-ease-out);
+    svg {
+      width: 12px;
+      height: 12px;
+      transition: transform var(--rt-dur-200) var(--rt-ease-out);
+    }
+  }
+
+  /* Animation #6 — desktop hover lift, image zoom, CTA arrow nudge. */
+  @media (min-width: 1024px) and (hover: hover) {
+    &:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 4px 12px rgba(31, 58, 43, 0.10),
+                  0 16px 40px rgba(31, 58, 43, 0.18);
+      .cat-card__media img { transform: scale(1.06); }
+      .cat-card__cta {
+        background: rgba(255, 255, 255, 0.28);
+        svg { transform: translateX(3px); }
+      }
+    }
+  }
+
+  /* Animation #7 — touch press feedback. */
+  &:active { transform: scale(0.97); }
+
+  /* Focus ring (keyboard) — bright, clearly visible against any image. */
+  &:focus-visible {
+    outline: 3px solid var(--color-bg-card);
+    outline-offset: -3px;
+    box-shadow: 0 0 0 5px var(--color-primary);
+  }
+}
+
 /* ===== STORY ===== */
 
 .story {
-  padding: var(--space-16) 0;
+  padding: var(--space-12) 0;
   border-block-start: 1px solid var(--color-rule);
+  @media (min-width: 1024px) { padding: var(--space-16) 0; }
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
@@ -139,26 +395,100 @@
       width: 100%; height: auto;
       aspect-ratio: 5 / 4;
       object-fit: cover;
-      transition: transform 600ms ease-out;
     }
   }
-  @media (prefers-reduced-motion: no-preference) {
-    &__media:hover img { transform: scale(1.02); }
+}
+
+/* ===== HOW IT'S MADE ===== */
+
+.how {
+  padding: var(--space-16) 0;
+  background: var(--color-primary-deep);
+  color: var(--color-bg-card);
+
+  &__inner {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-px);
+  }
+
+  &__head {
+    margin-block-end: var(--space-10);
+    h2 { color: var(--color-bg-card); max-width: 22ch; }
+    .section-eyebrow { color: color-mix(in srgb, var(--color-bg-card) 70%, transparent); }
+  }
+
+  &__steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: 1fr;
+    /* Vertical timeline mobile, horizontal three-up desktop per §9 home #5. */
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+    }
+  }
+}
+
+.how-step {
+  display: grid;
+  gap: var(--space-3);
+
+  &__media {
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    margin-block-end: var(--space-3);
+    img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__num {
+    font-family: var(--font-display);
+    font-size: var(--type-2xl);
+    color: var(--rathika-earth-500);
+    line-height: 1;
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: var(--type-xl);
+    color: var(--color-bg-card);
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  &__body {
+    color: color-mix(in srgb, var(--color-bg-card) 80%, transparent);
+    font-size: var(--type-base);
+    line-height: 1.6;
+    max-width: 38ch;
+    margin: 0;
   }
 }
 
 /* ===== SIX PILLARS ===== */
 
 .pillars {
-  padding: var(--space-16) 0;
-  border-block-start: 1px solid var(--color-rule);
+  padding: var(--space-12) 0;
+  @media (min-width: 1024px) { padding: var(--space-16) 0; }
+
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-px);
   }
   &__head {
-    margin-block-end: var(--space-12);
+    margin-block-end: var(--space-10);
     h2 { max-width: 22ch; }
   }
   &__list {
@@ -206,10 +536,12 @@
 /* ===== FEATURED PRODUCTS ===== */
 
 .featured {
-  padding: var(--space-16) 0;
+  padding: var(--space-12) 0;
   background: color-mix(in srgb, var(--color-tint) 30%, var(--color-bg) 70%);
   border-block-start: 1px solid var(--color-rule);
   border-block-end: 1px solid var(--color-rule);
+  @media (min-width: 1024px) { padding: var(--space-16) 0; }
+
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
@@ -234,7 +566,7 @@
       color: var(--color-primary-deep);
       text-decoration: underline;
       text-underline-offset: 3px;
-      transition: color 160ms ease;
+      transition: color var(--rt-dur-150) var(--rt-ease-out);
       &:hover { color: var(--color-accent); }
     }
     &-or { color: var(--color-rule); }
@@ -259,7 +591,10 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color 240ms ease, transform 240ms ease, box-shadow 240ms ease;
+  transition:
+    border-color var(--rt-dur-200) var(--rt-ease-out),
+    transform var(--rt-dur-200) var(--rt-ease-out),
+    box-shadow var(--rt-dur-200) var(--rt-ease-out);
 
   &__link {
     display: flex;
@@ -297,7 +632,7 @@
     line-height: 1.2;
     color: var(--color-primary-deep);
     margin: 0;
-    transition: color 160ms ease;
+    transition: color var(--rt-dur-150) var(--rt-ease-out);
   }
 
   &__size {
@@ -315,26 +650,35 @@
     line-height: 1;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
+  /* Animation #6 — desktop hover lift. */
+  @media (min-width: 1024px) and (hover: hover) {
     &:hover {
       border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(31, 58, 43, 0.08);
 
       .product-card__media img { transform: scale(1.04); }
       .product-card__name { color: var(--color-accent); }
     }
   }
+
+  /* Animation #7 — mobile press feedback. */
+  &:active { transform: scale(0.98); }
 }
 
 /* ===== WHERE USED ===== */
 
 .where-used {
-  padding: var(--space-16) 0;
+  padding: var(--space-12) 0;
+  @media (min-width: 1024px) { padding: var(--space-16) 0; }
+
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-px);
     h2 { max-width: 22ch; margin-block-end: var(--space-8); }
   }
+
   &__list {
     list-style: none;
     padding: 0;
@@ -352,8 +696,6 @@
       font-size: var(--type-2xl);
     }
 
-    /* Use a flexbox-friendly inline separator that doesn't dangle on
-       wrap. The dot lives after each item except the last. */
     li {
       display: inline-flex;
       align-items: center;
@@ -371,27 +713,49 @@
   }
 }
 
-/* ===== CTA ===== */
+/* ===== CTA BAND — terracotta accent ===== */
 
 .home-cta {
-  padding: var(--space-16) 0;
-  background: var(--color-tint);
-  border-block-start: 1px solid var(--color-rule);
+  padding: var(--space-12) 0;
+  background: var(--color-accent);
+  color: var(--color-bg-card);
+  @media (min-width: 1024px) { padding: var(--space-16) 0; }
+
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-px);
     text-align: start;
-    h2 { max-width: 22ch; margin-block-end: var(--space-4); }
+    h2 {
+      color: var(--color-bg-card);
+      max-width: 22ch;
+      margin-block-end: var(--space-4);
+    }
   }
+
+  &__eyebrow {
+    color: color-mix(in srgb, var(--color-bg-card) 70%, transparent);
+  }
+
   &__lead {
     font-size: var(--type-lg);
-    color: var(--color-ink);
+    color: color-mix(in srgb, var(--color-bg-card) 92%, transparent);
     max-width: 50ch;
     margin-block-end: var(--space-8);
 
     @media (max-width: 480px) {
       font-size: var(--type-base);
+    }
+  }
+
+  /* On the terracotta band, the accent button would disappear — invert
+     it to a cream-on-deep button. */
+  .btn--accent {
+    background: var(--color-bg-card);
+    color: var(--color-accent);
+    &:hover {
+      background: color-mix(in srgb, var(--color-bg-card) 90%, var(--color-ink) 10%);
+      color: var(--color-accent);
     }
   }
 }

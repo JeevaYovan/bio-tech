@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { SeoService } from '../../services/seo.service';
 import {
   EMAIL,
@@ -25,6 +32,29 @@ export default class ContactComponent implements OnInit {
   protected readonly osmUrl = 'https://www.openstreetmap.org/?mlat=11.0779&mlon=77.0006#map=16/11.0779/77.0006';
   protected readonly googleMapsUrl = 'https://www.google.com/maps?q=11.0779,77.0006&z=15';
 
+  /** WA-prefill inquiry form (per user choice B). Sends to wa.me with
+      a pre-composed message that the user reviews and submits in the
+      WhatsApp app — no backend, no PII storage. */
+  protected readonly formName = signal('');
+  protected readonly formPhone = signal('');
+  protected readonly formMessage = signal('');
+
+  protected readonly canSubmit = computed(
+    () => this.formName().trim().length > 1 && this.formMessage().trim().length > 4,
+  );
+
+  protected readonly waMessageUrl = computed(() => {
+    const lines = [
+      `Hi Rathika, I'm ${this.formName().trim() || '[name]'}.`,
+      this.formPhone().trim() ? `Phone: ${this.formPhone().trim()}` : '',
+      '',
+      this.formMessage().trim(),
+    ]
+      .filter(Boolean)
+      .join('\n');
+    return `https://wa.me/919080966792?text=${encodeURIComponent(lines)}`;
+  });
+
   ngOnInit(): void {
     this.seo.applyRouteSeo({
       description:
@@ -32,5 +62,11 @@ export default class ContactComponent implements OnInit {
       canonicalPath: '/contact/',
       ogTitle: 'Contact Rathika Biotech Products, Neelambur, Coimbatore',
     });
+  }
+
+  protected onFieldInput(field: 'name' | 'phone' | 'message', value: string): void {
+    if (field === 'name') this.formName.set(value);
+    else if (field === 'phone') this.formPhone.set(value);
+    else this.formMessage.set(value);
   }
 }

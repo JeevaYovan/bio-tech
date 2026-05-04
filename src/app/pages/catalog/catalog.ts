@@ -1,5 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   formatINR,
   productCategories,
@@ -7,6 +18,9 @@ import {
 } from '../../../data/products';
 import { displayableProducts, getMedia } from '../../../data/product-content';
 import { SeoService } from '../../services/seo.service';
+import { whatsappOrderUrlForProduct } from '../../shared/constants';
+import { HorizontalSliderComponent } from '../../shared/horizontal-slider/horizontal-slider';
+import { HorizontalSliderItemDirective } from '../../shared/horizontal-slider/horizontal-slider-item.directive';
 
 type Filter = 'all' | ProductCategory;
 
@@ -26,6 +40,7 @@ interface CatalogItem {
   readonly width: number;
   readonly height: number;
   readonly alt: string;
+  readonly waUrl: string;
 }
 
 interface FilterTab {
@@ -37,14 +52,24 @@ interface FilterTab {
 @Component({
   selector: 'app-catalog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective],
   templateUrl: './catalog.html',
   styleUrl: './catalog.scss',
 })
 export default class CatalogComponent implements OnInit {
   private readonly seo = inject(SeoService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly filter = signal<Filter>('all');
+  protected readonly query = signal<string>('');
+  /** Tracks first emission of queryParams so we don't scroll on initial
+      navigation (Angular's scrollPositionRestoration already does that
+      for full route changes). We only scroll when query params change
+      *while staying on /products* — e.g. clicking a footer category. */
+  private firstParam = true;
 
   ngOnInit(): void {
     this.seo.applyRouteSeo({
@@ -53,6 +78,31 @@ export default class CatalogComponent implements OnInit {
       canonicalPath: '/products/',
       ogTitle: 'Eco-Friendly Plates, Cups & Bowls | Rathika Biotech Coimbatore',
     });
+
+    /* Pick up the ?category=plates query param so the category cards on
+       Home, the footer Catalog column, and any deep link pre-filter
+       the catalog. We also clear the search and scroll to top when the
+       category changes mid-session — without this, clicking a footer
+       category from the bottom of /products silently swaps the chip
+       but the user is still parked at the bottom and thinks nothing
+       happened. */
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const cat = params.get('category');
+        const validCat =
+          cat && (productCategories as readonly string[]).includes(cat)
+            ? (cat as ProductCategory)
+            : 'all';
+        const changed = this.filter() !== validCat;
+        this.filter.set(validCat);
+        if (changed) this.query.set('');
+        if (!this.firstParam && changed && isPlatformBrowser(this.platformId)) {
+          const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+        }
+        this.firstParam = false;
+      });
   }
 
   protected readonly filterTabs: ReadonlyArray<FilterTab> = (() => {
@@ -65,33 +115,63 @@ export default class CatalogComponent implements OnInit {
     return [all, ...byCat];
   })();
 
+  /** All catalog items (no filter, no search) — used by the featured slider. */
+  protected readonly allItems = computed<ReadonlyArray<CatalogItem>>(() =>
+    displayableProducts.map((p) => this.toItem(p)),
+  );
+
   protected readonly visibleProducts = computed<ReadonlyArray<CatalogItem>>(() => {
     const f = this.filter();
-    const filtered = f === 'all' ? displayableProducts : displayableProducts.filter((p) => p.category === f);
-    return filtered.map<CatalogItem>((p) => {
-      const media = getMedia(p.slug);
-      const hasPhoto = !!media?.hasPhoto && !!media.imageSlug;
-      const slug = media?.imageSlug ?? '';
-      const base = `assets/${slug}`;
-      return {
-        slug: p.slug,
-        name: p.name,
-        size: p.size,
-        priceLabel: formatINR(p.price),
-        category: p.category,
-        hasPhoto,
-        avifSrcset: hasPhoto ? `${base}-400.avif 400w, ${base}-800.avif 800w` : '',
-        webpSrcset: hasPhoto ? `${base}-400.webp 400w, ${base}-800.webp 800w` : '',
-        jpgSrcset:  hasPhoto ? `${base}-400.jpg 400w, ${base}-800.jpg 800w` : '',
-        fallback:   hasPhoto ? `${base}-400.jpg` : '',
-        width:  media?.intrinsic?.w ?? 400,
-        height: media?.intrinsic?.h ?? 400,
-        alt: media?.alt ?? '',
-      };
-    });
+    const q = this.query().trim().toLowerCase();
+    let list = this.allItems();
+    if (f !== 'all') list = list.filter((p) => p.category === f);
+    if (q) {
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.size.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q),
+      );
+    }
+    return list;
   });
 
   protected setFilter(value: Filter): void {
-    this.filter.set(value);
+    /* Sync filter to the URL — keeps back/forward + share links in
+       sync with the chip state. queryParams replace mode prevents the
+       history stack from filling with one entry per chip click. */
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { category: value === 'all' ? null : value },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
+  protected setQuery(value: string): void {
+    this.query.set(value);
+  }
+
+  private toItem(p: { slug: string; name: string; size: string; price: number; category: ProductCategory }): CatalogItem {
+    const media = getMedia(p.slug);
+    const hasPhoto = !!media?.hasPhoto && !!media.imageSlug;
+    const slug = media?.imageSlug ?? '';
+    const base = `assets/${slug}`;
+    return {
+      slug: p.slug,
+      name: p.name,
+      size: p.size,
+      priceLabel: formatINR(p.price),
+      category: p.category,
+      hasPhoto,
+      avifSrcset: hasPhoto ? `${base}-400.avif 400w, ${base}-800.avif 800w` : '',
+      webpSrcset: hasPhoto ? `${base}-400.webp 400w, ${base}-800.webp 800w` : '',
+      jpgSrcset:  hasPhoto ? `${base}-400.jpg 400w, ${base}-800.jpg 800w` : '',
+      fallback:   hasPhoto ? `${base}-400.jpg` : '',
+      width:  media?.intrinsic?.w ?? 400,
+      height: media?.intrinsic?.h ?? 400,
+      alt: media?.alt ?? '',
+      waUrl: whatsappOrderUrlForProduct(p.name, p.size),
+    };
   }
 }

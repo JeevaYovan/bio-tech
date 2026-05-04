@@ -32,6 +32,14 @@
   --color-muted:        #6B6B6B;
   --color-accent:       var(--rathika-accent);
 
+  /* Klaro's @klaro/theme paints `body { background: var(--background) }`
+     and `color: var(--foreground)` from its emerald preset. Without
+     these aliases the page edges leak emerald-dark on wide viewports
+     where the body shows past our centred container. Aliasing pins
+     Klaro's body rule to our brand cream + ink. */
+  --background: var(--rathika-cream);
+  --foreground: var(--rathika-ink);
+
   /* Type families — system fallbacks for now; real WOFF2 wired in Phase 4 */
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -49,6 +57,18 @@
   --type-5xl:  3.25rem;
   --type-6xl:  4rem;
   --type-display: clamp(2.5rem, 7vw, 5rem);
+
+  /* Mobile-first heading clamps — REBUILD §8c.
+     h1 grows 40px (mobile) → 56px (tablet) → 72px (desktop) → 88px (max).
+     h2 grows 28px (mobile) → 36px (tablet) → 48px (desktop).
+     h3 grows 22px (mobile) → 28px (desktop).
+     The viewport-relative middle term hits each breakpoint roughly: at
+     375px mobile we read the floor; at 768px tablet ~6.9vw=53px; at
+     1024px desktop ~6.9vw=70px; max clamps at 88px so 1440+ doesn't
+     bloat. */
+  --type-h1: clamp(2.5rem, 6.9vw, 5.5rem);
+  --type-h2: clamp(1.75rem, 4.2vw, 3rem);
+  --type-h3: clamp(1.375rem, 2.4vw, 1.75rem);
 
   /* Spacing — 4px base */
   --space-1:  0.25rem;

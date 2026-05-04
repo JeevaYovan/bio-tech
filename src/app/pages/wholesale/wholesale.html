@@ -1,0 +1,135 @@
+<section class="wholesale-hero" aria-labelledby="wh-title">
+  <div class="wholesale-hero__inner">
+    <p class="section-eyebrow">Wholesale</p>
+    <h1 id="wh-title" class="wholesale-hero__title">
+      For restaurants, caterers,<br />weddings, and festivals.
+    </h1>
+    <p class="wholesale-hero__lead">
+      We supply biodegradable tableware in carton lots and pallet quantities.
+      Plates, bowls, cups, parcel boxes, spoons, and decorative pieces — all
+      hand-pressed in our Neelambur workshop.
+    </p>
+  </div>
+</section>
+
+<section class="wholesale-pitch" aria-labelledby="pitch-title">
+  <div class="wholesale-pitch__inner">
+    <h2 id="pitch-title" class="visually-hidden">What bulk pricing looks like</h2>
+    <ul class="pitch-cards" role="list">
+      <li class="pitch-card">
+        <p class="pitch-card__num">1,000+</p>
+        <p class="pitch-card__label">pieces</p>
+        <p class="pitch-card__body">
+          Bulk pricing kicks in on orders of one carton or more (typical
+          carton: 500–2,000 pieces depending on SKU).
+        </p>
+      </li>
+      <li class="pitch-card">
+        <p class="pitch-card__num">14</p>
+        <p class="pitch-card__label">SKUs available</p>
+        <p class="pitch-card__body">
+          Mix and match from the catalog. Cartons can ship combined; we'll
+          quote based on your total volume and delivery city.
+        </p>
+      </li>
+      <li class="pitch-card">
+        <p class="pitch-card__num">Same-day</p>
+        <p class="pitch-card__label">WhatsApp reply</p>
+        <p class="pitch-card__body">
+          We respond during working hours, typically same-day. Send the
+          slugs, quantities, and your delivery city — we'll come back with a
+          quote.
+        </p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== INQUIRY FORM ===================== -->
+<section class="wholesale-form" aria-labelledby="form-title">
+  <div class="wholesale-form__inner">
+    <header>
+      <p class="section-eyebrow">Get a quote</p>
+      <h2 id="form-title">Send a wholesale inquiry</h2>
+      <p class="wholesale-form__lead">
+        Fill these in and we'll open WhatsApp with the inquiry pre-composed.
+        No backend, no email signup — you tap send when you're ready.
+      </p>
+    </header>
+
+    <form class="inquiry-form" (submit)="$event.preventDefault()" novalidate>
+      <label class="inquiry-field">
+        <span class="inquiry-field__label">Your name</span>
+        <input type="text" autocomplete="name" required
+               [value]="form.name()"
+               (input)="onField('name', $any($event.target).value)" />
+      </label>
+      <label class="inquiry-field">
+        <span class="inquiry-field__label">Business name</span>
+        <input type="text" autocomplete="organization" required
+               [value]="form.business()"
+               (input)="onField('business', $any($event.target).value)" />
+      </label>
+
+      <label class="inquiry-field">
+        <span class="inquiry-field__label">Delivery city</span>
+        <input type="text" autocomplete="address-level2"
+               [value]="form.city()"
+               (input)="onField('city', $any($event.target).value)" />
+      </label>
+      <label class="inquiry-field">
+        <span class="inquiry-field__label">Event date <span class="inquiry-field__optional">(if any)</span></span>
+        <input type="date"
+               [value]="form.eventDate()"
+               (input)="onField('eventDate', $any($event.target).value)" />
+      </label>
+
+      <label class="inquiry-field inquiry-field--full">
+        <span class="inquiry-field__label">Items and quantities</span>
+        <textarea rows="4" required
+                  placeholder="e.g.&#10;tea-cup-100ml × 2,000&#10;parcel-box-300ml × 500&#10;spoon-5in × 2,000"
+                  [value]="form.items()"
+                  (input)="onField('items', $any($event.target).value)"></textarea>
+      </label>
+
+      <label class="inquiry-field inquiry-field--full">
+        <span class="inquiry-field__label">Total quantity estimate <span class="inquiry-field__optional">(optional)</span></span>
+        <input type="text" inputmode="numeric"
+               placeholder="e.g. 5,000 pieces total"
+               [value]="form.qty()"
+               (input)="onField('qty', $any($event.target).value)" />
+      </label>
+
+      <div class="inquiry-actions">
+        <a
+          [class.is-disabled]="!canSubmit()"
+          [attr.aria-disabled]="!canSubmit() ? 'true' : null"
+          [attr.tabindex]="canSubmit() ? null : '-1'"
+          [href]="canSubmit() ? waMessageUrl() : null"
+          target="_blank" rel="noopener noreferrer"
+          class="btn btn--accent btn--large">
+          Open WhatsApp with this inquiry<span class="visually-hidden"> (opens in new tab)</span>
+        </a>
+        <p class="inquiry-actions__hint">
+          We don't store this data; the button opens WhatsApp pre-filled.
+        </p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="wholesale-cta" aria-labelledby="cta-title">
+  <div class="wholesale-cta__inner">
+    <h2 id="cta-title">Prefer to chat first?</h2>
+    <p>
+      Skip the form and message us straight away — we'll work out the SKU
+      mix, carton sizes, and delivery together.
+    </p>
+    <p>
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
+        Open WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
+      </a>
+      <a routerLink="/products" class="btn btn--ghost">See the catalog</a>
+    </p>
+  </div>
+</section>

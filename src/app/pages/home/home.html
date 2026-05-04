@@ -16,7 +16,7 @@
         <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
           Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
         </a>
-        <a href="#featured" class="btn btn--ghost">See featured products</a>
+        <a routerLink="/products" class="btn btn--ghost">See catalog</a>
       </div>
     </div>
     <picture class="hero__media">
@@ -42,8 +42,78 @@
   </div>
 </section>
 
+<!-- ===================== TRUST STRIP ===================== -->
+<aside #reveal class="trust-strip rt-reveal" aria-label="Why Rathika">
+  <ul class="trust-strip__list">
+    @for (claim of trustClaims; track claim) {
+      <li class="trust-strip__item">
+        <svg class="trust-strip__check" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>{{ claim }}</span>
+      </li>
+    }
+  </ul>
+</aside>
+
+<!-- ===================== CATEGORY SLIDER ===================== -->
+<section #reveal class="cat-slider rt-reveal" aria-labelledby="cat-title">
+  <div class="cat-slider__head">
+    <div>
+      <p class="section-eyebrow">Browse by category</p>
+      <h2 id="cat-title">Tableware for every meal</h2>
+    </div>
+    <a routerLink="/products" class="cat-slider__seeall">
+      See all
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+  </div>
+
+  <app-horizontal-slider
+    class="cat-slider__rail"
+    ariaLabel="Browse by category"
+    [autoScroll]="3000"
+    loop
+    progressBar>
+    @for (cat of categories; track cat.key) {
+      <a
+        appHorizontalSliderItem
+        class="cat-card"
+        [routerLink]="['/products']"
+        [queryParams]="{ category: cat.key }"
+        [attr.aria-label]="cat.label + ' — browse category'"
+        [style.--cat-tint]="cat.tint">
+        <picture class="cat-card__media">
+          <source type="image/avif" [attr.srcset]="'assets/' + cat.imageSlug + '-400.avif 400w, assets/' + cat.imageSlug + '-800.avif 800w'" sizes="(min-width: 1024px) 280px, 220px" />
+          <source type="image/webp" [attr.srcset]="'assets/' + cat.imageSlug + '-400.webp 400w, assets/' + cat.imageSlug + '-800.webp 800w'" sizes="(min-width: 1024px) 280px, 220px" />
+          <img
+            [src]="'assets/' + cat.imageSlug + '-400.jpg'"
+            [attr.srcset]="'assets/' + cat.imageSlug + '-400.jpg 400w, assets/' + cat.imageSlug + '-800.jpg 800w'"
+            sizes="(min-width: 1024px) 280px, 220px"
+            width="400" height="500"
+            loading="lazy" decoding="async"
+            [attr.alt]="cat.alt" />
+        </picture>
+        <div class="cat-card__overlay" aria-hidden="true"></div>
+        <div class="cat-card__copy">
+          <span class="cat-card__eyebrow">{{ cat.eyebrow }}</span>
+          <span class="cat-card__label">{{ cat.label }}</span>
+          <span class="cat-card__cta">
+            Shop
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </div>
+      </a>
+    }
+  </app-horizontal-slider>
+</section>
+
 <!-- ===================== STORY ===================== -->
-<section class="story" aria-labelledby="story-title">
+<section #reveal class="story rt-reveal" aria-labelledby="story-title">
   <div class="story__inner">
     <div class="story__copy">
       <p class="section-eyebrow">Our story</p>
@@ -87,8 +157,38 @@
   </div>
 </section>
 
+<!-- ===================== HOW IT'S MADE ===================== -->
+<section #reveal class="how rt-reveal" aria-labelledby="how-title">
+  <div class="how__inner">
+    <header class="how__head">
+      <p class="section-eyebrow">How it's made</p>
+      <h2 id="how-title">From harvest to table</h2>
+    </header>
+    <ol class="how__steps">
+      @for (step of howSteps; track step.n) {
+        <li class="how-step">
+          <picture class="how-step__media">
+            <source type="image/avif" [attr.srcset]="'assets/' + step.imageSlug + '-400.avif 400w, assets/' + step.imageSlug + '-800.avif 800w'" sizes="(min-width: 1024px) 33vw, 100vw" />
+            <source type="image/webp" [attr.srcset]="'assets/' + step.imageSlug + '-400.webp 400w, assets/' + step.imageSlug + '-800.webp 800w'" sizes="(min-width: 1024px) 33vw, 100vw" />
+            <img
+              [src]="'assets/' + step.imageSlug + '-400.jpg'"
+              [attr.srcset]="'assets/' + step.imageSlug + '-400.jpg 400w, assets/' + step.imageSlug + '-800.jpg 800w'"
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              [attr.width]="step.intrinsic.w" [attr.height]="step.intrinsic.h"
+              loading="lazy" decoding="async"
+              [attr.alt]="step.alt" />
+          </picture>
+          <p class="how-step__num" aria-hidden="true">{{ step.n }}</p>
+          <h3 class="how-step__title">{{ step.title }}</h3>
+          <p class="how-step__body">{{ step.body }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
 <!-- ===================== SIX PILLARS ===================== -->
-<section class="pillars" aria-labelledby="pillars-title">
+<section #reveal class="pillars rt-reveal" aria-labelledby="pillars-title">
   <div class="pillars__inner">
     <header class="pillars__head">
       <p class="section-eyebrow">Why this tableware</p>
@@ -107,7 +207,7 @@
 </section>
 
 <!-- ===================== FEATURED PRODUCTS ===================== -->
-<section id="featured" class="featured" aria-labelledby="featured-title">
+<section #reveal id="featured" class="featured rt-reveal" aria-labelledby="featured-title">
   <div class="featured__inner">
     <header class="featured__head">
       <p class="section-eyebrow">From the catalog</p>
@@ -119,20 +219,13 @@
         <li class="product-card">
           <a class="product-card__link" [routerLink]="['/products', p.slug]">
             <picture class="product-card__media">
-              <source
-                type="image/avif"
-                [attr.srcset]="p.avifSrcset"
-                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-              <source
-                type="image/webp"
-                [attr.srcset]="p.webpSrcset"
-                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+              <source type="image/avif" [attr.srcset]="p.avifSrcset" sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
+              <source type="image/webp" [attr.srcset]="p.webpSrcset" sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
               <img
                 [src]="p.fallback"
                 [attr.srcset]="p.jpgSrcset"
                 sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
-                [attr.width]="p.intrinsic.w"
-                [attr.height]="p.intrinsic.h"
+                [attr.width]="p.intrinsic.w" [attr.height]="p.intrinsic.h"
                 loading="lazy" decoding="async"
                 [attr.alt]="p.alt" />
             </picture>
@@ -154,7 +247,7 @@
 </section>
 
 <!-- ===================== WHERE USED ===================== -->
-<section class="where-used" aria-labelledby="where-title">
+<section #reveal class="where-used rt-reveal" aria-labelledby="where-title">
   <div class="where-used__inner">
     <p class="section-eyebrow">Where it's used</p>
     <h2 id="where-title">From kitchens to weddings</h2>
@@ -166,10 +259,10 @@
   </div>
 </section>
 
-<!-- ===================== CTA ===================== -->
-<section class="home-cta" aria-labelledby="cta-title">
+<!-- ===================== CTA BAND ===================== -->
+<section #reveal class="home-cta rt-reveal" aria-labelledby="cta-title">
   <div class="home-cta__inner">
-    <p class="section-eyebrow">Order today</p>
+    <p class="section-eyebrow home-cta__eyebrow">Order today</p>
     <h2 id="cta-title">Place an order on WhatsApp</h2>
     <p class="home-cta__lead">
       We respond during working hours, typically same-day. Bulk orders for

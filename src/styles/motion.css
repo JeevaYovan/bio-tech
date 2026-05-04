@@ -1,0 +1,50 @@
+/* ======================================================================
+   Motion tokens — REBUILD §7
+   ----------------------------
+   The 12 sanctioned animations (§7a) reference these tokens. No motion
+   may exceed 800ms; only `transform` + `opacity` are animated. All motion
+   is gated on `prefers-reduced-motion: no-preference` at the call site
+   (some — touch press, form focus — are feedback and may stay under
+   reduce; see §7c).
+   ====================================================================== */
+
+:root {
+  /* Durations — paired with each sanctioned animation in §7a */
+  --rt-dur-100: 100ms;   /* touch press feedback (#7) */
+  --rt-dur-150: 150ms;   /* button hover, filter chip, form focus (#8 #11 #12) */
+  --rt-dur-200: 200ms;   /* route fade, sticky WA show/hide (#1 #10) */
+  --rt-dur-250: 250ms;   /* slider snap (#5) */
+  --rt-dur-400: 400ms;   /* section scroll-reveal (#4) */
+  --rt-dur-500: 500ms;   /* hero text entrance (#3) */
+  --rt-dur-600: 600ms;   /* sticky WA pulse (#9) */
+  --rt-dur-12s:  12s;    /* hero ken burns (#2) */
+
+  /* Stagger — children inside hero entrance and scroll-reveal */
+  --rt-stagger-80: 80ms;
+
+  /* Easings — ease-out is the default */
+  --rt-ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --rt-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --rt-ease-linear: linear;
+
+  /* Common offsets for scroll-reveal and hero entrance */
+  --rt-translate-reveal: 16px;
+  --rt-translate-hero: 24px;
+  --rt-translate-sticky: 80px;
+}
+
+/* Forbidden bouncing easings (§7b) — never define cubic-bezier(0.68, -0.55, ...) tokens. */
+
+/* Reduced-motion override — collapse decoration to instant. Touch
+   feedback (#7) and form focus (#12) intentionally still play because
+   they are feedback, not decoration. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rt-dur-200: 0ms;
+    --rt-dur-250: 0ms;
+    --rt-dur-400: 0ms;
+    --rt-dur-500: 0ms;
+    --rt-dur-600: 0ms;
+    --rt-dur-12s: 0ms;
+  }
+}

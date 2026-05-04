@@ -1,0 +1,53 @@
+:host { display: contents; }
+
+.scroll-fab {
+  position: fixed;
+  inset-inline-start: 1rem;
+  inset-block-end: 1rem;
+  z-index: 50;
+
+  appearance: none;
+  border: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary-deep);
+  color: var(--color-bg-card);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(31, 58, 43, 0.20);
+  transition:
+    background-color var(--rt-dur-150) var(--rt-ease-out),
+    transform var(--rt-dur-200) var(--rt-ease-out),
+    box-shadow var(--rt-dur-200) var(--rt-ease-out);
+
+  @media (min-width: 1024px) {
+    inset-inline-start: 1.5rem;
+    inset-block-end: 1.5rem;
+  }
+
+  &:hover {
+    background: var(--color-primary);
+    box-shadow: 0 8px 24px rgba(31, 58, 43, 0.28);
+  }
+
+  &:active { transform: scale(0.95); }
+
+  /* The default chevron points DOWN. Flip it 180° when in up-mode so
+     the same SVG serves both states — single source of truth, smooth
+     CSS transition between them. */
+  svg {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--rt-dur-200) var(--rt-ease-out);
+  }
+
+  &.is-up svg { transform: rotate(180deg); }
+
+  /* Lift above the sticky-bottom WA price bar on product detail (mobile). */
+  :host-context(body[data-route="product-detail"]) & {
+    @media (max-width: 767.98px) { inset-block-end: 4.5rem; }
+  }
+}

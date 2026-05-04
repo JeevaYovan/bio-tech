@@ -1,0 +1,189 @@
+:host { display: block; position: relative; }
+
+/* REBUILD §10 — Horizontal scroll-snap slider with optional auto-scroll
+   and a soft right-edge gradient fade.
+
+   Card sizing uses CSS variables consumers override on the host. The
+   slider itself is content-agnostic; visuals (3:4, gradient overlay,
+   typography) live in the consumer's stylesheet. */
+
+.slider {
+  position: relative;
+
+  &__viewport {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--slider-gap, 12px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: var(--slider-pad, var(--container-px));
+    /* Trailing padding lets the last card snap cleanly without a dead
+       gap, AND creates the always-visible peek of the next card on
+       interim positions. */
+    padding-block: 4px var(--space-2);
+    padding-inline: var(--slider-pad, var(--container-px))
+      calc(var(--slider-pad, var(--container-px)) + 30%);
+
+    /* Hide scrollbars cross-browser. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar { display: none; }
+
+    scroll-behavior: smooth;
+    @media (prefers-reduced-motion: reduce) { scroll-behavior: auto; }
+
+    @media (min-width: 1024px) {
+      gap: var(--slider-gap-lg, 16px);
+    }
+  }
+
+  /* Slides — direct children of the viewport. */
+  ::ng-deep .slider-item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* ===== Right-edge gradient fade =====
+     Only when [edgeFade]="true" (default). Pure decoration — sits above
+     the rail but below the arrow buttons. pointer-events: none so it
+     never blocks taps on the cards underneath. */
+  :host(.has-fade) &__viewport::after { content: none; } /* noop placeholder */
+}
+
+/* Render the fade as a host pseudo so it spans the full slider region
+   without leaking into individual cards or being clipped by viewport
+   overflow. */
+:host(.has-fade)::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: 56px;
+  pointer-events: none;
+  background: linear-gradient(to left,
+    var(--slider-fade-color, var(--color-bg)) 0%,
+    transparent 100%);
+  z-index: 1;
+  /* Hide the fade once the user has scrolled to the very end. The
+     viewport's scroll state isn't reachable from here; instead we drop
+     opacity gracefully using progress (set on body). Cheap fix: keep a
+     constant fade — looks fine and saves logic. */
+}
+
+/* ===== Arrow buttons — desktop only ===== */
+.slider__arrow {
+  display: none;
+
+  @media (min-width: 1024px) and (hover: hover) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-rule);
+    color: var(--color-primary-deep);
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0;
+    transition:
+      opacity var(--rt-dur-200) var(--rt-ease-out),
+      background-color var(--rt-dur-150) var(--rt-ease-out),
+      border-color var(--rt-dur-150) var(--rt-ease-out),
+      transform var(--rt-dur-150) var(--rt-ease-out);
+    box-shadow: 0 4px 16px rgba(31, 58, 43, 0.10);
+
+    svg { width: 18px; height: 18px; }
+
+    &:hover {
+      background: var(--color-tint);
+      border-color: var(--color-primary);
+    }
+    &:active { transform: translateY(-50%) scale(0.95); }
+  }
+
+  &--prev { left: 8px; }
+  &--next { right: 8px; }
+}
+
+@media (min-width: 1024px) and (hover: hover) {
+  :host(:hover) .slider__arrow,
+  :host(:focus-within) .slider__arrow { opacity: 1; }
+}
+
+/* ===== Dot indicators ===== */
+.slider__dots {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  li { display: inline-flex; }
+}
+
+.slider__dot {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-primary-deep) 25%, transparent);
+    transition:
+      background-color var(--rt-dur-150) var(--rt-ease-out),
+      transform var(--rt-dur-200) var(--rt-ease-out);
+  }
+
+  &.is-active::after {
+    background: var(--color-primary-deep);
+    transform: scale(1.25);
+  }
+
+  &:hover::after {
+    background: color-mix(in srgb, var(--color-primary-deep) 60%, transparent);
+  }
+}
+
+/* ===== Progress bar (alternative to dots) =====
+   Cleaner indicator for auto-scrolling sliders — dots stop being
+   meaningful once content rotates, but a progress bar always reflects
+   "where am I in the rail" honestly. */
+.slider__progress {
+  position: relative;
+  height: 3px;
+  margin: var(--space-4) auto 0;
+  width: min(160px, 50%);
+  background: color-mix(in srgb, var(--color-primary-deep) 12%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.slider__progress-fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  background: var(--color-primary-deep);
+  border-radius: inherit;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform var(--rt-dur-200) var(--rt-ease-out);
+}

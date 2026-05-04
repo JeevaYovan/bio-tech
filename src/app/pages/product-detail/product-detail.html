@@ -42,7 +42,9 @@
         <p class="detail__category">{{ vm.product.category }}</p>
         <h1 id="detail-title" class="detail__name">{{ vm.product.name }}</h1>
         <p class="detail__size">{{ vm.product.size }}</p>
-        <p class="detail__price">{{ vm.priceLabel }}</p>
+        <p class="detail__price">
+          {{ vm.priceLabel }} <span class="detail__per">per piece</span>
+        </p>
 
         <p class="detail__description">{{ vm.product.content.description }}</p>
 
@@ -55,12 +57,58 @@
           <dd><code>{{ vm.product.slug }}</code></dd>
         </dl>
 
-        <a [href]="vm.waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent btn--large">
-          Order on WhatsApp
+        <a [href]="vm.waUrl" target="_blank" rel="noopener noreferrer"
+           class="btn btn--accent btn--large detail__cta">
+          Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
         </a>
       </div>
     </div>
+
+    @if (vm.related.length > 0) {
+      <section class="detail__related" aria-labelledby="related-title">
+        <header class="detail__related-head">
+          <p class="section-eyebrow">From the same category</p>
+          <h2 id="related-title">More {{ vm.product.category }}</h2>
+        </header>
+        <app-horizontal-slider class="detail__related-rail" ariaLabel="Related products">
+          @for (r of vm.related; track r.slug) {
+            <a appHorizontalSliderItem class="related-card" [routerLink]="['/products', r.slug]">
+              @if (r.image) {
+                <picture class="related-card__media">
+                  <source type="image/avif" [attr.srcset]="r.image.avifSrcset" sizes="(min-width: 1024px) 240px, 200px" />
+                  <source type="image/webp" [attr.srcset]="r.image.webpSrcset" sizes="(min-width: 1024px) 240px, 200px" />
+                  <img
+                    [src]="r.image.fallback"
+                    [attr.srcset]="r.image.jpgSrcset"
+                    sizes="(min-width: 1024px) 240px, 200px"
+                    [attr.width]="r.image.width" [attr.height]="r.image.height"
+                    loading="lazy" decoding="async"
+                    [attr.alt]="r.image.alt" />
+                </picture>
+              } @else {
+                <div class="related-card__placeholder" aria-hidden="true"></div>
+              }
+              <div class="related-card__body">
+                <p class="related-card__name">{{ r.name }}</p>
+                <p class="related-card__size">{{ r.size }}</p>
+                <p class="related-card__price">{{ r.priceLabel }}</p>
+              </div>
+            </a>
+          }
+        </app-horizontal-slider>
+      </section>
+    }
   </article>
+
+  <!-- Sticky-bottom mobile WA CTA — thumb-zone primary action.  Hidden on
+       desktop where the inline button in the body is enough. -->
+  <a class="detail__sticky-wa"
+     [href]="vm.waUrl"
+     target="_blank"
+     rel="noopener noreferrer">
+    Order this on WhatsApp — {{ vm.priceLabel }}
+    <span class="visually-hidden">(opens in new tab)</span>
+  </a>
 } @else {
   <section class="detail-missing" aria-labelledby="missing-title">
     <h1 id="missing-title">Product not found</h1>

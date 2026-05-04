@@ -1,9 +1,20 @@
-:host { display: block; }
+:host { display: block; padding-block-end: 80px; }
+@media (min-width: 1024px) { :host { padding-block-end: 0; } }
+
+.section-eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-block-end: var(--space-3);
+  font-weight: 600;
+}
 
 .detail {
   max-width: var(--container-max);
   margin-inline: auto;
-  padding: var(--space-8) var(--container-px) var(--space-16);
+  padding: var(--space-8) var(--container-px) var(--space-12);
+  @media (min-width: 1024px) { padding-block-end: var(--space-16); }
 
   &__crumbs {
     margin-block-end: var(--space-8);
@@ -21,7 +32,6 @@
     a {
       color: var(--color-primary);
       text-decoration: none;
-      /* Touch target ≥ 24 px tall (WCAG 2.5.8) */
       padding-block: 0.25rem;
       display: inline-block;
     }
@@ -32,17 +42,13 @@
     display: grid;
     gap: var(--space-10);
     @media (min-width: 1024px) {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.2fr 1fr;
       gap: var(--space-12);
       align-items: start;
     }
   }
 
   &__media {
-    /* Detail pages show the product at its natural aspect ratio — no
-       forced 4:5 cover that would chop landscape product photos
-       (parcel boxes, spoons, etc.). The intrinsic width/height attrs
-       on the <img> prevent CLS. */
     img {
       width: 100%;
       height: auto;
@@ -50,11 +56,16 @@
       max-height: 70vh;
       border-radius: var(--radius-md);
       background: var(--color-tint);
+      /* §8b — detail hero is 16:10, never square. The contain + bg means
+         portraits won't crop, but the box itself is consistent. */
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      @media (min-width: 1024px) { aspect-ratio: auto; }
     }
   }
 
   &__placeholder {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 10;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -94,16 +105,16 @@
   }
 
   &__category {
-    font-size: var(--type-sm);
+    font-size: 0.6875rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-primary);
+    font-weight: 600;
     margin: 0;
   }
 
   &__name {
     font-family: var(--font-display);
-    font-size: var(--type-4xl);
     line-height: 1.05;
     letter-spacing: -0.01em;
     margin: 0;
@@ -122,6 +133,17 @@
     color: var(--color-accent);
     margin: var(--space-3) 0 var(--space-5);
     line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  &__per {
+    font-family: var(--font-body);
+    font-size: var(--type-sm);
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
   }
 
   &__description {
@@ -158,27 +180,149 @@
       }
     }
   }
+
+  /* Inline CTA — hidden on mobile (sticky bottom replaces it) so we
+     don't have two duplicate buttons stacked above each other. */
+  &__cta {
+    display: none;
+    @media (min-width: 768px) { display: inline-flex; }
+  }
+
+  /* ===== Related products ===== */
+  &__related {
+    margin-block-start: var(--space-12);
+    padding-block-start: var(--space-10);
+    border-block-start: 1px solid var(--color-rule);
+  }
+
+  &__related-head {
+    margin-block-end: var(--space-6);
+    h2 { font-size: var(--type-2xl); margin: 0; }
+  }
+
+  &__related-rail { display: block; }
 }
 
+/* ===== Related card ===== */
+.related-card {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition:
+    border-color var(--rt-dur-200) var(--rt-ease-out),
+    transform var(--rt-dur-200) var(--rt-ease-out),
+    box-shadow var(--rt-dur-200) var(--rt-ease-out);
+
+  @media (min-width: 1024px) { width: 240px; }
+
+  @media (min-width: 1024px) and (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-primary);
+      box-shadow: 0 8px 24px rgba(31, 58, 43, 0.08);
+    }
+  }
+  &:active { transform: scale(0.98); }
+
+  &__media,
+  &__placeholder {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-tint);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__body {
+    padding: var(--space-3) var(--space-4);
+    display: grid;
+    gap: 2px;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: var(--type-base);
+    color: var(--color-primary-deep);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  &__size {
+    font-size: var(--type-xs);
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  &__price {
+    margin-block-start: 4px;
+    font-family: var(--font-display);
+    font-size: var(--type-base);
+    color: var(--color-accent);
+    margin-bottom: 0;
+  }
+}
+
+/* ===== Sticky-bottom WA CTA (mobile only) ===== */
+.detail__sticky-wa {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: var(--color-bg-card);
+  text-decoration: none;
+  font-size: var(--type-base);
+  font-weight: 500;
+  padding: 1rem var(--container-px);
+  box-shadow: 0 -2px 12px rgba(31, 58, 43, 0.10);
+  transition:
+    background-color var(--rt-dur-150) var(--rt-ease-out),
+    transform var(--rt-dur-100) var(--rt-ease-out);
+
+  &:hover { background: color-mix(in srgb, var(--color-accent) 88%, var(--color-ink) 12%); color: var(--color-bg-card); }
+  &:active { transform: scale(0.99); }
+
+  @media (min-width: 768px) { display: none; }
+}
+
+/* ===== Inline btn (desktop) ===== */
 .btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.75rem 1.25rem;
+  padding: 0.85rem 1.4rem;
   border-radius: var(--radius-md);
   font-weight: 500;
   font-size: var(--type-base);
   text-decoration: none;
   border: 1px solid transparent;
-  transition: background 120ms ease;
+  transition:
+    background-color var(--rt-dur-150) var(--rt-ease-out),
+    transform var(--rt-dur-100) var(--rt-ease-out);
 
   &--accent {
     background: var(--color-accent);
     color: var(--color-bg-card);
     &:hover { background: color-mix(in srgb, var(--color-accent) 85%, var(--color-ink) 15%); color: var(--color-bg-card); }
   }
-  &--large { padding: 1rem 1.75rem; font-size: var(--type-lg); }
+  &--large { padding: 1.05rem 1.85rem; font-size: var(--type-lg); }
+  &:active { transform: scale(0.98); }
 }
 
+/* ===== Missing fallback ===== */
 .detail-missing {
   max-width: var(--container-max);
   margin-inline: auto;

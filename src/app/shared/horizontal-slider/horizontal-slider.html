@@ -1,0 +1,53 @@
+<div class="slider">
+  @if (canPrev()) {
+    <button
+      type="button"
+      class="slider__arrow slider__arrow--prev"
+      aria-label="Previous"
+      (click)="scrollPrev()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  }
+  @if (canNext()) {
+    <button
+      type="button"
+      class="slider__arrow slider__arrow--next"
+      aria-label="Next"
+      (click)="scrollNext()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  }
+
+  <div #viewport class="slider__viewport" tabindex="0">
+    <ng-content />
+  </div>
+
+  @if (count() > 1) {
+    @if (progressBar()) {
+      <div class="slider__progress" role="progressbar"
+           [attr.aria-valuenow]="progressPercent()"
+           aria-valuemin="0" aria-valuemax="100"
+           aria-label="Scroll progress">
+        <div class="slider__progress-fill" [style.transform]="'scaleX(' + progress() + ')'"></div>
+      </div>
+    } @else {
+      <ol class="slider__dots" aria-label="Slide selector">
+        @for (_ of items(); track $index) {
+          <li>
+            <button
+              type="button"
+              class="slider__dot"
+              [class.is-active]="current() === $index"
+              [attr.aria-current]="current() === $index ? 'true' : null"
+              [attr.aria-label]="'Go to slide ' + ($index + 1)"
+              (click)="goTo($index)"></button>
+          </li>
+        }
+      </ol>
+    }
+  }
+</div>

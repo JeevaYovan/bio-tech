@@ -1,0 +1,84 @@
+:host { display: contents; }
+
+/* REBUILD §11a — Sticky floating WhatsApp.
+   Mobile 60 px (thumb-zone), desktop 56 px (smaller, less obtrusive on
+   wider canvases per §6c). Terracotta on cream — high contrast.
+   Position: fixed, bottom-right, above any in-page content but below
+   modal layers if/when introduced. */
+.sticky-wa {
+  position: fixed;
+  inset-inline-end: 1rem;
+  inset-block-end: 1rem;
+  z-index: 50;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-bg-card);
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(31, 58, 43, 0.18);
+  /* Animation #10 — slide in from below; out by 80 px. */
+  transition:
+    transform var(--rt-dur-200) var(--rt-ease-out),
+    opacity var(--rt-dur-200) var(--rt-ease-out),
+    background-color var(--rt-dur-150) var(--rt-ease-out);
+
+  @media (min-width: 1024px) {
+    width: 56px;
+    height: 56px;
+    inset-inline-end: 1.5rem;
+    inset-block-end: 1.5rem;
+  }
+
+  &__glyph {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+  }
+
+  /* Animation #7 — touch press feedback (also serves as desktop active) */
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-accent) 88%, var(--color-ink) 12%);
+    color: var(--color-bg-card);
+  }
+
+  &.is-hidden {
+    transform: translateY(var(--rt-translate-sticky));
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* On product-detail pages a sticky-bottom WA bar already covers this
+     CTA on mobile. Hide the floating button below 768 px to avoid the
+     two overlapping. Desktop keeps the floating button (no bottom bar). */
+  :host-context(body[data-route="product-detail"]) & {
+    @media (max-width: 767.98px) { display: none; }
+  }
+
+  /* Animation #9 — subtle pulse ring, every 4 s.
+     Pure decoration; gated under prefers-reduced-motion: no-preference. */
+  @media (prefers-reduced-motion: no-preference) {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 40%, transparent);
+      animation: rt-wa-pulse 4s var(--rt-ease-out) infinite;
+    }
+  }
+}
+
+@keyframes rt-wa-pulse {
+  0%   { box-shadow: 0 0 0 0   color-mix(in srgb, var(--color-accent) 40%, transparent); }
+  60%  { box-shadow: 0 0 0 12px color-mix(in srgb, var(--color-accent) 0%,  transparent); }
+  100% { box-shadow: 0 0 0 0   color-mix(in srgb, var(--color-accent) 0%,  transparent); }
+}

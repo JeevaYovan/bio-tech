@@ -5,6 +5,10 @@
 }
 
 main { flex: 1 0 auto; }
+/* Route-shell wraps the outlet so @routeFade has a real layout box to
+   animate opacity on. display:block (default) is intentional — display:
+   contents would erase the box and break the transition. */
+.route-shell { display: block; }
 
 .skip-link {
   position: absolute;
@@ -31,22 +35,36 @@ main { flex: 1 0 auto; }
 
 /* ============ HEADER ============ */
 
+/* Header is full-bleed: the cream band + sticky blur stretches edge to
+   edge of the viewport, while the brand+nav+CTA row inside is capped
+   to --container-max and centered. We achieve this without an extra
+   wrapper element by growing padding-inline on wide viewports — the
+   `max(safe-gutter, (parent-width − container-max) / 2)` pattern. */
 .site-header {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--space-3);
-  padding: var(--space-4) var(--container-px);
-  border-block-end: 1px solid var(--color-rule);
-  background: var(--color-bg);
-  max-width: var(--container-max);
-  margin-inline: auto;
   width: 100%;
+  border-block-end: 1px solid var(--color-rule);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+
+  /* Mobile: small horizontal gutter, tighter vertical rhythm. */
+  padding: var(--space-3) var(--container-px);
 
   @media (min-width: 768px) {
-    flex-wrap: nowrap;
     gap: var(--space-5);
-    padding-block: var(--space-5);
+    padding-block: var(--space-4);
+    /* 100% (parent width) is scrollbar-aware (unlike 100vw), so this
+       won't trigger horizontal overflow when the page has a scrollbar.
+       Below 1200 px viewport: padding stays at --container-px.
+       Above: extra padding equally on each side to center content. */
+    padding-inline: max(var(--container-px),
+      calc((100% - var(--container-max)) / 2));
   }
 }
 
@@ -112,24 +130,14 @@ main { flex: 1 0 auto; }
 }
 
 .site-nav {
-  display: flex;
-  gap: var(--space-3);
-  flex: 1 1 100%;
-  order: 4;
-  padding-block-start: var(--space-3);
-  border-block-start: 1px solid var(--color-rule);
-  margin-block-start: var(--space-1);
-  font-size: var(--type-sm);
-  flex-wrap: wrap;
+  /* Mobile hides the inline nav entirely — drawer takes over. */
+  display: none;
 
   @media (min-width: 768px) {
+    display: flex;
     flex: 0 0 auto;
-    order: 2;
     margin-inline-start: auto;
     margin-inline-end: var(--space-5);
-    margin-block-start: 0;
-    padding-block-start: 0;
-    border: none;
     gap: var(--space-5);
     font-size: var(--type-base);
   }
@@ -137,8 +145,6 @@ main { flex: 1 0 auto; }
   a {
     color: var(--color-ink);
     text-decoration: none;
-    /* Min 24×24 touch target on mobile (WCAG 2.5.8). At 14 px font + 1.6 line-height = 22 px;
-       padding-block: 6px brings it to 34 px which is comfortable. */
     padding-block: 0.4rem;
     position: relative;
     transition: color 160ms ease;
@@ -170,30 +176,23 @@ main { flex: 1 0 auto; }
 }
 
 .header-cta {
-  display: inline-flex;
+  /* Hidden on mobile — the drawer's full-width "Order on WhatsApp"
+     button replaces it. Visible from tablet up where the header has
+     room for an inline button. */
+  display: none;
   align-items: center;
   background: var(--color-accent);
   color: var(--color-bg-card);
-  padding: 0.5rem 0.85rem;
+  padding: 0.625rem 1.125rem;
   border-radius: var(--radius-md);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.8125rem;
+  font-size: var(--type-sm);
   white-space: nowrap;
-  margin-inline-start: auto;
-  order: 3;
-  transition: background 160ms ease;
-
-  @media (min-width: 480px) {
-    padding: 0.55rem 1rem;
-    font-size: var(--type-sm);
-  }
+  transition: background-color var(--rt-dur-150) var(--rt-ease-out);
 
   @media (min-width: 768px) {
-    padding: 0.625rem 1.125rem;
-    font-size: var(--type-sm);
-    order: 4;
-    margin-inline-start: 0;
+    display: inline-flex;
   }
 
   &:hover {
@@ -202,84 +201,299 @@ main { flex: 1 0 auto; }
   }
 }
 
-/* ============ FOOTER ============ */
+/* ============ HAMBURGER (mobile only) ============ */
+.hamburger {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 44px;
+  height: 44px;
+  margin-inline-start: auto;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background-color var(--rt-dur-150) var(--rt-ease-out);
+
+  &:hover { background: var(--color-tint); }
+  &:active { transform: scale(0.97); }
+
+  @media (min-width: 768px) {
+    /* Inline nav takes over from tablet up. */
+    display: none;
+  }
+
+  &__line {
+    width: 22px;
+    height: 2px;
+    background: var(--color-primary-deep);
+    border-radius: 2px;
+    transition:
+      transform var(--rt-dur-200) var(--rt-ease-out),
+      opacity var(--rt-dur-150) var(--rt-ease-out);
+  }
+
+  /* Animate to an X when open. */
+  &.is-open {
+    .hamburger__line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger__line:nth-child(2) { opacity: 0; }
+    .hamburger__line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
+
+/* ============ MOBILE DRAWER ============ */
+.mobile-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear var(--rt-dur-200);
+
+  &.is-open {
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  @media (min-width: 768px) { display: none; }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(31, 58, 43, 0.45);
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity var(--rt-dur-200) var(--rt-ease-out);
+  }
+  &.is-open &__backdrop { opacity: 1; }
+
+  &__panel {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block: 0;
+    width: min(86vw, 360px);
+    background: var(--color-bg-card);
+    box-shadow: -8px 0 32px rgba(31, 58, 43, 0.18);
+    transform: translateX(100%);
+    transition: transform var(--rt-dur-250) var(--rt-ease-out);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  &.is-open &__panel { transform: translateX(0); }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-5);
+    border-block-end: 1px solid var(--color-rule);
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: var(--type-xl);
+    color: var(--color-primary-deep);
+  }
+
+  &__close {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--color-primary-deep);
+    cursor: pointer;
+    transition: background-color var(--rt-dur-150) var(--rt-ease-out);
+
+    &:hover { background: var(--color-tint); }
+    svg { width: 18px; height: 18px; }
+  }
+
+  &__list {
+    list-style: none;
+    padding: var(--space-3) 0;
+    margin: 0;
+    flex: 1 0 auto;
+
+    li a {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: 0.95rem var(--space-5);
+      color: var(--color-ink);
+      text-decoration: none;
+      font-size: var(--type-base);
+      transition: background-color var(--rt-dur-150) var(--rt-ease-out);
+
+      svg {
+        width: 18px;
+        height: 18px;
+        color: var(--color-primary);
+        flex: 0 0 18px;
+      }
+
+      &:hover { background: color-mix(in srgb, var(--color-tint) 50%, transparent); }
+      &:active { background: var(--color-tint); }
+
+      &.is-active {
+        background: color-mix(in srgb, var(--color-tint) 60%, transparent);
+        color: var(--color-primary-deep);
+        font-weight: 500;
+        svg { color: var(--color-accent); }
+      }
+    }
+  }
+
+  &__cta {
+    margin: var(--space-3) var(--space-5) var(--space-5);
+    padding: 0.95rem 1.25rem;
+    background: var(--color-accent);
+    color: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color var(--rt-dur-150) var(--rt-ease-out);
+
+    &:hover {
+      background: color-mix(in srgb, var(--color-accent) 88%, var(--color-ink) 12%);
+      color: var(--color-bg-card);
+    }
+  }
+}
+
+/* ============ FOOTER (REBUILD §11c) ============
+   Always sits on --rathika-green-900. Single column on mobile, hairline-
+   divided columns on desktop. Hierarchy reflects 4 sections: brand,
+   catalog, company, reach-us. */
 
 .site-footer {
-  margin-block-start: var(--space-16);
-  padding: var(--space-12) var(--container-px) var(--space-16);
-  border-block-start: 1px solid var(--color-rule);
-  background: color-mix(in srgb, var(--color-tint) 30%, var(--color-bg) 70%);
+  /* No margin-block-start — the preceding section's bottom padding plus
+     the footer's own padding gives the breathing room. A margin would
+     show body cream between the terracotta CTA band and the footer. */
+  padding: var(--space-12) var(--container-px) var(--space-8);
+  background: var(--color-primary-deep);
+  color: color-mix(in srgb, var(--color-bg-card) 85%, transparent);
   font-size: var(--type-sm);
 
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
     display: grid;
-    gap: var(--space-6);
+    gap: var(--space-8);
 
-    @media (min-width: 768px) {
-      grid-template-columns: 2fr 1fr;
+    @media (min-width: 640px) {
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (min-width: 1024px) {
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: var(--space-10);
       align-items: start;
     }
+  }
+
+  &__col {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+
+    /* Hairline between columns on mobile (single col) for visual rhythm. */
+    @media (max-width: 639px) {
+      &:not(:first-child) {
+        padding-block-start: var(--space-5);
+        border-block-start: 1px solid color-mix(in srgb, var(--color-bg-card) 12%, transparent);
+      }
+    }
+
+    &--brand {
+      gap: var(--space-4);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: var(--space-2);
+
+      li a {
+        display: inline-block;
+        color: color-mix(in srgb, var(--color-bg-card) 80%, transparent);
+        text-decoration: none;
+        padding-block: 0.3rem;
+        transition: color var(--rt-dur-150) var(--rt-ease-out);
+
+        &:hover {
+          color: var(--color-bg-card);
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
+      }
+    }
+  }
+
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: var(--color-bg-card);
+  }
+
+  &__mark {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+
+  &__brandname {
+    font-family: var(--font-display);
+    font-size: var(--type-xl);
+    color: var(--color-bg-card);
+    letter-spacing: -0.01em;
   }
 
   &__address {
     font-style: normal;
     line-height: 1.7;
-    color: var(--color-ink);
-
-    strong {
-      display: block;
-      font-family: var(--font-display);
-      font-size: var(--type-base);
-      color: var(--color-primary-deep);
-      margin-block-end: 0.25rem;
-    }
-  }
-
-  &__contact {
-    list-style: none;
-    padding: 0;
+    color: color-mix(in srgb, var(--color-bg-card) 70%, transparent);
     margin: 0;
-
-    li { padding-block: 0.3rem; }
-
-    a {
-      color: var(--color-primary);
-      text-decoration: none;
-      transition: color 160ms ease;
-
-      &:hover {
-        color: var(--color-primary-deep);
-        text-decoration: underline;
-        text-underline-offset: 3px;
-      }
-    }
+    font-size: var(--type-sm);
   }
 
-  &__meta {
-    grid-column: 1 / -1;
-    margin-block-start: var(--space-6);
-    padding-block-start: var(--space-6);
-    border-block-start: 1px solid var(--color-rule);
-    color: var(--color-muted);
+  &__heading {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: color-mix(in srgb, var(--color-bg-card) 55%, transparent);
+    font-weight: 600;
+    margin: 0 0 var(--space-2);
+  }
+
+  &__hours {
+    color: color-mix(in srgb, var(--color-bg-card) 55%, transparent);
+    padding-block: 0.3rem;
+  }
+
+  &__bar {
+    max-width: var(--container-max);
+    margin: var(--space-10) auto 0;
+    padding-block-start: var(--space-5);
+    border-block-start: 1px solid color-mix(in srgb, var(--color-bg-card) 12%, transparent);
+    color: color-mix(in srgb, var(--color-bg-card) 55%, transparent);
     font-size: var(--type-xs);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
-  }
-
-  &__privacy {
-    color: var(--color-muted);
-    text-decoration: none;
-    border-block-end: 1px dotted var(--color-rule);
-    padding-block-end: 1px;
-    transition: color 160ms ease, border-color 160ms ease;
-
-    &:hover {
-      color: var(--color-primary);
-      border-color: var(--color-primary);
-    }
+    p { margin: 0; }
   }
 }
