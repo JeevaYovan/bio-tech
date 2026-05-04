@@ -1,4 +1,10 @@
-<!-- ===================== HERO ===================== -->
+<!-- ===================== HERO =====================
+   Document order matches mobile layout exactly:
+   1) eyebrow + title + lede (hero__copy)
+   2) image (hero__media)
+   3) CTAs (hero__ctas)
+   On desktop, grid-template-areas restores the side-by-side layout
+   (image right, copy + CTAs stacked left). -->
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__inner">
     <div class="hero__copy">
@@ -12,13 +18,8 @@
         fiber, sugarcane bagasse, and rice husk — agricultural by-products that
         would otherwise be burned.
       </p>
-      <div class="hero__ctas">
-        <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
-          Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
-        </a>
-        <a routerLink="/products" class="btn btn--ghost">See catalog</a>
-      </div>
     </div>
+
     <picture class="hero__media">
       <source
         type="image/avif"
@@ -39,6 +40,13 @@
         loading="eager" fetchpriority="high" decoding="sync"
         alt="A bagasse tea cup beside a haystack at the edge of a paddy field at golden hour" />
     </picture>
+
+    <div class="hero__ctas">
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
+        Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
+      </a>
+      <a routerLink="/products" class="btn btn--ghost">See catalog</a>
+    </div>
   </div>
 </section>
 

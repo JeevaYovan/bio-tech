@@ -84,21 +84,36 @@
     max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-px);
+    /* Mobile: stack copy → media → CTAs in document order. Tighter
+       gap between media and CTAs so the cup-then-button pairing reads
+       as one unit. */
     display: grid;
-    gap: var(--space-6);
-    align-items: center;
-    @media (min-width: 768px)  { gap: var(--space-8); }
+    gap: var(--space-5);
+    grid-template-areas:
+      "copy"
+      "media"
+      "ctas";
+
+    @media (min-width: 768px) { gap: var(--space-6); }
+
+    /* Desktop: copy + CTAs stack in the left column, media spans the
+       right column across both rows. Side-by-side composition. */
     @media (min-width: 1024px) {
       grid-template-columns: 1fr 1.2fr;
-      gap: var(--space-12);
+      grid-template-areas:
+        "copy  media"
+        "ctas  media";
+      column-gap: var(--space-12);
+      row-gap: var(--space-5);
+      align-items: start;
     }
   }
 
-  &__copy { order: 2; @media (min-width: 1024px) { order: 1; } }
+  &__copy  { grid-area: copy;  }
+  &__media { grid-area: media; }
+  &__ctas  { grid-area: ctas;  }
 
   &__media {
-    order: 1;
-    @media (min-width: 1024px) { order: 2; }
     border-radius: var(--radius-lg);
     overflow: hidden;
     position: relative;
@@ -154,12 +169,13 @@
     color: var(--color-ink);
     line-height: 1.6;
     max-width: 38ch;
-    margin-block-end: var(--space-5);
+    /* No margin-block-end — grid gap handles vertical spacing to the
+       next area (media on mobile, CTAs row 2 on desktop). */
+    margin: 0;
 
     @media (min-width: 768px) {
       font-size: var(--type-lg);
       max-width: 52ch;
-      margin-block-end: var(--space-8);
     }
   }
 
