@@ -8,16 +8,12 @@
   [class.is-scrolled]="scrolled()"
   [class.is-over-hero]="!scrolled() && (routeKey() === 'home' || routeKey() === 'products' || routeKey() === 'wholesale' || routeKey() === 'about' || routeKey() === 'contact')">
   <a routerLink="/" class="brand" aria-label="Rathika Biotech Products home">
-    <picture class="brand__mark-wrap" aria-hidden="true">
-      <source type="image/avif" srcset="assets/brand/logo-64.avif" />
-      <source type="image/webp" srcset="assets/brand/logo-64.webp" />
-      <img
-        class="brand__mark"
-        src="assets/brand/logo-64.jpg"
-        width="48" height="48"
-        alt=""
-        loading="eager" decoding="sync" />
-    </picture>
+    <img
+      class="brand__mark"
+      src="assets/brand/logo.jpeg"
+      width="48" height="48"
+      alt="" aria-hidden="true"
+      loading="eager" decoding="sync" />
     <span class="brand__lockup">
       <span class="brand__name">Rathika</span>
       <span class="brand__sub">Biotech Products</span>
@@ -160,16 +156,12 @@
     <!-- Brand column -->
     <div class="site-footer__col site-footer__col--brand">
       <a routerLink="/" class="site-footer__brand" aria-label="Rathika Biotech Products home">
-        <picture aria-hidden="true">
-          <source type="image/avif" srcset="assets/brand/logo-64.avif" />
-          <source type="image/webp" srcset="assets/brand/logo-64.webp" />
-          <img
-            class="site-footer__mark"
-            src="assets/brand/logo-64.jpg"
-            width="48" height="48"
-            alt=""
-            loading="lazy" decoding="async" />
-        </picture>
+        <img
+          class="site-footer__mark"
+          src="assets/brand/logo.jpeg"
+          width="48" height="48"
+          alt="" aria-hidden="true"
+          loading="lazy" decoding="async" />
         <span class="site-footer__brandname">Rathika</span>
       </a>
       <address class="site-footer__address">
