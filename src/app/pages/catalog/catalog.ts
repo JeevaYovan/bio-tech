@@ -21,6 +21,7 @@ import { SeoService } from '../../services/seo.service';
 import { WA_URL, whatsappOrderUrlForProduct } from '../../shared/constants';
 import { HorizontalSliderComponent } from '../../shared/horizontal-slider/horizontal-slider';
 import { HorizontalSliderItemDirective } from '../../shared/horizontal-slider/horizontal-slider-item.directive';
+import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
 
 type Filter = 'all' | ProductCategory;
 
@@ -52,7 +53,7 @@ interface FilterTab {
 @Component({
   selector: 'app-catalog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective],
+  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective, SectionBadgeComponent],
   templateUrl: './catalog.html',
   styleUrl: './catalog.scss',
 })

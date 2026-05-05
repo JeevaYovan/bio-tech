@@ -18,6 +18,12 @@
     }
   }
 
+  &__featured-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
   &__lead {
     font-size: var(--type-lg);
     color: var(--color-muted);

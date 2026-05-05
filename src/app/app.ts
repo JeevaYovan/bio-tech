@@ -7,6 +7,7 @@ import {
   ViewChild,
   inject,
   OnInit,
+  AfterViewInit,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
@@ -48,7 +49,7 @@ import { ScrollTopComponent } from './shared/scroll-top/scroll-top';
     ]),
   ],
 })
-export class App implements OnInit {
+export class App implements OnInit, AfterViewInit {
   private readonly seo = inject(SeoService);
   private readonly contexts = inject(ChildrenOutletContexts);
   private readonly router = inject(Router);
@@ -63,6 +64,9 @@ export class App implements OnInit {
   /** Stamp the current top-level path on the body so route-aware
       siblings (sticky WA, scroll-top) can react via [data-route]. */
   protected readonly routeKey = signal<string>('home');
+  /** True once the page has scrolled past 80px — flips header to
+      opaque white-with-shadow. */
+  protected readonly scrolled = signal(false);
 
   /** Refs used to return focus to the hamburger when the drawer
       closes — keyboard users expect focus restoration after a modal
@@ -90,6 +94,14 @@ export class App implements OnInit {
           document.body.dataset['route'] = this.routeKey();
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const onScroll = () => this.scrolled.set(window.scrollY > 80);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    this.destroyRef.onDestroy(() => window.removeEventListener('scroll', onScroll));
   }
 
   protected toggleMenu(): void {

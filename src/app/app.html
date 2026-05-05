@@ -1,12 +1,15 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="site-header" role="banner">
+<header
+  class="site-header"
+  role="banner"
+  [class.is-scrolled]="scrolled()"
+  [class.is-over-hero]="routeKey() === 'home' && !scrolled()">
   <a routerLink="/" class="brand" aria-label="Rathika Biotech Products home">
     <img
       class="brand__mark"
-      src="assets/brand/logo-44.png"
-      srcset="assets/brand/logo-44.png 1x, assets/brand/logo-88.png 2x"
-      width="44" height="44"
+      src="assets/brand/logo.svg"
+      width="48" height="48"
       alt="" aria-hidden="true"
       loading="eager" decoding="sync" />
     <span class="brand__lockup">
@@ -147,9 +150,8 @@
       <a routerLink="/" class="site-footer__brand" aria-label="Rathika Biotech Products home">
         <img
           class="site-footer__mark"
-          src="assets/brand/logo-44.png"
-          srcset="assets/brand/logo-44.png 1x, assets/brand/logo-88.png 2x"
-          width="44" height="44"
+          src="assets/brand/logo.svg"
+          width="48" height="48"
           alt="" aria-hidden="true"
           loading="lazy" decoding="async" />
         <span class="site-footer__brandname">Rathika</span>
