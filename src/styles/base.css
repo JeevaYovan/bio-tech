@@ -16,18 +16,12 @@ html {
   overflow-x: clip;
 }
 
-/* On routes that lead with a dark hero (home, products, wholesale,
-   about, contact), the dark green needs to extend through any top
-   rubber-band / scroll-overflow area. Matching html bg to the hero
-   colour hides the thin light line some browsers render above the
-   sticky header at scrollY = 0. */
-body[data-route="home"],
-body[data-route="products"],
-body[data-route="wholesale"],
-body[data-route="about"],
-body[data-route="contact"] {
-  background: var(--color-bg-dark);
-}
+/* On routes that lead with a dark hero, set the html background to
+   dark green so the very top of the viewport (above the sticky header
+   at scrollY = 0, and any rubber-band / scroll-overflow area) reads as
+   the hero colour rather than a thin white line. The BODY stays at
+   mint so any section that doesn't paint its own background still
+   reads correctly — only the html-level rubber-band edge is dark. */
 html:has(body[data-route="home"]),
 html:has(body[data-route="products"]),
 html:has(body[data-route="wholesale"]),

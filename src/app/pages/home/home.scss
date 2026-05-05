@@ -557,6 +557,7 @@
 }
 
 /* ===================== PILLARS ===================== */
+.pillars { background: var(--color-bg); }
 .pillars__head {
   text-align: center;
   display: flex;
@@ -654,6 +655,7 @@
 }
 
 /* ===================== ECO TIPS ===================== */
+.eco-tips { background: var(--color-bg); }
 .eco-tips__head {
   text-align: center;
   display: flex;
