@@ -1,13 +1,10 @@
 <!-- ===================== HERO ===================== -->
 <section class="contact-hero" aria-labelledby="contact-title">
   <div class="contact-hero__bg" aria-hidden="true"></div>
-  <div class="container contact-hero__inner">
-    <app-section-badge label="Contact"
-      revealOnScroll [revealDelay]="0" />
-    <h1 id="contact-title" class="contact-hero__title"
-        revealOnScroll [revealDelay]="120">Get in touch</h1>
-    <p class="contact-hero__lead"
-       revealOnScroll [revealDelay]="240">
+  <div class="container contact-hero__inner hero-stagger">
+    <app-section-badge label="Contact" />
+    <h1 id="contact-title" class="contact-hero__title">Get in touch</h1>
+    <p class="contact-hero__lead">
       Most orders come through WhatsApp. We respond during working hours,
       typically same-day. For bulk and custom orders, send the product slugs,
       quantities, and your delivery location.
@@ -16,7 +13,7 @@
 </section>
 
 <!-- ===================== CHANNELS ===================== -->
-<section appReveal class="section contact-channels" aria-labelledby="channels-title">
+<section class="section contact-channels" aria-labelledby="channels-title">
   <div class="container">
     <header class="contact-channels__head">
       <app-section-badge label="Reach us"
@@ -70,7 +67,7 @@
 </section>
 
 <!-- ===================== LOCATION ===================== -->
-<section appReveal class="section section--mint contact-location" aria-labelledby="location-title">
+<section class="section section--mint contact-location" aria-labelledby="location-title">
   <div class="container">
     <header class="contact-location__head">
       <app-section-badge label="Workshop & office"
@@ -150,7 +147,7 @@
 </section>
 
 <!-- ===================== INQUIRY FORM ===================== -->
-<section appReveal class="section contact-form" aria-labelledby="form-title">
+<section class="section contact-form" aria-labelledby="form-title">
   <div class="container contact-form__inner">
     <header class="contact-form__head">
       <app-section-badge label="Quick inquiry"

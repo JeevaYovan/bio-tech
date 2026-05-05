@@ -11,7 +11,6 @@ import { SeoService } from '../../services/seo.service';
 import { WA_URL } from '../../shared/constants';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
 import { StatsCounterComponent } from '../../shared/stats-counter/stats-counter';
-import { RevealDirective } from '../../shared/reveal.directive';
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
@@ -23,7 +22,6 @@ import { revealDelayFor } from '../../shared/reveal/reveal.util';
     RouterLink,
     SectionBadgeComponent,
     StatsCounterComponent,
-    RevealDirective,
     RevealOnScrollDirective,
   ],
   templateUrl: './wholesale.html',

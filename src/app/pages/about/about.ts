@@ -3,14 +3,13 @@ import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 import { WA_URL } from '../../shared/constants';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
-import { RevealDirective } from '../../shared/reveal.directive';
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 @Component({
   selector: 'app-about',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, SectionBadgeComponent, RevealDirective, RevealOnScrollDirective],
+  imports: [RouterLink, SectionBadgeComponent, RevealOnScrollDirective],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })

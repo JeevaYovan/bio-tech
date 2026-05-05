@@ -15,14 +15,13 @@ import {
   WA_URL,
 } from '../../shared/constants';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
-import { RevealDirective } from '../../shared/reveal.directive';
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionBadgeComponent, RevealDirective, RevealOnScrollDirective],
+  imports: [SectionBadgeComponent, RevealOnScrollDirective],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })

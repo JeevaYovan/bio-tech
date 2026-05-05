@@ -17,65 +17,63 @@ import {
 } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+/**
+ * Top-of-page progress bar that fires on every router navigation.
+ * No full-screen splash: the site is statically prerendered so HTML is
+ * available immediately — covering it with an overlay would only delay
+ * the LCP. The bar is decorative; navigation start/end is communicated
+ * to AT via the Router itself (no aria-live needed for SPA route
+ * transitions on a prerendered site).
+ */
 @Component({
   selector: 'app-page-loader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- Top progress bar — fires on every navigation start -->
-    <div
-      class="bar"
-      [class.is-loading]="loading()"
-      role="progressbar"
-      aria-label="Page loading"
-      aria-hidden="true"></div>
-
-    <!-- Initial-load splash — only shows once, on the very first paint -->
-    @if (initial()) {
-      <div class="splash" [class.is-out]="splashOut()" aria-hidden="true">
-        <div class="splash__mark">
-          <img src="assets/brand/logo.jpeg" width="64" height="64" alt="" />
-        </div>
-        <div class="splash__spinner"></div>
-      </div>
-    }
+    <div class="bar" [class.is-loading]="loading()" aria-hidden="true"></div>
   `,
   styleUrl: './page-loader.scss',
 })
 export class PageLoaderComponent implements OnInit {
   protected readonly loading = signal(false);
-  protected readonly initial = signal(true);
-  protected readonly splashOut = signal(false);
 
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
+  /** Pending hide-bar timer; cleared on subsequent NavigationStart and
+   *  on component destroy so callbacks don't fire on a stale signal. */
+  private hideTimer: ReturnType<typeof setTimeout> | null = null;
+
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      this.initial.set(false);
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    /* Initial splash: visible briefly on first paint, then fades out.
-       Two-step (fade then unmount) so the fade-out is visible. */
-    setTimeout(() => this.splashOut.set(true), 650);
-    setTimeout(() => this.initial.set(false), 1100);
-
-    /* Top progress bar on every route change */
     this.router.events
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((e) => {
         if (e instanceof NavigationStart) {
+          this.clearHideTimer();
           this.loading.set(true);
         } else if (
           e instanceof NavigationEnd ||
           e instanceof NavigationCancel ||
           e instanceof NavigationError
         ) {
-          /* Small delay so the bar visibly completes before disappearing */
-          setTimeout(() => this.loading.set(false), 280);
+          this.clearHideTimer();
+          this.hideTimer = setTimeout(() => {
+            this.loading.set(false);
+            this.hideTimer = null;
+          }, 280);
         }
       });
+
+    this.destroyRef.onDestroy(() => this.clearHideTimer());
+  }
+
+  private clearHideTimer(): void {
+    if (this.hideTimer !== null) {
+      clearTimeout(this.hideTimer);
+      this.hideTimer = null;
+    }
   }
 }

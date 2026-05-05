@@ -219,24 +219,32 @@ a:hover { color: var(--color-primary-deep); }
 }
 .section--dark .eyebrow::before { color: var(--color-accent); }
 
-/* Scroll reveal — opt-in via [data-reveal] attribute on any element.
-   The directive flips data-reveal-active when it enters viewport. */
-@media (prefers-reduced-motion: no-preference) {
-  [data-reveal] {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 600ms ease, transform 600ms ease;
-  }
-  [data-reveal][data-reveal-active] {
-    opacity: 1;
-    transform: none;
-  }
-}
 
 /* Marquee — used by trust + use-cases bands */
 @keyframes rt-marquee-x {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+/* ======================================================================
+   Hero stagger — CSS-only entry cascade for above-the-fold content.
+   Pure CSS animation (no IntersectionObserver) so the LCP element
+   isn't blocked behind hydration / IO callback timing. Each direct
+   child fades up with a small delay; total runtime stays under 800ms.
+   ====================================================================== */
+@keyframes rt-hero-fade {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-stagger > * {
+    animation: rt-hero-fade 600ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .hero-stagger > *:nth-child(1) { animation-delay: 60ms; }
+  .hero-stagger > *:nth-child(2) { animation-delay: 160ms; }
+  .hero-stagger > *:nth-child(3) { animation-delay: 260ms; }
+  .hero-stagger > *:nth-child(4) { animation-delay: 360ms; }
+  .hero-stagger > *:nth-child(5) { animation-delay: 460ms; }
 }
 
 /* ======================================================================
@@ -273,20 +281,42 @@ a:hover { color: var(--color-primary-deep); }
 }
 
 /* ======================================================================
-   Custom cursor — when active, hide the native pointer everywhere
-   except form controls so text inputs keep the I-beam.
+   Custom cursor — when active, hide the native pointer on most elements
+   while preserving the OS affordance cursor on form controls. Text
+   inputs keep the I-beam, selects/checkboxes/radios/buttons get the
+   default pointer (so a motor-impaired mouse user can still see what
+   the OS thinks is interactive).
    ====================================================================== */
 html.rt-custom-cursor,
 html.rt-custom-cursor * {
   cursor: none !important;
 }
+/* Text-entry: I-beam */
 html.rt-custom-cursor input[type="text"],
 html.rt-custom-cursor input[type="search"],
 html.rt-custom-cursor input[type="email"],
 html.rt-custom-cursor input[type="tel"],
+html.rt-custom-cursor input[type="password"],
 html.rt-custom-cursor input[type="number"],
 html.rt-custom-cursor input[type="url"],
 html.rt-custom-cursor input[type="date"],
-html.rt-custom-cursor textarea {
+html.rt-custom-cursor input[type="datetime-local"],
+html.rt-custom-cursor input[type="month"],
+html.rt-custom-cursor input[type="time"],
+html.rt-custom-cursor input[type="week"],
+html.rt-custom-cursor textarea,
+html.rt-custom-cursor [contenteditable="true"] {
   cursor: text !important;
+}
+/* Other form controls: OS default pointer */
+html.rt-custom-cursor select,
+html.rt-custom-cursor input[type="checkbox"],
+html.rt-custom-cursor input[type="radio"],
+html.rt-custom-cursor input[type="range"],
+html.rt-custom-cursor input[type="file"],
+html.rt-custom-cursor input[type="color"],
+html.rt-custom-cursor input[type="submit"],
+html.rt-custom-cursor input[type="reset"],
+html.rt-custom-cursor input[type="button"] {
+  cursor: auto !important;
 }

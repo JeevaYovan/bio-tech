@@ -8,12 +8,16 @@
   [class.is-scrolled]="scrolled()"
   [class.is-over-hero]="!scrolled() && (routeKey() === 'home' || routeKey() === 'products' || routeKey() === 'wholesale' || routeKey() === 'about' || routeKey() === 'contact')">
   <a routerLink="/" class="brand" aria-label="Rathika Biotech Products home">
-    <img
-      class="brand__mark"
-      src="assets/brand/logo.jpeg"
-      width="48" height="48"
-      alt="" aria-hidden="true"
-      loading="eager" decoding="sync" />
+    <picture class="brand__mark-wrap" aria-hidden="true">
+      <source type="image/avif" srcset="assets/brand/logo-64.avif" />
+      <source type="image/webp" srcset="assets/brand/logo-64.webp" />
+      <img
+        class="brand__mark"
+        src="assets/brand/logo-64.jpg"
+        width="48" height="48"
+        alt=""
+        loading="eager" decoding="sync" />
+    </picture>
     <span class="brand__lockup">
       <span class="brand__name">Rathika</span>
       <span class="brand__sub">Biotech Products</span>
@@ -65,7 +69,10 @@
   </button>
 </header>
 
-<!-- Mobile drawer — backdrop + panel from the right. -->
+<!-- Mobile drawer — backdrop + panel from the right. The panel itself
+     is a role=dialog wrapper so screen readers announce it as a modal;
+     the link list inside is a real <nav> so landmark navigation still
+     surfaces it. -->
 <div
   class="mobile-drawer"
   [class.is-open]="menuOpen()"
@@ -77,12 +84,12 @@
     tabindex="-1"
     (click)="closeMenu()"></button>
 
-  <nav
+  <div
     id="primary-drawer"
     class="mobile-drawer__panel"
-    aria-label="Primary mobile"
-    [attr.aria-modal]="menuOpen() ? 'true' : null"
-    role="dialog">
+    role="dialog"
+    aria-label="Navigation menu"
+    [attr.aria-modal]="menuOpen() ? 'true' : null">
     <div class="mobile-drawer__head">
       <span class="mobile-drawer__title">Menu</span>
       <button
@@ -97,6 +104,7 @@
       </button>
     </div>
 
+    <nav aria-label="Primary mobile">
     <ul class="mobile-drawer__list">
       <li>
         <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="is-active" (click)="closeMenu()">
@@ -130,10 +138,12 @@
       </li>
     </ul>
 
+    </nav>
+
     <a [href]="waUrl" class="mobile-drawer__cta" target="_blank" rel="noopener noreferrer" (click)="closeMenu()">
       Order on WhatsApp
     </a>
-  </nav>
+  </div>
 </div>
 
 <main id="main" tabindex="-1">
@@ -150,12 +160,16 @@
     <!-- Brand column -->
     <div class="site-footer__col site-footer__col--brand">
       <a routerLink="/" class="site-footer__brand" aria-label="Rathika Biotech Products home">
-        <img
-          class="site-footer__mark"
-          src="assets/brand/logo.jpeg"
-          width="48" height="48"
-          alt="" aria-hidden="true"
-          loading="lazy" decoding="async" />
+        <picture aria-hidden="true">
+          <source type="image/avif" srcset="assets/brand/logo-64.avif" />
+          <source type="image/webp" srcset="assets/brand/logo-64.webp" />
+          <img
+            class="site-footer__mark"
+            src="assets/brand/logo-64.jpg"
+            width="48" height="48"
+            alt=""
+            loading="lazy" decoding="async" />
+        </picture>
         <span class="site-footer__brandname">Rathika</span>
       </a>
       <address class="site-footer__address">

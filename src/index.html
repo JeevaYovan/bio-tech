@@ -9,9 +9,18 @@
   <meta name="theme-color" content="#1B4D3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-  <link rel="icon" type="image/jpeg" href="assets/brand/logo.jpeg">
-  <link rel="apple-touch-icon" href="assets/brand/logo.jpeg">
+  <!-- Non-blocking Inter load: preload as style, swap to stylesheet on
+       arrival, fall back to a synchronous link if JS is disabled. -->
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  </noscript>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+  <link rel="apple-touch-icon" href="assets/brand/logo-256.png">
   <link rel="preload" as="image" type="image/avif"
         href="assets/lifestyle/hero-tea-cup-haystack-768.avif"
         imagesrcset="assets/lifestyle/hero-tea-cup-haystack-768.avif 768w, assets/lifestyle/hero-tea-cup-haystack-1280.avif 1280w"

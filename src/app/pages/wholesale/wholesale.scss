@@ -81,8 +81,8 @@
   transition: transform 250ms ease, box-shadow 250ms ease;
 }
 .wh-stats__grid app-stats-counter:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* ===================== FORM ===================== */

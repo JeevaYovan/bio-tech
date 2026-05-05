@@ -1,28 +1,23 @@
 <!-- ===================== HERO ===================== -->
 <section class="wh-hero" aria-labelledby="wh-title">
   <div class="wh-hero__bg" aria-hidden="true"></div>
-  <div class="container wh-hero__inner">
-    <app-section-badge label="Wholesale"
-      revealOnScroll [revealDelay]="0" />
-    <h1 id="wh-title" class="wh-hero__title"
-        revealOnScroll [revealDelay]="120">
+  <div class="container wh-hero__inner hero-stagger">
+    <app-section-badge label="Wholesale" />
+    <h1 id="wh-title" class="wh-hero__title">
       For restaurants, caterers,<br />weddings, and festivals.
     </h1>
-    <p class="wh-hero__lead"
-       revealOnScroll [revealDelay]="240">
+    <p class="wh-hero__lead">
       We supply biodegradable tableware in carton lots and pallet quantities.
       Plates, bowls, cups, parcel boxes, spoons, and decorative pieces — all
       hand-pressed in our Neelambur workshop.
     </p>
     <div class="wh-hero__ctas">
-      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent"
-         revealOnScroll [revealDelay]="360">
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
         <span>Open WhatsApp</span>
         <span class="btn__arrow" aria-hidden="true">→</span>
         <span class="visually-hidden"> (opens in new tab)</span>
       </a>
-      <a routerLink="/products" class="btn btn--ghost"
-         revealOnScroll [revealDelay]="440">
+      <a routerLink="/products" class="btn btn--ghost">
         <span>See the catalog</span>
         <span class="btn__arrow" aria-hidden="true">→</span>
       </a>
@@ -31,7 +26,7 @@
 </section>
 
 <!-- ===================== STATS ===================== -->
-<section appReveal class="section section--mint wh-stats" aria-labelledby="stats-title">
+<section class="section section--mint wh-stats" aria-labelledby="stats-title">
   <div class="container">
     <header class="wh-stats__head">
       <app-section-badge label="What bulk pricing looks like"
@@ -63,7 +58,7 @@
 </section>
 
 <!-- ===================== INQUIRY FORM ===================== -->
-<section appReveal class="section wh-form" aria-labelledby="form-title">
+<section class="section wh-form" aria-labelledby="form-title">
   <div class="container wh-form__inner">
     <header class="wh-form__head">
       <app-section-badge label="Get a quote"
@@ -141,7 +136,7 @@
 </section>
 
 <!-- ===================== CTA ===================== -->
-<section appReveal class="section section--dark wh-cta" aria-labelledby="cta-title">
+<section class="section section--dark wh-cta" aria-labelledby="cta-title">
   <div class="container wh-cta__inner">
     <app-section-badge label="Prefer to chat first"
       revealOnScroll [revealDelay]="0" />

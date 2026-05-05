@@ -14,7 +14,6 @@ import { SectionBadgeComponent } from '../../shared/section-badge/section-badge'
 import { MarqueeComponent } from '../../shared/marquee/marquee';
 import { StatsCounterComponent } from '../../shared/stats-counter/stats-counter';
 import { FaqAccordionComponent, type FaqItem } from '../../shared/faq-accordion/faq-accordion';
-import { RevealDirective } from '../../shared/reveal.directive';
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
@@ -106,7 +105,6 @@ function buildFeatured(spec: FeaturedSpec): Featured | null {
     MarqueeComponent,
     StatsCounterComponent,
     FaqAccordionComponent,
-    RevealDirective,
     RevealOnScrollDirective,
   ],
   templateUrl: './home.html',

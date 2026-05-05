@@ -349,8 +349,8 @@
   transition: transform 250ms ease, box-shadow 250ms ease;
 }
 .stats__grid app-stats-counter:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* ===================== FEATURED ===================== */
@@ -513,7 +513,7 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-card-hover);
   }
 }
 .how-step__num {
@@ -595,7 +595,7 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-card-hover);
     border-color: var(--color-accent);
   }
 }
@@ -683,7 +683,7 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-card-hover);
   }
 }
 .eco-card__media {

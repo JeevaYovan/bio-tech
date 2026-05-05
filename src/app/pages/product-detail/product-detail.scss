@@ -259,7 +259,7 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-card-hover);
   }
   &:active { transform: scale(0.98); }
 
