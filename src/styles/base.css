@@ -8,6 +8,27 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  background: var(--color-bg);
+}
+
+/* On routes that lead with a dark hero (home, products, wholesale,
+   about, contact), the dark green needs to extend through any top
+   rubber-band / scroll-overflow area. Matching html bg to the hero
+   colour hides the thin light line some browsers render above the
+   sticky header at scrollY = 0. */
+body[data-route="home"],
+body[data-route="products"],
+body[data-route="wholesale"],
+body[data-route="about"],
+body[data-route="contact"] {
+  background: var(--color-bg-dark);
+}
+html:has(body[data-route="home"]),
+html:has(body[data-route="products"]),
+html:has(body[data-route="wholesale"]),
+html:has(body[data-route="about"]),
+html:has(body[data-route="contact"]) {
+  background: var(--color-bg-dark);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -216,4 +237,56 @@ a:hover { color: var(--color-primary-deep); }
 @keyframes rt-marquee-x {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+/* ======================================================================
+   Reveal-on-scroll — used by [revealOnScroll] directive.
+   Initial state: hidden + transformed per direction.
+   .reveal-visible removes transform + opacity, transition runs once.
+   easeOutQuart (0.22, 0.61, 0.36, 1) — confident entry, smooth deceleration.
+   ====================================================================== */
+.reveal-init {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity var(--reveal-duration, 600ms) cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, 600ms) cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-fadeInUp    { transform: translate3d(0, 24px, 0); }
+.reveal-fadeInLeft  { transform: translate3d(-32px, 0, 0); }
+.reveal-fadeInRight { transform: translate3d(32px, 0, 0); }
+
+.reveal-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Defense-in-depth: SCSS forces visible state under reduced motion even
+   if the directive runs (it should also early-return). */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ======================================================================
+   Custom cursor — when active, hide the native pointer everywhere
+   except form controls so text inputs keep the I-beam.
+   ====================================================================== */
+html.rt-custom-cursor,
+html.rt-custom-cursor * {
+  cursor: none !important;
+}
+html.rt-custom-cursor input[type="text"],
+html.rt-custom-cursor input[type="search"],
+html.rt-custom-cursor input[type="email"],
+html.rt-custom-cursor input[type="tel"],
+html.rt-custom-cursor input[type="number"],
+html.rt-custom-cursor input[type="url"],
+html.rt-custom-cursor input[type="date"],
+html.rt-custom-cursor textarea {
+  cursor: text !important;
 }

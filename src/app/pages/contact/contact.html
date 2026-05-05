@@ -2,9 +2,12 @@
 <section class="contact-hero" aria-labelledby="contact-title">
   <div class="contact-hero__bg" aria-hidden="true"></div>
   <div class="container contact-hero__inner">
-    <app-section-badge label="Contact" />
-    <h1 id="contact-title" class="contact-hero__title">Get in touch</h1>
-    <p class="contact-hero__lead">
+    <app-section-badge label="Contact"
+      revealOnScroll [revealDelay]="0" />
+    <h1 id="contact-title" class="contact-hero__title"
+        revealOnScroll [revealDelay]="120">Get in touch</h1>
+    <p class="contact-hero__lead"
+       revealOnScroll [revealDelay]="240">
       Most orders come through WhatsApp. We respond during working hours,
       typically same-day. For bulk and custom orders, send the product slugs,
       quantities, and your delivery location.
@@ -16,11 +19,14 @@
 <section appReveal class="section contact-channels" aria-labelledby="channels-title">
   <div class="container">
     <header class="contact-channels__head">
-      <app-section-badge label="Reach us" />
-      <h2 id="channels-title">Three ways to get in touch</h2>
+      <app-section-badge label="Reach us"
+        revealOnScroll [revealDelay]="0" />
+      <h2 id="channels-title"
+          revealOnScroll [revealDelay]="100">Three ways to get in touch</h2>
     </header>
     <ul class="channels" role="list">
-      <li class="channel channel--primary">
+      <li class="channel channel--primary"
+          revealOnScroll [revealDelay]="0">
         <div class="channel__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <path d="M20 12.5a8 8 0 11-3.4-6.5L21 4l-1.2 4.4A8 8 0 0120 12.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
@@ -36,7 +42,7 @@
           <span class="visually-hidden"> (opens in new tab)</span>
         </a>
       </li>
-      <li class="channel">
+      <li class="channel" revealOnScroll [revealDelay]="100">
         <div class="channel__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <path d="M5 4h3l2 5-2.5 1.5a11 11 0 005 5L14 13l5 2v3a2 2 0 01-2 2A14 14 0 013 6a2 2 0 012-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
@@ -47,7 +53,7 @@
         <p class="channel__hint">Tamil and English</p>
         <a [href]="phoneHref" class="channel__link">{{ phone }}</a>
       </li>
-      <li class="channel">
+      <li class="channel" revealOnScroll [revealDelay]="200">
         <div class="channel__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
@@ -67,12 +73,15 @@
 <section appReveal class="section section--mint contact-location" aria-labelledby="location-title">
   <div class="container">
     <header class="contact-location__head">
-      <app-section-badge label="Workshop & office" />
-      <h2 id="location-title">1/447 Avinashi Road, Neelambur</h2>
+      <app-section-badge label="Workshop & office"
+        revealOnScroll [revealDelay]="0" />
+      <h2 id="location-title"
+          revealOnScroll [revealDelay]="100">1/447 Avinashi Road, Neelambur</h2>
     </header>
 
     <div class="contact-location__layout">
-      <div class="map-card" role="img" aria-label="Stylised map of the Neelambur workshop location.">
+      <div class="map-card" role="img" aria-label="Stylised map of the Neelambur workshop location."
+           revealOnScroll="fadeInLeft" [revealDelay]="0">
         <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="map-svg">
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -117,7 +126,7 @@
         </p>
       </div>
 
-      <div class="address-card">
+      <div class="address-card" revealOnScroll="fadeInRight" [revealDelay]="100">
         <address class="address-card__address">
           <strong>Rathika Biotech Products</strong><br />
           1/447 Avinashi Road, Neelambur<br />
@@ -144,9 +153,12 @@
 <section appReveal class="section contact-form" aria-labelledby="form-title">
   <div class="container contact-form__inner">
     <header class="contact-form__head">
-      <app-section-badge label="Quick inquiry" />
-      <h2 id="form-title">Send us a WhatsApp message</h2>
-      <p class="contact-form__lead">
+      <app-section-badge label="Quick inquiry"
+        revealOnScroll [revealDelay]="0" />
+      <h2 id="form-title"
+          revealOnScroll [revealDelay]="100">Send us a WhatsApp message</h2>
+      <p class="contact-form__lead"
+         revealOnScroll [revealDelay]="200">
         Fill these in and we'll open WhatsApp with the message ready — no
         backend, no email signup. You review and tap send.
       </p>

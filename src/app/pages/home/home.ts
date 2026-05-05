@@ -15,6 +15,8 @@ import { MarqueeComponent } from '../../shared/marquee/marquee';
 import { StatsCounterComponent } from '../../shared/stats-counter/stats-counter';
 import { FaqAccordionComponent, type FaqItem } from '../../shared/faq-accordion/faq-accordion';
 import { RevealDirective } from '../../shared/reveal.directive';
+import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
+import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 interface CategoryCard {
   readonly key: ProductCategory;
@@ -105,6 +107,7 @@ function buildFeatured(spec: FeaturedSpec): Featured | null {
     StatsCounterComponent,
     FaqAccordionComponent,
     RevealDirective,
+    RevealOnScrollDirective,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
@@ -238,4 +241,5 @@ export default class HomeComponent implements OnInit {
   ];
 
   protected readonly formatPrice = formatINR;
+  protected readonly revealDelayFor = revealDelayFor;
 }

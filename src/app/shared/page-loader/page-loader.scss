@@ -1,0 +1,92 @@
+:host { display: contents; }
+
+/* ====== Top progress bar ====== */
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-deep));
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(139, 195, 74, 0.6);
+  transition: width 360ms cubic-bezier(0.65, 0, 0.35, 1), opacity 200ms ease;
+  opacity: 0;
+}
+.bar.is-loading {
+  opacity: 1;
+  width: 92%;
+  animation: rt-loader-bar 1.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes rt-loader-bar {
+  0%   { width: 0; }
+  35%  { width: 60%; }
+  70%  { width: 84%; }
+  100% { width: 92%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar { transition: none; animation: none; }
+  .bar.is-loading { width: 100%; }
+}
+
+/* ====== Initial-load splash ====== */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  gap: var(--space-5);
+  background: var(--color-bg-dark);
+  color: var(--color-ink-on-dark);
+  transition: opacity 380ms ease, visibility 0s linear 0s;
+}
+.splash.is-out {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 380ms ease, visibility 0s linear 380ms;
+}
+
+.splash__mark {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 4px rgba(139, 195, 74, 0.25), var(--shadow-card-hover);
+  animation: rt-splash-pulse 1.2s ease-in-out infinite;
+}
+.splash__mark img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.splash__spinner {
+  position: absolute;
+  bottom: max(env(safe-area-inset-bottom), 1.5rem);
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: rt-splash-spin 0.85s linear infinite;
+}
+
+@keyframes rt-splash-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 4px rgba(139, 195, 74, 0.25), 0 8px 32px rgba(0,0,0,0.3); }
+  50%      { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(139, 195, 74, 0.18), 0 12px 40px rgba(0,0,0,0.35); }
+}
+@keyframes rt-splash-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash__mark { animation: none; }
+  .splash__spinner { animation-duration: 2s; }
+}

@@ -117,4 +117,13 @@
   --container-px:   1.5rem;
   --section-py:     clamp(4rem, 8vw, 7.5rem);
   --section-py-tight: clamp(2.5rem, 5vw, 4rem);
+
+  /* Sticky header height — used by home hero to pull up behind the
+     transparent-on-hero header so the dark green band reaches the
+     top of the viewport without a cream gap. */
+  --header-h: 64px;
+}
+
+@media (min-width: 768px) {
+  :root { --header-h: 80px; }
 }

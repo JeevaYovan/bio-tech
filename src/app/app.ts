@@ -27,6 +27,8 @@ import { SeoService } from './services/seo.service';
 import { WA_URL } from './shared/constants';
 import { StickyWhatsappComponent } from './shared/sticky-whatsapp/sticky-whatsapp';
 import { ScrollTopComponent } from './shared/scroll-top/scroll-top';
+import { PageLoaderComponent } from './shared/page-loader/page-loader';
+import { CursorComponent } from './shared/cursor/cursor';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +39,8 @@ import { ScrollTopComponent } from './shared/scroll-top/scroll-top';
     RouterOutlet,
     StickyWhatsappComponent,
     ScrollTopComponent,
+    PageLoaderComponent,
+    CursorComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

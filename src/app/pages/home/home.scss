@@ -4,7 +4,14 @@
   isolation: isolate;
   background: var(--color-bg-dark);
   color: var(--color-ink-on-dark);
-  padding: clamp(3rem, 7vw, 6rem) var(--container-px) clamp(3rem, 7vw, 5rem);
+  /* Pull up behind the sticky transparent header so the dark green band
+     reaches the very top of the viewport. Compensate with extra top
+     padding so the hero copy still clears the header. */
+  margin-top: calc(-1 * var(--header-h));
+  padding:
+    calc(var(--header-h) + clamp(3rem, 6vw, 5rem))
+    var(--container-px)
+    clamp(3rem, 7vw, 5rem);
   overflow: hidden;
 }
 
@@ -35,22 +42,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-5);
-
-  @media (prefers-reduced-motion: no-preference) {
-    > * {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: rt-hero-in 700ms cubic-bezier(0.2, 0, 0, 1) forwards;
-    }
-    > *:nth-child(1) { animation-delay: 50ms; }
-    > *:nth-child(2) { animation-delay: 150ms; }
-    > *:nth-child(3) { animation-delay: 250ms; }
-    > *:nth-child(4) { animation-delay: 350ms; }
-  }
-}
-
-@keyframes rt-hero-in {
-  to { opacity: 1; transform: none; }
 }
 
 .hero__title {

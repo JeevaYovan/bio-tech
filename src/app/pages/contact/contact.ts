@@ -16,11 +16,13 @@ import {
 } from '../../shared/constants';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
 import { RevealDirective } from '../../shared/reveal.directive';
+import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
+import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionBadgeComponent, RevealDirective],
+  imports: [SectionBadgeComponent, RevealDirective, RevealOnScrollDirective],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
@@ -69,4 +71,6 @@ export default class ContactComponent implements OnInit {
     else if (field === 'phone') this.formPhone.set(value);
     else this.formMessage.set(value);
   }
+
+  protected readonly revealDelayFor = revealDelayFor;
 }

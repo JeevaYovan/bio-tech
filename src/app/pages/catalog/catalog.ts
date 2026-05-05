@@ -22,6 +22,8 @@ import { WA_URL, whatsappOrderUrlForProduct } from '../../shared/constants';
 import { HorizontalSliderComponent } from '../../shared/horizontal-slider/horizontal-slider';
 import { HorizontalSliderItemDirective } from '../../shared/horizontal-slider/horizontal-slider-item.directive';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
+import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
+import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 type Filter = 'all' | ProductCategory;
 
@@ -53,7 +55,7 @@ interface FilterTab {
 @Component({
   selector: 'app-catalog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective, SectionBadgeComponent],
+  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective, SectionBadgeComponent, RevealOnScrollDirective],
   templateUrl: './catalog.html',
   styleUrl: './catalog.scss',
 })
@@ -156,6 +158,8 @@ export default class CatalogComponent implements OnInit {
   protected setQuery(value: string): void {
     this.query.set(value);
   }
+
+  protected readonly revealDelayFor = revealDelayFor;
 
   private toItem(p: { slug: string; name: string; size: string; price: number; category: ProductCategory }): CatalogItem {
     const media = getMedia(p.slug);

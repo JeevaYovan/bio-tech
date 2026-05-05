@@ -4,6 +4,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { RevealOnScrollDirective } from '../reveal/reveal-on-scroll.directive';
 
 export interface FaqItem {
   readonly q: string;
@@ -14,10 +15,14 @@ export interface FaqItem {
   selector: 'app-faq-accordion',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RevealOnScrollDirective],
   template: `
     <ul class="faq" role="list">
       @for (item of items(); track item.q; let i = $index) {
-        <li class="faq__item" [class.is-open]="open() === i">
+        <li class="faq__item"
+            [class.is-open]="open() === i"
+            revealOnScroll
+            [revealDelay]="i * 60">
           <button
             type="button"
             class="faq__head"

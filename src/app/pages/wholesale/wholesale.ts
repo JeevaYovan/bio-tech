@@ -12,6 +12,8 @@ import { WA_URL } from '../../shared/constants';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
 import { StatsCounterComponent } from '../../shared/stats-counter/stats-counter';
 import { RevealDirective } from '../../shared/reveal.directive';
+import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
+import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 @Component({
   selector: 'app-wholesale',
@@ -22,6 +24,7 @@ import { RevealDirective } from '../../shared/reveal.directive';
     SectionBadgeComponent,
     StatsCounterComponent,
     RevealDirective,
+    RevealOnScrollDirective,
   ],
   templateUrl: './wholesale.html',
   styleUrl: './wholesale.scss',
@@ -75,4 +78,6 @@ export default class WholesaleComponent implements OnInit {
   protected onField<K extends keyof typeof this.form>(field: K, value: string): void {
     this.form[field].set(value);
   }
+
+  protected readonly revealDelayFor = revealDelayFor;
 }

@@ -4,11 +4,13 @@ import { SeoService } from '../../services/seo.service';
 import { WA_URL } from '../../shared/constants';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
 import { RevealDirective } from '../../shared/reveal.directive';
+import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
+import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 @Component({
   selector: 'app-about',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, SectionBadgeComponent, RevealDirective],
+  imports: [RouterLink, SectionBadgeComponent, RevealDirective, RevealOnScrollDirective],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })
@@ -25,4 +27,6 @@ export default class AboutComponent implements OnInit {
       ogTitle: 'Our Story — Banana Fiber Tableware from Tamil Nadu | Rathika',
     });
   }
+
+  protected readonly revealDelayFor = revealDelayFor;
 }

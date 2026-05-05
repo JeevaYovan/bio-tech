@@ -93,17 +93,20 @@ main { flex: 1 0 auto; }
   }
 
   &__mark {
-    width: 36px;
-    height: 36px;
-    flex: 0 0 36px;
-    object-fit: contain;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #FFFFFF;
     display: block;
     transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 0 1px rgba(45, 106, 79, 0.12);
 
     @media (min-width: 768px) {
-      width: 44px;
-      height: 44px;
-      flex: 0 0 44px;
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
     }
   }
 
@@ -461,10 +464,13 @@ main { flex: 1 0 auto; }
   }
 
   &__mark {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #FFFFFF;
     flex: 0 0 auto;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
   }
 
   &__brandname {

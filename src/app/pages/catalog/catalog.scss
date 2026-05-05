@@ -1,41 +1,68 @@
 :host { display: block; }
 
+/* ===================== HERO (dark green) ===================== */
+.cat-hero {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-bg-dark);
+  color: var(--color-ink-on-dark);
+  margin-top: calc(-1 * var(--header-h));
+  padding:
+    calc(var(--header-h) + clamp(3rem, 6vw, 5rem))
+    0
+    clamp(3rem, 6vw, 5rem);
+  overflow: hidden;
+}
+.cat-hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(139, 195, 74, 0.18), transparent 60%),
+    radial-gradient(ellipse at 10% 90%, rgba(45, 106, 79, 0.5), transparent 55%);
+  z-index: -1;
+}
+.cat-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  max-width: 760px;
+}
+.cat-hero__title {
+  color: #FFFFFF;
+  font-size: clamp(2.25rem, 5.2vw, 3.75rem);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  font-weight: 800;
+  margin: 0;
+  max-width: 22ch;
+}
+.cat-hero__lead {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--type-lg);
+  max-width: 64ch;
+  line-height: 1.7;
+  margin: 0;
+
+  a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+    &:hover { color: #FFFFFF; }
+  }
+}
+.cat-hero ::ng-deep .eyebrow {
+  background: rgba(139, 195, 74, 0.18);
+  color: #FFFFFF;
+}
+.cat-hero ::ng-deep .eyebrow::before { color: var(--color-accent); }
+
+/* ===================== CATALOG BODY ===================== */
 .catalog {
   max-width: var(--container-max);
   margin-inline: auto;
-  padding: clamp(2.5rem, 5vw, 4.5rem) var(--container-px) var(--space-16);
-
-  &__head {
-    margin-block-end: var(--space-10);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-    h1 {
-      max-width: 22ch;
-      margin: 0;
-      font-size: clamp(2.25rem, 5vw, 3.5rem);
-    }
-  }
-
-  &__featured-head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  &__lead {
-    font-size: var(--type-lg);
-    color: var(--color-muted);
-    max-width: 60ch;
-    line-height: 1.65;
-    a {
-      color: var(--color-accent-deep);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      &:hover { color: var(--color-primary-deep); }
-    }
-  }
+  padding: clamp(2.5rem, 5vw, 4rem) var(--container-px) var(--space-16);
 
   &__featured {
     margin: 0 calc(var(--container-px) * -1) var(--space-10);
@@ -67,7 +94,7 @@
 
   &__sticky {
     position: sticky;
-    top: 60px;
+    top: var(--header-h);
     z-index: 10;
     background: color-mix(in srgb, var(--color-bg) 95%, transparent);
     backdrop-filter: blur(10px);
@@ -80,7 +107,6 @@
     gap: var(--space-3);
 
     @media (min-width: 768px) {
-      top: 72px;
       flex-direction: row;
       align-items: center;
       gap: var(--space-5);

@@ -6,7 +6,11 @@
   isolation: isolate;
   background: var(--color-bg-dark);
   color: var(--color-ink-on-dark);
-  padding: clamp(3rem, 7vw, 6rem) 0 clamp(3rem, 6vw, 5rem);
+  margin-top: calc(-1 * var(--header-h));
+  padding:
+    calc(var(--header-h) + clamp(3rem, 6vw, 5rem))
+    0
+    clamp(3rem, 6vw, 5rem);
   overflow: hidden;
 }
 .about-hero__bg {
