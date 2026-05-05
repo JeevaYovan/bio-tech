@@ -19,14 +19,11 @@ html {
 /* On routes that lead with a dark hero, set the html background to
    dark green so the very top of the viewport (above the sticky header
    at scrollY = 0, and any rubber-band / scroll-overflow area) reads as
-   the hero colour rather than a thin white line. The BODY stays at
-   mint so any section that doesn't paint its own background still
-   reads correctly — only the html-level rubber-band edge is dark. */
-html:has(body[data-route="home"]),
-html:has(body[data-route="products"]),
-html:has(body[data-route="wholesale"]),
-html:has(body[data-route="about"]),
-html:has(body[data-route="contact"]) {
+   the hero colour rather than a thin white line. Class is set by
+   App.ts on every NavigationEnd — more reliable than :has() across
+   browser versions. Body stays mint so sections without their own
+   background fall through to the page bg. */
+html.rt-dark-hero {
   background: var(--color-bg-dark);
 }
 

@@ -96,6 +96,13 @@ export class App implements OnInit, AfterViewInit {
         this.routeKey.set(top[0] ? (top[0] === 'products' && top.length > 1 ? 'product-detail' : top[0]) : 'home');
         if (isPlatformBrowser(this.platformId)) {
           document.body.dataset['route'] = this.routeKey();
+          /* Routes that lead with a dark-green hero get a class on
+             <html> so the html background is dark green too — masks the
+             1-2px white strip some browsers paint at the very top of
+             the viewport (above the sticky header) and during rubber-
+             band overscroll. */
+          const darkHero = ['home', 'products', 'wholesale', 'about', 'contact'].includes(this.routeKey());
+          document.documentElement.classList.toggle('rt-dark-hero', darkHero);
         }
       });
   }
