@@ -395,20 +395,24 @@ main { flex: 1 0 auto; }
 }
 
 /* ============ FOOTER (dark green, lime accents) ============
-   Mobile (<640): brand full, then catalog | company side-by-side,
-   then reach-us full. Tablet 640-1023: 2-col stacked. Desktop ≥1024:
-   4-col (brand 1.6fr, catalog, company, reach). */
+   Mobile (<1024): brand full, then catalog | company side-by-side,
+   then reach-us full. Desktop ≥1024: 4-col (brand 1.6fr, catalog,
+   company, reach). Bottom padding clears the sticky WA FAB on mobile. */
 .site-footer {
-  padding: var(--space-16) var(--container-px) var(--space-6);
+  padding: var(--space-12) var(--container-px) var(--space-16);
   background: var(--color-primary-deep);
   color: rgba(255, 255, 255, 0.78);
   font-size: var(--type-sm);
+
+  @media (min-width: 1024px) {
+    padding: var(--space-16) var(--container-px) var(--space-8);
+  }
 
   &__inner {
     max-width: var(--container-max);
     margin-inline: auto;
     display: grid;
-    gap: var(--space-7) var(--space-6);
+    gap: var(--space-10) var(--space-6);
     grid-template-columns: 1fr 1fr;
 
     /* Brand and Reach span full width on mobile so the middle two
@@ -435,9 +439,9 @@ main { flex: 1 0 auto; }
     gap: var(--space-3);
     align-content: start;
 
-    &--brand { gap: var(--space-4); }
+    &--brand { gap: var(--space-3); }
     &--reach {
-      padding-block-start: var(--space-5);
+      padding-block-start: var(--space-6);
       border-block-start: 1px solid rgba(255, 255, 255, 0.1);
 
       @media (min-width: 1024px) {
@@ -451,25 +455,26 @@ main { flex: 1 0 auto; }
       padding: 0;
       margin: 0;
       display: grid;
-      gap: var(--space-2);
+      gap: 2px;
 
       li a {
         position: relative;
         display: inline-flex;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.55rem;
         color: rgba(255, 255, 255, 0.78);
         text-decoration: none;
-        padding-block: 0.3rem;
+        padding-block: 0.2rem;
+        line-height: 1.45;
         transition: color 150ms ease, transform 200ms ease;
 
         &::before {
           content: "";
-          width: 6px;
-          height: 6px;
+          width: 5px;
+          height: 5px;
           border-radius: 50%;
           background: var(--color-accent);
-          flex: 0 0 6px;
+          flex: 0 0 5px;
           opacity: 0.85;
           transition: transform 200ms ease, opacity 200ms ease;
         }
@@ -512,7 +517,7 @@ main { flex: 1 0 auto; }
 
   &__address {
     font-style: normal;
-    line-height: 1.7;
+    line-height: 1.55;
     color: rgba(255, 255, 255, 0.65);
     margin: 0;
     font-size: var(--type-sm);
@@ -534,7 +539,7 @@ main { flex: 1 0 auto; }
     padding: 0;
     margin: 0;
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-2);
 
     li a {
       display: inline-flex;
@@ -561,8 +566,8 @@ main { flex: 1 0 auto; }
 
   &__contact-icon {
     flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -572,11 +577,11 @@ main { flex: 1 0 auto; }
     background: transparent;
     transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
 
-    svg { width: 16px; height: 16px; }
+    svg { width: 14px; height: 14px; }
   }
 
   &__hours {
-    margin: var(--space-4) 0 0;
+    margin: var(--space-3) 0 0;
     color: rgba(255, 255, 255, 0.55);
     font-size: var(--type-xs);
     letter-spacing: 0.04em;
@@ -584,12 +589,12 @@ main { flex: 1 0 auto; }
 
   &__bar {
     max-width: var(--container-max);
-    margin: var(--space-10) auto 0;
-    padding-block-start: var(--space-5);
+    margin: var(--space-8) auto 0;
+    padding-block-start: var(--space-4);
     border-block-start: 1px solid rgba(255, 255, 255, 0.12);
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-2);
     align-items: center;
     color: rgba(255, 255, 255, 0.55);
     font-size: var(--type-xs);
