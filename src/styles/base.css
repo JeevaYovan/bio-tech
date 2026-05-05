@@ -174,13 +174,16 @@ a:hover { color: var(--color-primary-deep); }
   color: currentColor;
   border-color: currentColor;
 }
+/* Hover: explicit white bg + dark-green text. Using `currentColor` for
+   the background here would cause it to re-evaluate to the new
+   `color` value (primary-deep), making bg and text the same colour
+   and hiding the label. Ghost buttons in this site only sit on dark
+   backgrounds, so white-on-hover is safe. */
 .btn--ghost:hover {
-  background: currentColor;
+  background: #FFFFFF;
   color: var(--color-primary-deep);
-}
-.section--dark .btn--ghost:hover {
-  background: var(--color-ink-on-dark);
-  color: var(--color-primary-deep);
+  border-color: #FFFFFF;
+  transform: translateY(-2px);
 }
 
 .btn__arrow {
