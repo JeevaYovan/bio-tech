@@ -8,9 +8,9 @@
   color: var(--color-ink-on-dark);
   margin-top: calc(-1 * var(--header-h));
   padding:
-    calc(var(--header-h) + clamp(3rem, 6vw, 5rem))
+    calc(var(--header-h) + clamp(1.5rem, 3vw, 2.5rem))
     0
-    clamp(3rem, 6vw, 5rem);
+    clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
 }
 .about-hero__bg {
