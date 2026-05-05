@@ -394,9 +394,12 @@ main { flex: 1 0 auto; }
   }
 }
 
-/* ============ FOOTER (dark green, 4-col, lime accents) ============ */
+/* ============ FOOTER (dark green, lime accents) ============
+   Mobile (<640): brand full, then catalog | company side-by-side,
+   then reach-us full. Tablet 640-1023: 2-col stacked. Desktop ≥1024:
+   4-col (brand 1.6fr, catalog, company, reach). */
 .site-footer {
-  padding: var(--space-16) var(--container-px) var(--space-8);
+  padding: var(--space-16) var(--container-px) var(--space-6);
   background: var(--color-primary-deep);
   color: rgba(255, 255, 255, 0.78);
   font-size: var(--type-sm);
@@ -405,15 +408,25 @@ main { flex: 1 0 auto; }
     max-width: var(--container-max);
     margin-inline: auto;
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-7) var(--space-6);
+    grid-template-columns: 1fr 1fr;
 
-    @media (min-width: 640px) {
-      grid-template-columns: 1fr 1fr;
+    /* Brand and Reach span full width on mobile so the middle two
+       columns can sit side-by-side. */
+    > .site-footer__col--brand,
+    > .site-footer__col--reach {
+      grid-column: 1 / -1;
     }
+
     @media (min-width: 1024px) {
-      grid-template-columns: 1.6fr 1fr 1fr 1.1fr;
+      grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
       gap: var(--space-10);
       align-items: start;
+
+      > .site-footer__col--brand,
+      > .site-footer__col--reach {
+        grid-column: auto;
+      }
     }
   }
 
@@ -422,15 +435,15 @@ main { flex: 1 0 auto; }
     gap: var(--space-3);
     align-content: start;
 
-    @media (max-width: 639px) {
-      &:not(:first-child) {
-        padding-block-start: var(--space-6);
-        border-block-start: 1px solid rgba(255, 255, 255, 0.1);
-      }
-    }
+    &--brand { gap: var(--space-4); }
+    &--reach {
+      padding-block-start: var(--space-5);
+      border-block-start: 1px solid rgba(255, 255, 255, 0.1);
 
-    &--brand {
-      gap: var(--space-4);
+      @media (min-width: 1024px) {
+        padding-block-start: 0;
+        border-block-start: 0;
+      }
     }
 
     ul {
@@ -441,15 +454,31 @@ main { flex: 1 0 auto; }
       gap: var(--space-2);
 
       li a {
-        display: inline-block;
-        color: rgba(255, 255, 255, 0.72);
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: rgba(255, 255, 255, 0.78);
         text-decoration: none;
         padding-block: 0.3rem;
         transition: color 150ms ease, transform 200ms ease;
 
+        &::before {
+          content: "";
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--color-accent);
+          flex: 0 0 6px;
+          opacity: 0.85;
+          transition: transform 200ms ease, opacity 200ms ease;
+        }
+
         &:hover {
           color: var(--color-accent);
           transform: translateX(3px);
+
+          &::before { transform: scale(1.4); opacity: 1; }
         }
       }
     }
@@ -495,22 +524,107 @@ main { flex: 1 0 auto; }
     text-transform: uppercase;
     letter-spacing: 0.16em;
     color: var(--color-accent);
-    font-weight: 600;
+    font-weight: 700;
     margin: 0 0 var(--space-3);
   }
 
+  /* Reach-us list — circular icon + label per row, no bullet dot. */
+  &__contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+
+    li a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 150ms ease;
+
+      /* Override the lime bullet from the generic ul rule. */
+      &::before { content: none !important; }
+
+      &:hover {
+        color: #FFFFFF;
+        .site-footer__contact-icon {
+          background: var(--color-accent);
+          color: var(--color-accent-ink);
+          border-color: var(--color-accent);
+        }
+      }
+    }
+  }
+
+  &__contact-icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.85);
+    background: transparent;
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+
+    svg { width: 16px; height: 16px; }
+  }
+
   &__hours {
+    margin: var(--space-4) 0 0;
     color: rgba(255, 255, 255, 0.55);
-    padding-block: 0.3rem;
+    font-size: var(--type-xs);
+    letter-spacing: 0.04em;
   }
 
   &__bar {
     max-width: var(--container-max);
-    margin: var(--space-12) auto 0;
+    margin: var(--space-10) auto 0;
     padding-block-start: var(--space-5);
     border-block-start: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: center;
     color: rgba(255, 255, 255, 0.55);
     font-size: var(--type-xs);
-    p { margin: 0; }
+    text-align: center;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: start;
+    }
+  }
+
+  &__copy {
+    margin: 0;
+  }
+
+  &__bar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: var(--space-4);
+
+    li + li::before {
+      content: "·";
+      margin-inline-end: var(--space-4);
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    a {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      transition: color 150ms ease;
+
+      &:hover { color: var(--color-accent); }
+    }
   }
 }
