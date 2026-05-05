@@ -9,6 +9,11 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   background: var(--color-bg);
+  /* Clip any inadvertent horizontal overflow (e.g. a no-wrap CTA label
+     that briefly exceeds its container) so the page never scrolls
+     sideways. `clip` is preferred over `hidden` because it doesn't
+     create a scroll context that would break sticky positioning. */
+  overflow-x: clip;
 }
 
 /* On routes that lead with a dark hero (home, products, wholesale,
@@ -49,6 +54,7 @@ body {
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
 
 img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
