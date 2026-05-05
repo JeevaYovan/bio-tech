@@ -1,43 +1,19 @@
 /* ======================================================================
-   Self-hosted fonts
-   ----------------
-   TODO (Phase 4): drop WOFF2 files into public/fonts/ and uncomment
-   the @font-face blocks below. Until then, system fallbacks (declared
-   in tokens.css) keep the scaffold lean and the perf budget honest.
-
-   Chosen families:
-   - Fraunces (variable, opsz + wght) — display/headings
-   - Inter (variable, wght) — body
-   - Tiro Tamil — Tamil display + body
-
-   Source: rsms.me/inter for Inter, github.com/undercasetype/Fraunces
-   for Fraunces, fonts.google.com/?subset=tamil for Tiro Tamil. License
-   each as OFL/SIL.
+   Web fonts — Inter (variable, wght 100-900)
+   --------------------------------------------------------------
+   Loaded from Google Fonts CDN with display=swap. The link tag is
+   injected via index.html (preconnect + stylesheet) so the request
+   starts before this file is parsed.
    ====================================================================== */
 
+/* Tamil subset kept for /ta routes (commented until WOFF2 ships). */
 /*
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/Inter-VariableFont_slnt-wght.woff2') format('woff2-variations');
-}
-
-@font-face {
-  font-family: 'Fraunces';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.woff2') format('woff2-variations');
-}
-
 @font-face {
   font-family: 'Tiro Tamil';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   unicode-range: U+0964-0965, U+0B82-0BFA, U+200C-200D, U+25CC;
-  src: url('/fonts/TiroTamil-Regular.woff2') format('woff2');
+  src: url('/assets/fonts/TiroTamil-Regular.woff2') format('woff2');
 }
 */

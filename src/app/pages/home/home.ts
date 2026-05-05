@@ -1,22 +1,20 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  ElementRef,
-  PLATFORM_ID,
-  ViewChildren,
-  QueryList,
   inject,
   OnInit,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { findProductBySlug, formatINR, type Product, type ProductCategory } from '../../../data/products';
 import { SeoService } from '../../services/seo.service';
 import { WA_URL } from '../../shared/constants';
 import { HorizontalSliderComponent } from '../../shared/horizontal-slider/horizontal-slider';
 import { HorizontalSliderItemDirective } from '../../shared/horizontal-slider/horizontal-slider-item.directive';
+import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
+import { MarqueeComponent } from '../../shared/marquee/marquee';
+import { StatsCounterComponent } from '../../shared/stats-counter/stats-counter';
+import { FaqAccordionComponent, type FaqItem } from '../../shared/faq-accordion/faq-accordion';
+import { RevealDirective } from '../../shared/reveal.directive';
 
 interface CategoryCard {
   readonly key: ProductCategory;
@@ -24,8 +22,6 @@ interface CategoryCard {
   readonly eyebrow: string;
   readonly imageSlug: string;
   readonly alt: string;
-  /** Token for the per-card cream-variation tint (REBUILD §10b). */
-  readonly tint: string;
 }
 
 interface HowStep {
@@ -52,12 +48,23 @@ interface Featured extends Product {
   webpSrcset: string;
   jpgSrcset: string;
   fallback: string;
+  priceLabel: string;
 }
 
 interface Pillar {
   n: string;
   title: string;
   body: string;
+  icon: string;
+}
+
+interface EcoTip {
+  readonly tag: string;
+  readonly title: string;
+  readonly body: string;
+  readonly date: string;
+  readonly imageSlug: string;
+  readonly alt: string;
 }
 
 const FEATURED_SPECS: ReadonlyArray<FeaturedSpec> = [
@@ -71,10 +78,7 @@ const FEATURED_SPECS: ReadonlyArray<FeaturedSpec> = [
 
 function buildFeatured(spec: FeaturedSpec): Featured | null {
   const product = findProductBySlug(spec.slug);
-  if (!product) {
-    console.warn(`[home] Featured slug not found: ${spec.slug} — skipping`);
-    return null;
-  }
+  if (!product) return null;
   const base = `assets/${spec.imageSlug}`;
   return {
     ...product,
@@ -85,25 +89,30 @@ function buildFeatured(spec: FeaturedSpec): Featured | null {
     webpSrcset: `${base}-400.webp 400w, ${base}-800.webp 800w`,
     jpgSrcset:  `${base}-400.jpg 400w, ${base}-800.jpg 800w`,
     fallback:   `${base}-400.jpg`,
+    priceLabel: formatINR(product.price),
   };
 }
 
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective],
+  imports: [
+    RouterLink,
+    HorizontalSliderComponent,
+    HorizontalSliderItemDirective,
+    SectionBadgeComponent,
+    MarqueeComponent,
+    StatsCounterComponent,
+    FaqAccordionComponent,
+    RevealDirective,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export default class HomeComponent implements OnInit, AfterViewInit {
+export default class HomeComponent implements OnInit {
   private readonly seo = inject(SeoService);
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly waUrl = WA_URL;
-
-  /** Animation #4 — first-viewport reveal on these section roots. */
-  @ViewChildren('reveal') protected revealRefs!: QueryList<ElementRef<HTMLElement>>;
 
   ngOnInit(): void {
     this.seo.applyRouteSeo({
@@ -114,29 +123,6 @@ export default class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (typeof IntersectionObserver === 'undefined') {
-      // Fallback — show everything for users on older browsers without IO.
-      this.revealRefs.forEach((r) => r.nativeElement.classList.add('is-revealed'));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries, observer) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-revealed');
-            observer.unobserve(e.target); // animation #4: once only.
-          }
-        }
-      },
-      { rootMargin: '0px 0px -10%', threshold: 0.1 },
-    );
-    this.revealRefs.forEach((r) => io.observe(r.nativeElement));
-    this.destroyRef.onDestroy(() => io.disconnect());
-  }
-
-  /** REBUILD §9 home trust strip — claims must be real, not fabricated. */
   protected readonly trustClaims: ReadonlyArray<string> = [
     'Made in Coimbatore',
     '100% Biodegradable',
@@ -145,17 +131,15 @@ export default class HomeComponent implements OnInit, AfterViewInit {
     'Compostable in 30 days',
   ];
 
-  /** REBUILD §10b — six categories, cream-variation tints. */
   protected readonly categories: ReadonlyArray<CategoryCard> = [
-    { key: 'plates',   label: 'Plates',        eyebrow: 'Tableware',  imageSlug: 'products/partition-10x12',      alt: 'Partition plates stacked, embossed mark on top', tint: '#E8F0E5' },
-    { key: 'bowls',    label: 'Bowls',         eyebrow: 'Tableware',  imageSlug: 'products/ice-cream-bowl-4in',   alt: 'Multi-coloured 4-inch ice cream bowls',          tint: '#EFE8DA' },
-    { key: 'cups',     label: 'Cups',          eyebrow: 'Beverage',   imageSlug: 'products/tea-cup-100ml',        alt: 'Stacked 100 ml bagasse tea cups',                 tint: '#E5EBE0' },
-    { key: 'boxes',    label: 'Parcel boxes',  eyebrow: 'Takeaway',   imageSlug: 'products/parcel-box-300ml',     alt: 'Round 300 ml parcel box with lid',                tint: '#F0EAD6' },
-    { key: 'utensils', label: 'Utensils',      eyebrow: 'Cutlery',    imageSlug: 'products/spoon-5in',            alt: 'Row of nested 5-inch spoons',                     tint: '#E8EDDB' },
-    { key: 'decor',    label: 'Decor',         eyebrow: 'Ceremonial', imageSlug: 'products/vinayagar-statue-6in', alt: 'Six-inch Vinayagar statue in a bagasse bowl',     tint: '#EDE4D3' },
+    { key: 'plates',   label: 'Plates',        eyebrow: 'Tableware',  imageSlug: 'products/partition-10x12',      alt: 'Partition plates stacked, embossed mark on top' },
+    { key: 'bowls',    label: 'Bowls',         eyebrow: 'Tableware',  imageSlug: 'products/ice-cream-bowl-4in',   alt: 'Multi-coloured 4-inch ice cream bowls'          },
+    { key: 'cups',     label: 'Cups',          eyebrow: 'Beverage',   imageSlug: 'products/tea-cup-100ml',        alt: 'Stacked 100 ml bagasse tea cups'                },
+    { key: 'boxes',    label: 'Parcel boxes',  eyebrow: 'Takeaway',   imageSlug: 'products/parcel-box-300ml',     alt: 'Round 300 ml parcel box with lid'               },
+    { key: 'utensils', label: 'Utensils',      eyebrow: 'Cutlery',    imageSlug: 'products/spoon-5in',            alt: 'Row of nested 5-inch spoons'                    },
+    { key: 'decor',    label: 'Decor',         eyebrow: 'Ceremonial', imageSlug: 'products/vinayagar-statue-6in', alt: 'Six-inch Vinayagar statue in a bagasse bowl'    },
   ];
 
-  /** REBUILD §9 home — three-step "How it's made". */
   protected readonly howSteps: ReadonlyArray<HowStep> = [
     {
       n: '01',
@@ -190,17 +174,67 @@ export default class HomeComponent implements OnInit, AfterViewInit {
     FEATURED_SPECS.map(buildFeatured).filter((x): x is Featured => x !== null);
 
   protected readonly pillars: ReadonlyArray<Pillar> = [
-    { n: '01', title: '100% Natural & Biodegradable', body: 'Made entirely from banana fiber, sugarcane bagasse, and rice husk — no plastics, no chemicals, no coatings. Decomposes safely in weeks.' },
-    { n: '02', title: 'Strong & Durable',             body: 'Natural fiber tensile strength makes these sturdy enough for hot, cold, and oily food without bending or leaking.' },
-    { n: '03', title: 'Chemical-Free & Food Safe',    body: 'No synthetic binders, adhesives, or coatings. Safe for direct contact with food and ideal for eco-conscious kitchens.' },
-    { n: '04', title: 'Heat & Moisture Resistant',    body: 'Holds curries, gravies, and hot beverages without leaking. The natural fiber structure insulates well.' },
-    { n: '05', title: 'Zero-Waste Manufacturing',     body: 'Built from agricultural by-products that would otherwise be burned. Low carbon footprint, circular economy.' },
-    { n: '06', title: 'Animal-Friendly & Compostable',body: 'Discarded outdoors, animals can safely consume it. No soil or water pollution. Returns cleanly to the earth.' },
+    { n: '01', title: '100% Natural & Biodegradable', body: 'Made entirely from banana fiber, sugarcane bagasse, and rice husk — no plastics, no chemicals, no coatings. Decomposes safely in weeks.', icon: 'leaf' },
+    { n: '02', title: 'Strong & Durable',             body: 'Natural fiber tensile strength makes these sturdy enough for hot, cold, and oily food without bending or leaking.', icon: 'shield' },
+    { n: '03', title: 'Chemical-Free & Food Safe',    body: 'No synthetic binders, adhesives, or coatings. Safe for direct contact with food and ideal for eco-conscious kitchens.', icon: 'check' },
+    { n: '04', title: 'Heat & Moisture Resistant',    body: 'Holds curries, gravies, and hot beverages without leaking. The natural fiber structure insulates well.', icon: 'flame' },
+    { n: '05', title: 'Zero-Waste Manufacturing',     body: 'Built from agricultural by-products that would otherwise be burned. Low carbon footprint, circular economy.', icon: 'recycle' },
+    { n: '06', title: 'Animal-Friendly & Compostable',body: 'Discarded outdoors, animals can safely consume it. No soil or water pollution. Returns cleanly to the earth.', icon: 'paw' },
   ];
 
   protected readonly whereUsed: ReadonlyArray<string> = [
     'Restaurants', 'Cafés', 'Food trucks', 'Events', 'Weddings',
     'Festivals',   'Fruit shops', 'Organic stores', 'Eco-friendly markets', 'Home',
+  ];
+
+  protected readonly faqs: ReadonlyArray<FaqItem> = [
+    {
+      q: 'How long does the tableware take to compost?',
+      a: 'Discarded outdoors in open soil, each piece breaks down cleanly in four to six weeks. In a commercial composter the cycle is even faster — typically two to three weeks. There is no plastic film or chemical liner to slow this down.',
+    },
+    {
+      q: 'Can I use these for hot food and liquids?',
+      a: 'Yes. Plates, bowls, cups, and parcel boxes are rated for hot, oily, and saucy food at typical Indian serving temperatures. The natural fiber walls insulate the contents and resist gravy soak-through for the duration of a meal without warping.',
+    },
+    {
+      q: 'What is the minimum order quantity?',
+      a: 'The smallest bulk order is one carton — typical case quantities are 1,000 cups, 500 plates, or 300–500 boxes depending on the SKU. Bulk pricing kicks in at one carton; volume discounts apply at five cartons or more. Single-piece sample orders are not available, but we send catalogue samples on WhatsApp request.',
+    },
+    {
+      q: 'Do you ship outside Coimbatore and Tamil Nadu?',
+      a: 'Yes. We dispatch across South India by road for most orders, and pan-India for orders above a few cartons via partner logistics. Delivery time is typically 2–4 days within Tamil Nadu and 5–8 days for the rest of India. Share your delivery pincode on WhatsApp for an exact quote.',
+    },
+    {
+      q: 'Are the products safe for children and animals?',
+      a: 'Yes. The tableware contains no synthetic binders, no paint, no chemical sealers, and no plasticisers. Once discarded outdoors, animals can safely consume the fragments and the material returns to the soil without polluting it.',
+    },
+  ];
+
+  protected readonly ecoTips: ReadonlyArray<EcoTip> = [
+    {
+      tag: 'Composting',
+      title: 'How to compost biodegradable tableware at home',
+      body: 'Layer used plates and cups with kitchen scraps in your compost bin. Turn weekly, keep moist, and the fibers break down in three to four weeks alongside vegetable waste.',
+      date: 'Eco guide',
+      imageSlug: 'lifestyle/story-fiber-texture',
+      alt: 'Close-up of natural fiber texture, suggesting compostable material',
+    },
+    {
+      tag: 'Materials',
+      title: 'Why bagasse outperforms paper for hot food',
+      body: 'Sugarcane bagasse fiber is denser and more heat-tolerant than recycled paper. It resists gravy soak-through for the duration of a meal where paper plates buckle within minutes.',
+      date: 'Material note',
+      imageSlug: 'workshop/packing-partition-plates',
+      alt: 'Stack of partition plates fresh from the press',
+    },
+    {
+      tag: 'Buying guide',
+      title: 'What to look for in eco-friendly tableware',
+      body: 'Check for chemical-free certification, look for embossed origin marks, and verify the supplier composts in weeks not years. We make all three easy to confirm.',
+      date: 'Buyer guide',
+      imageSlug: 'workshop/bowls-cluster-sunlit',
+      alt: 'Cluster of finished bagasse bowls in afternoon sunlight',
+    },
   ];
 
   protected readonly formatPrice = formatINR;

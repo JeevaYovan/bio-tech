@@ -41,21 +41,24 @@ PROMPT.md disagree, PROMPT.md wins. Re-read it before each phase.
 - **Voice:** formal/corporate ("We manufacture...")
 - **Materials:** banana fiber, sugarcane bagasse, rice husk
 
-## Design palette (PROMPT.md §9 — do not invent values)
+## Design palette (Sellsmart-aesthetic refresh — locked, do not invent values)
 ```
---rathika-green-900: #1F3A2B   deep forest, primary text
---rathika-green-700: #2F5D3F   primary brand
---rathika-green-500: #5B8A6A   secondary
---rathika-green-100: #E8F0E5   surface tint
---rathika-earth-700: #6B4423
---rathika-earth-500: #A07550
---rathika-cream:     #F8F4EC   page background, NOT white
---rathika-ink:       #1A1A1A
---rathika-paper:     #FFFFFF   cards only
---rathika-rule:      #D9D2C2   hairlines
---rathika-accent:    #B8533A   terracotta — CTAs / price tags only
+--rathika-green-900: #1A3C2B   text dark
+--rathika-green-700: #1B4D3E   primary — hero bg, footer bg, CTA band
+--rathika-green-500: #2D6A4F   secondary
+--rathika-green-100: #F1F8E9   light mint — alt section bg
+--rathika-cream:     #F1F8E9   page background (light mint)
+--rathika-paper:     #FFFFFF   card bg
+--rathika-ink:       #1A3C2B   body text
+--rathika-muted:     #6B7B6B   secondary text
+--rathika-rule:      #E0E5DA   hairlines
+--rathika-accent:      #8BC34A lime — primary CTA bg
+--rathika-accent-deep: #7BAA3A lime hover
+--rathika-badge-bg: rgba(139, 195, 74, 0.15)  pill badge tint
+--rathika-star:     #FFC107   star ratings
 ```
-Green + cream + earth. Pure white reads digital; cream reads handmade.
+Deep forest green + light mint + lime accent. Inter typography only.
+Card radius 24px, pill buttons (9999px), green-tinted shadows.
 
 ## Klaro UI — the rule
 The design system already exists. Default behavior:

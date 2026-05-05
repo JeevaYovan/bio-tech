@@ -1,57 +1,64 @@
-<section class="wholesale-hero" aria-labelledby="wh-title">
-  <div class="wholesale-hero__inner">
-    <p class="section-eyebrow">Wholesale</p>
-    <h1 id="wh-title" class="wholesale-hero__title">
+<!-- ===================== HERO ===================== -->
+<section class="wh-hero" aria-labelledby="wh-title">
+  <div class="wh-hero__bg" aria-hidden="true"></div>
+  <div class="container wh-hero__inner">
+    <app-section-badge label="Wholesale" />
+    <h1 id="wh-title" class="wh-hero__title">
       For restaurants, caterers,<br />weddings, and festivals.
     </h1>
-    <p class="wholesale-hero__lead">
+    <p class="wh-hero__lead">
       We supply biodegradable tableware in carton lots and pallet quantities.
       Plates, bowls, cups, parcel boxes, spoons, and decorative pieces — all
       hand-pressed in our Neelambur workshop.
     </p>
+    <div class="wh-hero__ctas">
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
+        <span>Open WhatsApp</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+        <span class="visually-hidden"> (opens in new tab)</span>
+      </a>
+      <a routerLink="/products" class="btn btn--ghost">
+        <span>See the catalog</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
   </div>
 </section>
 
-<section class="wholesale-pitch" aria-labelledby="pitch-title">
-  <div class="wholesale-pitch__inner">
-    <h2 id="pitch-title" class="visually-hidden">What bulk pricing looks like</h2>
-    <ul class="pitch-cards" role="list">
-      <li class="pitch-card">
-        <p class="pitch-card__num">1,000+</p>
-        <p class="pitch-card__label">pieces</p>
-        <p class="pitch-card__body">
-          Bulk pricing kicks in on orders of one carton or more (typical
-          carton: 500–2,000 pieces depending on SKU).
-        </p>
-      </li>
-      <li class="pitch-card">
-        <p class="pitch-card__num">14</p>
-        <p class="pitch-card__label">SKUs available</p>
-        <p class="pitch-card__body">
-          Mix and match from the catalog. Cartons can ship combined; we'll
-          quote based on your total volume and delivery city.
-        </p>
-      </li>
-      <li class="pitch-card">
-        <p class="pitch-card__num">Same-day</p>
-        <p class="pitch-card__label">WhatsApp reply</p>
-        <p class="pitch-card__body">
-          We respond during working hours, typically same-day. Send the
-          slugs, quantities, and your delivery city — we'll come back with a
-          quote.
-        </p>
-      </li>
-    </ul>
+<!-- ===================== STATS ===================== -->
+<section appReveal class="section section--mint wh-stats" aria-labelledby="stats-title">
+  <div class="container">
+    <header class="wh-stats__head">
+      <app-section-badge label="What bulk pricing looks like" />
+      <h2 id="stats-title">Built for bulk from day one</h2>
+    </header>
+    <div class="wh-stats__grid">
+      <app-stats-counter
+        [to]="1000"
+        suffix="+"
+        label="Pieces per minimum order"
+        note="Bulk pricing kicks in on one carton; cartons are 500–2,000 pieces depending on SKU." />
+      <app-stats-counter
+        [to]="14"
+        suffix=""
+        label="SKUs across six categories"
+        note="Mix and match cartons. We quote based on total volume and delivery city." />
+      <app-stats-counter
+        [to]="6"
+        suffix=" cat."
+        label="Discount tiers from five cartons"
+        note="Volume discounts unlock at five cartons or more, with custom embossing on 5,000+ orders." />
+    </div>
   </div>
 </section>
 
 <!-- ===================== INQUIRY FORM ===================== -->
-<section class="wholesale-form" aria-labelledby="form-title">
-  <div class="wholesale-form__inner">
-    <header>
-      <p class="section-eyebrow">Get a quote</p>
+<section appReveal class="section wh-form" aria-labelledby="form-title">
+  <div class="container wh-form__inner">
+    <header class="wh-form__head">
+      <app-section-badge label="Get a quote" />
       <h2 id="form-title">Send a wholesale inquiry</h2>
-      <p class="wholesale-form__lead">
+      <p class="wh-form__lead">
         Fill these in and we'll open WhatsApp with the inquiry pre-composed.
         No backend, no email signup — you tap send when you're ready.
       </p>
@@ -108,7 +115,9 @@
           [href]="canSubmit() ? waMessageUrl() : null"
           target="_blank" rel="noopener noreferrer"
           class="btn btn--accent btn--large">
-          Open WhatsApp with this inquiry<span class="visually-hidden"> (opens in new tab)</span>
+          <span>Open WhatsApp with this inquiry</span>
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="visually-hidden"> (opens in new tab)</span>
         </a>
         <p class="inquiry-actions__hint">
           We don't store this data; the button opens WhatsApp pre-filled.
@@ -118,18 +127,25 @@
   </div>
 </section>
 
-<section class="wholesale-cta" aria-labelledby="cta-title">
-  <div class="wholesale-cta__inner">
-    <h2 id="cta-title">Prefer to chat first?</h2>
-    <p>
-      Skip the form and message us straight away — we'll work out the SKU
-      mix, carton sizes, and delivery together.
+<!-- ===================== CTA ===================== -->
+<section appReveal class="section section--dark wh-cta" aria-labelledby="cta-title">
+  <div class="container wh-cta__inner">
+    <app-section-badge label="Prefer to chat first" />
+    <h2 id="cta-title">Skip the form, message us straight away</h2>
+    <p class="wh-cta__lead">
+      We'll work out the SKU mix, carton sizes, and delivery together. Most
+      inquiries get a same-day reply during working hours.
     </p>
-    <p>
+    <div class="wh-cta__ctas">
       <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
-        Open WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
+        <span>Open WhatsApp</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+        <span class="visually-hidden"> (opens in new tab)</span>
       </a>
-      <a routerLink="/products" class="btn btn--ghost">See the catalog</a>
-    </p>
+      <a routerLink="/products" class="btn btn--ghost">
+        <span>See the catalog</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
   </div>
 </section>

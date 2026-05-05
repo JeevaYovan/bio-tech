@@ -1,5 +1,5 @@
 /* ======================================================================
-   Reset + body defaults — modern minimal reset, then brand body styles
+   Reset + body defaults
    ====================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -34,18 +34,17 @@ img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto
 input, button, textarea, select { font: inherit; }
 p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--color-primary-deep);
 }
-/* Mobile-first heading scale per REBUILD §8c — clamps replace the old
-   max-width 480 override pattern (which only handled phones, not the
-   awkward 480-768 band). */
-h1 { font-size: var(--type-h1); line-height: 1.05; }
-h2 { font-size: var(--type-h2); line-height: 1.15; }
-h3 { font-size: var(--type-h3); line-height: 1.2; }
-h4 { font-size: var(--type-xl); line-height: 1.25; }
+
+h1 { font-size: var(--type-h1); line-height: 1.1; }
+h2 { font-size: var(--type-h2); line-height: 1.15; letter-spacing: -0.015em; }
+h3 { font-size: var(--type-h3); line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+h4 { font-size: var(--type-xl);  line-height: 1.3;  font-weight: 600; letter-spacing: -0.005em; }
 
 p { max-width: var(--content-max); }
 
@@ -56,28 +55,20 @@ a {
 }
 a:hover { color: var(--color-primary-deep); }
 
-/* Focus indicator. Outline is constant, only the offset transitions on
-   pointer interaction — but we gate the transition behind motion-safe
-   so reduced-motion users get an instant indicator without any frame
-   where the inner edge sits flush against the element. */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  :focus-visible {
-    transition: outline-offset 120ms ease;
-  }
+  :focus-visible { transition: outline-offset 120ms ease; }
 }
 
 ::selection {
-  background: var(--color-tint);
-  color: var(--color-primary-deep);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
 }
 
-/* Visually hidden utility — used for sr-only "(opens in new tab)"
-   suffixes and screen-reader-only headings. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -91,26 +82,138 @@ a:hover { color: var(--color-primary-deep); }
 }
 
 /* ======================================================================
-   Animations (motion-safe, brand-aligned, subtle)
+   Reusable primitives
    ====================================================================== */
 
-@media (prefers-reduced-motion: no-preference) {
-  /* Scroll-driven section reveals (Chrome 115+, Edge 115+, Safari 17.4+
-     behind a flag). Browsers without animation-timeline support see
-     content immediately — graceful fallback. */
-  @supports (animation-timeline: view()) {
-    section,
-    article {
-      animation: rt-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 5% entry 60%;
-    }
-    @keyframes rt-reveal {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: none; }
-    }
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-px);
+}
 
-    /* Hero never fades in via scroll (it's already on screen) */
-    .hero { animation: none; }
+.section {
+  padding-block: var(--section-py);
+}
+.section--tight {
+  padding-block: var(--section-py-tight);
+}
+.section--mint {
+  background: var(--color-tint);
+}
+.section--dark {
+  background: var(--color-bg-dark);
+  color: var(--color-ink-on-dark);
+}
+.section--dark h1,
+.section--dark h2,
+.section--dark h3,
+.section--dark h4 { color: var(--color-ink-on-dark); }
+
+/* Pill button — reference's signature CTA shape */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--type-base);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease, color 200ms ease, border-color 200ms ease;
+  white-space: nowrap;
+}
+.btn:focus-visible { outline-offset: 4px; }
+
+.btn--accent {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  box-shadow: var(--shadow-button);
+}
+.btn--accent:hover {
+  background: var(--color-accent-deep);
+  color: var(--color-accent-ink);
+  transform: translateY(-2px);
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-ink-on-dark);
+}
+.btn--primary:hover {
+  background: var(--color-primary-deep);
+  color: var(--color-ink-on-dark);
+  transform: translateY(-2px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: currentColor;
+  border-color: currentColor;
+}
+.btn--ghost:hover {
+  background: currentColor;
+  color: var(--color-primary-deep);
+}
+.section--dark .btn--ghost:hover {
+  background: var(--color-ink-on-dark);
+  color: var(--color-primary-deep);
+}
+
+.btn__arrow {
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+.btn:hover .btn__arrow {
+  transform: translateX(4px);
+}
+
+/* Section badge / pill label */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  background: var(--color-badge-bg);
+  color: var(--color-primary-deep);
+  border-radius: var(--radius-pill);
+  font-size: var(--type-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+.eyebrow::before {
+  content: "✦";
+  color: var(--color-accent-deep);
+  font-size: 0.85em;
+}
+.section--dark .eyebrow {
+  background: rgba(139, 195, 74, 0.18);
+  color: #FFFFFF;
+}
+.section--dark .eyebrow::before { color: var(--color-accent); }
+
+/* Scroll reveal — opt-in via [data-reveal] attribute on any element.
+   The directive flips data-reveal-active when it enters viewport. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 600ms ease, transform 600ms ease;
   }
+  [data-reveal][data-reveal-active] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Marquee — used by trust + use-cases bands */
+@keyframes rt-marquee-x {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }

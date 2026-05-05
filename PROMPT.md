@@ -260,35 +260,44 @@ Likely product subjects observed (verify each):
 
 ## 9. DESIGN DIRECTION
 
-### Palette (use exactly these tokens)
+### Palette (Sellsmart-aesthetic refresh — locked tokens)
 
 ```scss
-// Greens — banana leaf / palm shade, not "tech green"
---rathika-green-900: #1F3A2B;   // deep forest, primary text
---rathika-green-700: #2F5D3F;   // primary brand
---rathika-green-500: #5B8A6A;   // secondary
---rathika-green-100: #E8F0E5;   // surface tint
-
-// Earth accents — banana stem, rice husk
---rathika-earth-700: #6B4423;
---rathika-earth-500: #A07550;
---rathika-cream:     #F8F4EC;   // page background, NOT pure white
+// Greens — deep forest, used for hero / footer / CTA bands
+--rathika-green-900: #1A3C2B;   // text dark
+--rathika-green-700: #1B4D3E;   // primary — hero bg, footer bg, CTA band
+--rathika-green-500: #2D6A4F;   // secondary
+--rathika-green-100: #F1F8E9;   // light mint — alt section bg
 
 // Neutrals
---rathika-ink:       #1A1A1A;
---rathika-paper:     #FFFFFF;   // cards only
---rathika-rule:      #D9D2C2;   // hairlines
+--rathika-cream:  #F1F8E9;      // page background (light mint)
+--rathika-paper:  #FFFFFF;      // card bg
+--rathika-ink:    #1A3C2B;      // body text
+--rathika-muted:  #6B7B6B;      // secondary text
+--rathika-rule:   #E0E5DA;      // hairlines
 
-// One accent — terracotta — used sparingly for CTAs / price tags
---rathika-accent:    #B8533A;
+// Accent — lime green for primary CTAs
+--rathika-accent:      #8BC34A; // primary CTA bg
+--rathika-accent-deep: #7BAA3A; // CTA hover
+--rathika-accent-ink:  #1A3C2B; // text on accent
+
+// Specials
+--rathika-badge-bg: rgba(139, 195, 74, 0.15);  // pill badge tint
+--rathika-star:     #FFC107;                    // star ratings
 ```
 
-The palette is **green + cream + earth**, not green + white. Pure white reads digital; cream reads handmade.
+The palette is **deep forest green + light mint + lime accent**. Hero
+and footer sit on dark green; alternating sections use light mint;
+cards use white. Lime accent reserved for primary CTAs and stat numbers.
 
 ### Typography
-- **Display/Headings:** Pick one — *Fraunces*, *Cormorant Garamond*, or *Tiro Tamil* (Tiro Tamil pairs well with the heritage angle)
-- **Body:** *Inter* or *Manrope*, 16px base, 1.6 line-height, max 68ch line length
-- **Optional Tamil touch:** Once on home, once in footer — e.g., `இயற்கை · iyarkai · nature` set in Tiro Tamil. Don't overdo it.
+- **All text:** *Inter* (variable, weights 400–800). Loaded via Google
+  Fonts CDN with `display: swap`. Single family across headings + body.
+- **Headings:** Inter at 700–800 weight, tight letter-spacing
+  (-0.02em on h1, -0.015em on h2, -0.01em on h3).
+- **Body:** Inter 400, 16px base, 1.6 line-height, max 68ch line length.
+- **Tamil subset:** Tiro Tamil reserved for /ta routes only (commented
+  in fonts.css until WOFF2 ships).
 
 ### Anti-patterns — DO NOT SHIP
 - ❌ Purple→blue or rainbow gradients

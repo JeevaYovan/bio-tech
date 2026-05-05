@@ -2,11 +2,13 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 import { WA_URL } from '../../shared/constants';
+import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
+import { RevealDirective } from '../../shared/reveal.directive';
 
 @Component({
   selector: 'app-about',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [RouterLink, SectionBadgeComponent, RevealDirective],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })

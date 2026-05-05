@@ -1,6 +1,8 @@
+<!-- ===================== HERO ===================== -->
 <section class="contact-hero" aria-labelledby="contact-title">
-  <div class="contact-hero__inner">
-    <p class="section-eyebrow">Contact</p>
+  <div class="contact-hero__bg" aria-hidden="true"></div>
+  <div class="container contact-hero__inner">
+    <app-section-badge label="Contact" />
     <h1 id="contact-title" class="contact-hero__title">Get in touch</h1>
     <p class="contact-hero__lead">
       Most orders come through WhatsApp. We respond during working hours,
@@ -10,38 +12,62 @@
   </div>
 </section>
 
-<section class="contact-channels" aria-labelledby="channels-title">
-  <div class="contact-channels__inner">
-    <h2 id="channels-title" class="visually-hidden">Contact channels</h2>
+<!-- ===================== CHANNELS ===================== -->
+<section appReveal class="section contact-channels" aria-labelledby="channels-title">
+  <div class="container">
+    <header class="contact-channels__head">
+      <app-section-badge label="Reach us" />
+      <h2 id="channels-title">Three ways to get in touch</h2>
+    </header>
     <ul class="channels" role="list">
-      <li class="channel channel--whatsapp">
+      <li class="channel channel--primary">
+        <div class="channel__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M20 12.5a8 8 0 11-3.4-6.5L21 4l-1.2 4.4A8 8 0 0120 12.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.5-2-2.5-1-.7.7c-1-.5-1.7-1.2-2.2-2.2l.7-.7-1-2.5-2 1.5z" fill="currentColor" />
+          </svg>
+        </div>
         <p class="channel__eyebrow">Primary</p>
         <p class="channel__label">WhatsApp</p>
-        <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="channel__cta">
-          Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
-        </a>
         <p class="channel__hint">Same-day reply during working hours</p>
+        <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
+          <span>Order on WhatsApp</span>
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="visually-hidden"> (opens in new tab)</span>
+        </a>
       </li>
       <li class="channel">
+        <div class="channel__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M5 4h3l2 5-2.5 1.5a11 11 0 005 5L14 13l5 2v3a2 2 0 01-2 2A14 14 0 013 6a2 2 0 012-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+          </svg>
+        </div>
         <p class="channel__eyebrow">By phone</p>
         <p class="channel__label">Call us</p>
-        <a [href]="phoneHref" class="channel__link">{{ phone }}</a>
         <p class="channel__hint">Tamil and English</p>
+        <a [href]="phoneHref" class="channel__link">{{ phone }}</a>
       </li>
       <li class="channel">
+        <div class="channel__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+          </svg>
+        </div>
         <p class="channel__eyebrow">By email</p>
         <p class="channel__label">Write to us</p>
-        <a [href]="emailHref" class="channel__link channel__link--email">{{ email }}</a>
         <p class="channel__hint">For invoices, GST documents, bulk quotes</p>
+        <a [href]="emailHref" class="channel__link channel__link--email">{{ email }}</a>
       </li>
     </ul>
   </div>
 </section>
 
-<section class="contact-location" aria-labelledby="location-title">
-  <div class="contact-location__inner">
-    <header>
-      <p class="section-eyebrow">Workshop &amp; office</p>
+<!-- ===================== LOCATION ===================== -->
+<section appReveal class="section section--mint contact-location" aria-labelledby="location-title">
+  <div class="container">
+    <header class="contact-location__head">
+      <app-section-badge label="Workshop & office" />
       <h2 id="location-title">1/447 Avinashi Road, Neelambur</h2>
     </header>
 
@@ -104,21 +130,21 @@
           <li><a [href]="googleMapsUrl" target="_blank" rel="noopener noreferrer">View on Google Maps<span class="visually-hidden"> (opens in new tab)</span></a></li>
         </ul>
 
-        <p class="address-card__hours">
-          <span class="address-card__hours-label">Working hours</span><br />
-          Monday – Saturday · 9:00 AM to 6:00 PM IST<br />
-          Closed Sundays and major Tamil festivals.
-        </p>
+        <div class="address-card__hours">
+          <p class="address-card__hours-label">Working hours</p>
+          <p>Monday – Saturday · 9:00 AM – 6:00 PM IST</p>
+          <p class="address-card__hours-note">Closed Sundays and major Tamil festivals.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ===================== INQUIRY FORM ===================== -->
-<section class="contact-form" aria-labelledby="form-title">
-  <div class="contact-form__inner">
-    <header>
-      <p class="section-eyebrow">Quick inquiry</p>
+<section appReveal class="section contact-form" aria-labelledby="form-title">
+  <div class="container contact-form__inner">
+    <header class="contact-form__head">
+      <app-section-badge label="Quick inquiry" />
       <h2 id="form-title">Send us a WhatsApp message</h2>
       <p class="contact-form__lead">
         Fill these in and we'll open WhatsApp with the message ready — no
@@ -153,7 +179,7 @@
         <span class="inquiry-field__label">Message</span>
         <textarea
           name="message"
-          rows="4"
+          rows="5"
           required
           placeholder="What you'd like to order — quantities, delivery city, any custom requirements"
           [value]="formMessage()"
@@ -169,7 +195,9 @@
           target="_blank"
           rel="noopener noreferrer"
           class="btn btn--accent btn--large">
-          Open WhatsApp with this message<span class="visually-hidden"> (opens in new tab)</span>
+          <span>Open WhatsApp with this message</span>
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="visually-hidden"> (opens in new tab)</span>
         </a>
         <p class="inquiry-actions__hint">
           We don't store your message. The button opens WhatsApp pre-filled.

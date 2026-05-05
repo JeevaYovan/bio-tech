@@ -1,14 +1,9 @@
-<!-- ===================== HERO =====================
-   Document order matches mobile layout exactly:
-   1) eyebrow + title + lede (hero__copy)
-   2) image (hero__media)
-   3) CTAs (hero__ctas)
-   On desktop, grid-template-areas restores the side-by-side layout
-   (image right, copy + CTAs stacked left). -->
+<!-- ===================== HERO ===================== -->
 <section class="hero" aria-labelledby="hero-title">
+  <div class="hero__bg" aria-hidden="true"></div>
   <div class="hero__inner">
     <div class="hero__copy">
-      <p class="hero__eyebrow">Manufactured in Neelambur, Coimbatore</p>
+      <app-section-badge label="Manufactured in Neelambur, Coimbatore" />
       <h1 id="hero-title" class="hero__title">
         Crafted from the earth.<br />
         Returns to the earth.
@@ -18,113 +13,102 @@
         fiber, sugarcane bagasse, and rice husk — agricultural by-products that
         would otherwise be burned.
       </p>
+      <div class="hero__ctas">
+        <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
+          <span>Order on WhatsApp</span>
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span class="visually-hidden"> (opens in new tab)</span>
+        </a>
+        <a routerLink="/products" class="btn btn--ghost">
+          <span>See catalog</span>
+          <span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
 
-    <picture class="hero__media">
-      <source
-        type="image/avif"
-        srcset="assets/lifestyle/hero-tea-cup-haystack-768.avif 768w,
-                assets/lifestyle/hero-tea-cup-haystack-1280.avif 1280w"
-        sizes="(min-width: 1024px) 60vw, 100vw" />
-      <source
-        type="image/webp"
-        srcset="assets/lifestyle/hero-tea-cup-haystack-768.webp 768w,
-                assets/lifestyle/hero-tea-cup-haystack-1280.webp 1280w"
-        sizes="(min-width: 1024px) 60vw, 100vw" />
-      <img
-        src="assets/lifestyle/hero-tea-cup-haystack-1280.jpg"
-        srcset="assets/lifestyle/hero-tea-cup-haystack-768.jpg 768w,
-                assets/lifestyle/hero-tea-cup-haystack-1280.jpg 1280w"
-        sizes="(min-width: 1024px) 60vw, 100vw"
-        width="1024" height="1024"
-        loading="eager" fetchpriority="high" decoding="sync"
-        alt="A bagasse tea cup beside a haystack at the edge of a paddy field at golden hour" />
-    </picture>
-
-    <div class="hero__ctas">
-      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
-        Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
-      </a>
-      <a routerLink="/products" class="btn btn--ghost">See catalog</a>
+    <div class="hero__media-wrap">
+      <div class="hero__blob hero__blob--a" aria-hidden="true"></div>
+      <div class="hero__blob hero__blob--b" aria-hidden="true"></div>
+      <picture class="hero__media">
+        <source
+          type="image/avif"
+          srcset="assets/lifestyle/hero-tea-cup-haystack-768.avif 768w,
+                  assets/lifestyle/hero-tea-cup-haystack-1280.avif 1280w"
+          sizes="(min-width: 1024px) 50vw, 100vw" />
+        <source
+          type="image/webp"
+          srcset="assets/lifestyle/hero-tea-cup-haystack-768.webp 768w,
+                  assets/lifestyle/hero-tea-cup-haystack-1280.webp 1280w"
+          sizes="(min-width: 1024px) 50vw, 100vw" />
+        <img
+          src="assets/lifestyle/hero-tea-cup-haystack-1280.jpg"
+          srcset="assets/lifestyle/hero-tea-cup-haystack-768.jpg 768w,
+                  assets/lifestyle/hero-tea-cup-haystack-1280.jpg 1280w"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          width="1024" height="1024"
+          loading="eager" fetchpriority="high" decoding="sync"
+          alt="A bagasse tea cup beside a haystack at the edge of a paddy field at golden hour" />
+      </picture>
     </div>
   </div>
 </section>
 
-<!-- ===================== TRUST STRIP ===================== -->
-<aside #reveal class="trust-strip rt-reveal" aria-label="Why Rathika">
-  <ul class="trust-strip__list">
-    @for (claim of trustClaims; track claim) {
-      <li class="trust-strip__item">
-        <svg class="trust-strip__check" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-          <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <span>{{ claim }}</span>
-      </li>
-    }
-  </ul>
-</aside>
+<!-- ===================== TRUST MARQUEE ===================== -->
+<section class="band band--mint" aria-label="Trust claims">
+  <app-marquee [items]="trustClaims" [duration]="38" ariaLabel="Why choose Rathika" />
+</section>
 
-<!-- ===================== CATEGORY SLIDER ===================== -->
-<section #reveal class="cat-slider rt-reveal" aria-labelledby="cat-title">
-  <div class="cat-slider__head">
-    <div>
-      <p class="section-eyebrow">Browse by category</p>
-      <h2 id="cat-title">Tableware for every meal</h2>
-    </div>
-    <a routerLink="/products" class="cat-slider__seeall">
-      See all
-      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-        <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    </a>
-  </div>
-
-  <app-horizontal-slider
-    class="cat-slider__rail"
-    ariaLabel="Browse by category"
-    [autoScroll]="3000"
-    loop
-    progressBar>
-    @for (cat of categories; track cat.key) {
-      <a
-        appHorizontalSliderItem
-        class="cat-card"
-        [routerLink]="['/products']"
-        [queryParams]="{ category: cat.key }"
-        [attr.aria-label]="cat.label + ' — browse category'"
-        [style.--cat-tint]="cat.tint">
-        <picture class="cat-card__media">
-          <source type="image/avif" [attr.srcset]="'assets/' + cat.imageSlug + '-400.avif 400w, assets/' + cat.imageSlug + '-800.avif 800w'" sizes="(min-width: 1024px) 280px, 220px" />
-          <source type="image/webp" [attr.srcset]="'assets/' + cat.imageSlug + '-400.webp 400w, assets/' + cat.imageSlug + '-800.webp 800w'" sizes="(min-width: 1024px) 280px, 220px" />
-          <img
-            [src]="'assets/' + cat.imageSlug + '-400.jpg'"
-            [attr.srcset]="'assets/' + cat.imageSlug + '-400.jpg 400w, assets/' + cat.imageSlug + '-800.jpg 800w'"
-            sizes="(min-width: 1024px) 280px, 220px"
-            width="400" height="500"
-            loading="lazy" decoding="async"
-            [attr.alt]="cat.alt" />
-        </picture>
-        <div class="cat-card__overlay" aria-hidden="true"></div>
-        <div class="cat-card__copy">
-          <span class="cat-card__eyebrow">{{ cat.eyebrow }}</span>
-          <span class="cat-card__label">{{ cat.label }}</span>
-          <span class="cat-card__cta">
-            Shop
-            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-              <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </span>
-        </div>
+<!-- ===================== CATEGORIES ===================== -->
+<section appReveal class="section section--tight categories" aria-labelledby="cat-title">
+  <div class="container">
+    <header class="categories__head">
+      <div>
+        <app-section-badge label="Browse by category" />
+        <h2 id="cat-title">Tableware for every meal</h2>
+      </div>
+      <a routerLink="/products" class="categories__seeall">
+        See all
+        <span aria-hidden="true">→</span>
       </a>
-    }
-  </app-horizontal-slider>
+    </header>
+
+    <div class="categories__grid">
+      @for (cat of categories; track cat.key) {
+        <a
+          class="cat-card"
+          [routerLink]="['/products']"
+          [queryParams]="{ category: cat.key }"
+          [attr.aria-label]="cat.label + ' — browse category'">
+          <picture class="cat-card__media">
+            <source type="image/avif" [attr.srcset]="'assets/' + cat.imageSlug + '-400.avif 400w, assets/' + cat.imageSlug + '-800.avif 800w'" sizes="(min-width: 1024px) 25vw, 50vw" />
+            <source type="image/webp" [attr.srcset]="'assets/' + cat.imageSlug + '-400.webp 400w, assets/' + cat.imageSlug + '-800.webp 800w'" sizes="(min-width: 1024px) 25vw, 50vw" />
+            <img
+              [src]="'assets/' + cat.imageSlug + '-400.jpg'"
+              [attr.srcset]="'assets/' + cat.imageSlug + '-400.jpg 400w, assets/' + cat.imageSlug + '-800.jpg 800w'"
+              sizes="(min-width: 1024px) 25vw, 50vw"
+              width="400" height="500"
+              loading="lazy" decoding="async"
+              [attr.alt]="cat.alt" />
+          </picture>
+          <div class="cat-card__overlay" aria-hidden="true"></div>
+          <div class="cat-card__copy">
+            <span class="cat-card__eyebrow">{{ cat.eyebrow }}</span>
+            <span class="cat-card__label">{{ cat.label }}</span>
+            <span class="cat-card__cta">
+              Shop <span aria-hidden="true">→</span>
+            </span>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
 </section>
 
 <!-- ===================== STORY ===================== -->
-<section #reveal class="story rt-reveal" aria-labelledby="story-title">
-  <div class="story__inner">
+<section appReveal class="section story" aria-labelledby="story-title">
+  <div class="container story__inner">
     <div class="story__copy">
-      <p class="section-eyebrow">Our story</p>
+      <app-section-badge label="Our story" />
       <h2 id="story-title">From farm waste to your table</h2>
       <p>
         Across Tamil Nadu, banana stems, sugarcane bagasse, and rice husk are
@@ -138,43 +122,142 @@
         the loop, support the circular economy, and give farmers a second
         revenue stream from what they used to set on fire.
       </p>
+      <a routerLink="/about" class="btn btn--accent">
+        <span>Read our story</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
     </div>
-    <picture class="story__media">
-      <source
-        type="image/avif"
-        srcset="assets/lifestyle/story-fiber-texture-600.avif 600w,
-                assets/lifestyle/story-fiber-texture-800.avif 800w,
-                assets/lifestyle/story-fiber-texture-1200.avif 1200w"
-        sizes="(min-width: 1024px) 40vw, 100vw" />
-      <source
-        type="image/webp"
-        srcset="assets/lifestyle/story-fiber-texture-600.webp 600w,
-                assets/lifestyle/story-fiber-texture-800.webp 800w,
-                assets/lifestyle/story-fiber-texture-1200.webp 1200w"
-        sizes="(min-width: 1024px) 40vw, 100vw" />
-      <img
-        src="assets/lifestyle/story-fiber-texture-600.jpg"
-        srcset="assets/lifestyle/story-fiber-texture-600.jpg 600w,
-                assets/lifestyle/story-fiber-texture-800.jpg 800w,
-                assets/lifestyle/story-fiber-texture-1200.jpg 1200w"
-        sizes="(min-width: 1024px) 40vw, 100vw"
-        width="1200" height="967"
-        loading="lazy" decoding="async"
-        alt="Close-up macro of natural fiber texture showing rice husk and bagasse strands" />
-    </picture>
+    <div class="story__media-wrap">
+      <picture class="story__media">
+        <source
+          type="image/avif"
+          srcset="assets/lifestyle/story-fiber-texture-600.avif 600w,
+                  assets/lifestyle/story-fiber-texture-800.avif 800w,
+                  assets/lifestyle/story-fiber-texture-1200.avif 1200w"
+          sizes="(min-width: 1024px) 45vw, 100vw" />
+        <source
+          type="image/webp"
+          srcset="assets/lifestyle/story-fiber-texture-600.webp 600w,
+                  assets/lifestyle/story-fiber-texture-800.webp 800w,
+                  assets/lifestyle/story-fiber-texture-1200.webp 1200w"
+          sizes="(min-width: 1024px) 45vw, 100vw" />
+        <img
+          src="assets/lifestyle/story-fiber-texture-600.jpg"
+          srcset="assets/lifestyle/story-fiber-texture-600.jpg 600w,
+                  assets/lifestyle/story-fiber-texture-800.jpg 800w,
+                  assets/lifestyle/story-fiber-texture-1200.jpg 1200w"
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          width="1200" height="967"
+          loading="lazy" decoding="async"
+          alt="Close-up macro of natural fiber texture showing rice husk and bagasse strands" />
+      </picture>
+      <div class="story__badge" aria-hidden="true">
+        <span class="story__badge-num">14</span>
+        <span class="story__badge-label">SKUs in catalog</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+<section appReveal class="section section--mint stats" aria-labelledby="stats-title">
+  <div class="container">
+    <header class="stats__head">
+      <app-section-badge label="By the numbers" />
+      <h2 id="stats-title" class="visually-hidden">Impact at a glance</h2>
+    </header>
+    <div class="stats__grid">
+      <app-stats-counter
+        [to]="1000"
+        suffix="+"
+        label="Pieces per minimum bulk order"
+        note="Smallest order is one carton; volume discounts at five cartons or more." />
+      <app-stats-counter
+        [to]="14"
+        suffix=""
+        label="SKUs across six categories"
+        note="Plates, bowls, cups, parcel boxes, utensils, and decorative pieces." />
+      <app-stats-counter
+        [to]="30"
+        suffix=" days"
+        label="To compost cleanly outdoors"
+        note="Faster in commercial composters; no plastic liner to slow decomposition." />
+      <app-stats-counter
+        [to]="100"
+        suffix="%"
+        label="Natural plant fiber"
+        note="No paint, no plastic film, no chemical sealer — just heat, pressure, and starch." />
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURED PRODUCTS ===================== -->
+<section appReveal id="featured" class="section featured" aria-labelledby="featured-title">
+  <div class="container">
+    <header class="featured__head">
+      <app-section-badge label="From the catalog" />
+      <h2 id="featured-title">A selection from the workshop</h2>
+      <p class="featured__sub">
+        Prices in INR. Tap any product for details, or message us on WhatsApp.
+      </p>
+    </header>
+
+    <app-horizontal-slider class="featured__rail" ariaLabel="Featured products">
+      @for (p of featured; track p.slug) {
+        <article appHorizontalSliderItem class="feat-card">
+          <a class="feat-card__media-link" [routerLink]="['/products', p.slug]" [attr.aria-label]="p.name">
+            <picture class="feat-card__media">
+              <source type="image/avif" [attr.srcset]="p.avifSrcset" sizes="(min-width: 1024px) 320px, 70vw" />
+              <source type="image/webp" [attr.srcset]="p.webpSrcset" sizes="(min-width: 1024px) 320px, 70vw" />
+              <img
+                [src]="p.fallback"
+                [attr.srcset]="p.jpgSrcset"
+                sizes="(min-width: 1024px) 320px, 70vw"
+                [attr.width]="p.intrinsic.w" [attr.height]="p.intrinsic.h"
+                loading="lazy" decoding="async"
+                [attr.alt]="p.alt" />
+            </picture>
+            <span class="feat-card__chip">{{ p.category }}</span>
+          </a>
+          <div class="feat-card__body">
+            <a class="feat-card__name" [routerLink]="['/products', p.slug]">{{ p.name }}</a>
+            <p class="feat-card__size">{{ p.size }}</p>
+            <p class="feat-card__price">
+              <span class="feat-card__price-num">{{ p.priceLabel }}</span>
+              <span class="feat-card__price-per">per piece</span>
+            </p>
+          </div>
+        </article>
+      }
+    </app-horizontal-slider>
+
+    <p class="featured__more">
+      <a routerLink="/products" class="btn btn--accent">
+        <span>See the full catalog</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="featured__ask">
+        Ask on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
+      </a>
+    </p>
   </div>
 </section>
 
 <!-- ===================== HOW IT'S MADE ===================== -->
-<section #reveal class="how rt-reveal" aria-labelledby="how-title">
-  <div class="how__inner">
+<section appReveal class="section section--mint how" aria-labelledby="how-title">
+  <div class="container">
     <header class="how__head">
-      <p class="section-eyebrow">How it's made</p>
+      <app-section-badge label="How it's made" />
       <h2 id="how-title">From harvest to table</h2>
+      <p class="how__lead">
+        Three steps from agricultural by-product to finished tableware. No plastic,
+        no chemical sealer — just heat, pressure, and natural starch.
+      </p>
     </header>
     <ol class="how__steps">
       @for (step of howSteps; track step.n) {
         <li class="how-step">
+          <div class="how-step__num">{{ step.n }}</div>
           <picture class="how-step__media">
             <source type="image/avif" [attr.srcset]="'assets/' + step.imageSlug + '-400.avif 400w, assets/' + step.imageSlug + '-800.avif 800w'" sizes="(min-width: 1024px) 33vw, 100vw" />
             <source type="image/webp" [attr.srcset]="'assets/' + step.imageSlug + '-400.webp 400w, assets/' + step.imageSlug + '-800.webp 800w'" sizes="(min-width: 1024px) 33vw, 100vw" />
@@ -186,7 +269,6 @@
               loading="lazy" decoding="async"
               [attr.alt]="step.alt" />
           </picture>
-          <p class="how-step__num" aria-hidden="true">{{ step.n }}</p>
           <h3 class="how-step__title">{{ step.title }}</h3>
           <p class="how-step__body">{{ step.body }}</p>
         </li>
@@ -195,17 +277,23 @@
   </div>
 </section>
 
-<!-- ===================== SIX PILLARS ===================== -->
-<section #reveal class="pillars rt-reveal" aria-labelledby="pillars-title">
-  <div class="pillars__inner">
+<!-- ===================== PILLARS ===================== -->
+<section appReveal class="section pillars" aria-labelledby="pillars-title">
+  <div class="container">
     <header class="pillars__head">
-      <p class="section-eyebrow">Why this tableware</p>
+      <app-section-badge label="Why this tableware" />
       <h2 id="pillars-title">Six reasons our products are different</h2>
+      <p class="pillars__lead">
+        Every piece is engineered for real-world use — hot food, oily curries,
+        long catering shifts — and engineered to disappear cleanly afterward.
+      </p>
     </header>
     <ol class="pillars__list">
       @for (pillar of pillars; track pillar.n) {
         <li class="pillar">
-          <p class="pillar__num" aria-hidden="true">{{ pillar.n }}</p>
+          <div class="pillar__icon" aria-hidden="true">
+            <span class="pillar__num">{{ pillar.n }}</span>
+          </div>
           <h3 class="pillar__title">{{ pillar.title }}</h3>
           <p class="pillar__body">{{ pillar.body }}</p>
         </li>
@@ -214,70 +302,90 @@
   </div>
 </section>
 
-<!-- ===================== FEATURED PRODUCTS ===================== -->
-<section #reveal id="featured" class="featured rt-reveal" aria-labelledby="featured-title">
-  <div class="featured__inner">
-    <header class="featured__head">
-      <p class="section-eyebrow">From the catalog</p>
-      <h2 id="featured-title">A selection from the workshop</h2>
-      <p class="featured__sub">Prices in INR. Tap any product for details, or message us on WhatsApp.</p>
-    </header>
-    <ul class="product-grid" role="list">
-      @for (p of featured; track p.slug) {
-        <li class="product-card">
-          <a class="product-card__link" [routerLink]="['/products', p.slug]">
-            <picture class="product-card__media">
-              <source type="image/avif" [attr.srcset]="p.avifSrcset" sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-              <source type="image/webp" [attr.srcset]="p.webpSrcset" sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-              <img
-                [src]="p.fallback"
-                [attr.srcset]="p.jpgSrcset"
-                sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
-                [attr.width]="p.intrinsic.w" [attr.height]="p.intrinsic.h"
-                loading="lazy" decoding="async"
-                [attr.alt]="p.alt" />
-            </picture>
-            <div class="product-card__body">
-              <p class="product-card__name">{{ p.name }}</p>
-              <p class="product-card__size">{{ p.size }}</p>
-              <p class="product-card__price">{{ formatPrice(p.price) }}</p>
-            </div>
-          </a>
-        </li>
-      }
-    </ul>
-    <p class="featured__more">
-      <a routerLink="/products">See the full catalog</a>
-      <span class="featured__more-or" aria-hidden="true">·</span>
-      <a [href]="waUrl" target="_blank" rel="noopener noreferrer">Ask on WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a>
-    </p>
+<!-- ===================== FAQ ===================== -->
+<section appReveal class="section section--mint faq-section" aria-labelledby="faq-title">
+  <div class="container faq-section__inner">
+    <div class="faq-section__head">
+      <app-section-badge label="Common questions" />
+      <h2 id="faq-title">Everything you need to know</h2>
+      <p class="faq-section__lead">
+        Working hours: Monday – Saturday, 9 AM – 6 PM IST. Most queries are
+        answered same-day on WhatsApp.
+      </p>
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
+        <span>Ask on WhatsApp</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+        <span class="visually-hidden"> (opens in new tab)</span>
+      </a>
+    </div>
+    <div class="faq-section__list">
+      <app-faq-accordion [items]="faqs" />
+    </div>
   </div>
 </section>
 
-<!-- ===================== WHERE USED ===================== -->
-<section #reveal class="where-used rt-reveal" aria-labelledby="where-title">
-  <div class="where-used__inner">
-    <p class="section-eyebrow">Where it's used</p>
-    <h2 id="where-title">From kitchens to weddings</h2>
-    <ul class="where-used__list" role="list">
-      @for (place of whereUsed; track place) {
-        <li>{{ place }}</li>
+<!-- ===================== ECO TIPS ===================== -->
+<section appReveal class="section eco-tips" aria-labelledby="eco-title">
+  <div class="container">
+    <header class="eco-tips__head">
+      <app-section-badge label="Eco notes" />
+      <h2 id="eco-title">Stories from the workshop</h2>
+    </header>
+    <div class="eco-tips__grid">
+      @for (tip of ecoTips; track tip.title) {
+        <article class="eco-card">
+          <picture class="eco-card__media">
+            <source type="image/avif" [attr.srcset]="'assets/' + tip.imageSlug + '-400.avif 400w, assets/' + tip.imageSlug + '-800.avif 800w'" sizes="(min-width: 1024px) 33vw, 90vw" />
+            <source type="image/webp" [attr.srcset]="'assets/' + tip.imageSlug + '-400.webp 400w, assets/' + tip.imageSlug + '-800.webp 800w'" sizes="(min-width: 1024px) 33vw, 90vw" />
+            <img
+              [src]="'assets/' + tip.imageSlug + '-400.jpg'"
+              [attr.srcset]="'assets/' + tip.imageSlug + '-400.jpg 400w, assets/' + tip.imageSlug + '-800.jpg 800w'"
+              sizes="(min-width: 1024px) 33vw, 90vw"
+              width="400" height="300"
+              loading="lazy" decoding="async"
+              [attr.alt]="tip.alt" />
+          </picture>
+          <div class="eco-card__body">
+            <p class="eco-card__meta">
+              <span class="eco-card__tag">{{ tip.tag }}</span>
+              <span class="eco-card__date">{{ tip.date }}</span>
+            </p>
+            <h3 class="eco-card__title">{{ tip.title }}</h3>
+            <p class="eco-card__excerpt">{{ tip.body }}</p>
+          </div>
+        </article>
       }
-    </ul>
+    </div>
   </div>
+</section>
+
+<!-- ===================== WHERE IT'S USED MARQUEE ===================== -->
+<section class="band band--mint" aria-label="Where Rathika tableware is used">
+  <div class="container band__head">
+    <app-section-badge label="Where it's used" />
+  </div>
+  <app-marquee [items]="whereUsed" [duration]="45" ariaLabel="Use cases" />
 </section>
 
 <!-- ===================== CTA BAND ===================== -->
-<section #reveal class="home-cta rt-reveal" aria-labelledby="cta-title">
-  <div class="home-cta__inner">
-    <p class="section-eyebrow home-cta__eyebrow">Order today</p>
+<section appReveal class="section section--dark home-cta" aria-labelledby="cta-title">
+  <div class="container home-cta__inner">
+    <app-section-badge label="Order today" />
     <h2 id="cta-title">Place an order on WhatsApp</h2>
     <p class="home-cta__lead">
       We respond during working hours, typically same-day. Bulk orders for
       restaurants, weddings, and events are welcome — just message us.
     </p>
-    <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent btn--large">
-      Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
-    </a>
+    <div class="home-cta__ctas">
+      <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent">
+        <span>Order on WhatsApp</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+        <span class="visually-hidden"> (opens in new tab)</span>
+      </a>
+      <a routerLink="/wholesale" class="btn btn--ghost">
+        <span>Wholesale enquiry</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
   </div>
 </section>

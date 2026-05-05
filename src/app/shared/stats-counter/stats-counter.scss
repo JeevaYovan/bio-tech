@@ -1,0 +1,38 @@
+:host { display: block; }
+
+.stat {
+  text-align: center;
+  padding: var(--space-6);
+}
+
+.stat__value {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-accent-deep);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-3);
+}
+
+.stat__suffix {
+  display: inline-block;
+  margin-left: 0.05em;
+}
+
+.stat__label {
+  font-family: var(--font-body);
+  font-size: var(--type-lg);
+  font-weight: 600;
+  color: var(--color-primary-deep);
+  margin: 0 auto;
+  max-width: 22ch;
+}
+
+.stat__note {
+  font-size: var(--type-sm);
+  color: var(--color-muted);
+  margin: var(--space-2) auto 0;
+  max-width: 28ch;
+  line-height: 1.5;
+}

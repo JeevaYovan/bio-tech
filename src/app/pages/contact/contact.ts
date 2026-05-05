@@ -14,10 +14,13 @@ import {
   PHONE_HREF,
   WA_URL,
 } from '../../shared/constants';
+import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
+import { RevealDirective } from '../../shared/reveal.directive';
 
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SectionBadgeComponent, RevealDirective],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
@@ -32,9 +35,6 @@ export default class ContactComponent implements OnInit {
   protected readonly osmUrl = 'https://www.openstreetmap.org/?mlat=11.0779&mlon=77.0006#map=16/11.0779/77.0006';
   protected readonly googleMapsUrl = 'https://www.google.com/maps?q=11.0779,77.0006&z=15';
 
-  /** WA-prefill inquiry form (per user choice B). Sends to wa.me with
-      a pre-composed message that the user reviews and submits in the
-      WhatsApp app — no backend, no PII storage. */
   protected readonly formName = signal('');
   protected readonly formPhone = signal('');
   protected readonly formMessage = signal('');

@@ -9,12 +9,20 @@ import {
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 import { WA_URL } from '../../shared/constants';
+import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
+import { StatsCounterComponent } from '../../shared/stats-counter/stats-counter';
+import { RevealDirective } from '../../shared/reveal.directive';
 
 @Component({
   selector: 'app-wholesale',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [
+    RouterLink,
+    SectionBadgeComponent,
+    StatsCounterComponent,
+    RevealDirective,
+  ],
   templateUrl: './wholesale.html',
   styleUrl: './wholesale.scss',
 })
@@ -23,8 +31,6 @@ export default class WholesaleComponent implements OnInit {
 
   protected readonly waUrl = WA_URL;
 
-  /** Wholesale inquiry form — name, business, items, qty, event date, city
-      → opens wa.me with prefilled body. No backend per §9 wholesale #4. */
   protected readonly form = {
     name: signal(''),
     business: signal(''),
