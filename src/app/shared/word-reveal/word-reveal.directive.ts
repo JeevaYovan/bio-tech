@@ -9,9 +9,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { observe } from '../observer-pool/observer-pool';
 
 /**
  * Word-by-word reveal — splits the host's text content into a span per
@@ -85,20 +83,52 @@ export class WordRevealDirective implements AfterViewInit {
       el.style.willChange = 'transform';
     });
 
+    /* Build the rise tween in paused state and trigger it manually.
+       Same pattern as [appKineticText] — using ScrollTrigger here
+       was unreliable on route navigation: when Lenis was mid-scroll-
+       to-top, the trigger sometimes failed to fire and the words
+       stayed at translateY(110%) (invisible inside their masks).
+       Reproduced as "page is blank, refresh shows it". The
+       immediate-fire path below covers that case. */
     const tween = gsap.to(Array.from(innerEls), {
       y: 0,
       duration: this.wordDuration / 1000,
       ease: 'power3.out',
       stagger: this.wordStagger / 1000,
-      scrollTrigger: {
-        trigger: host,
-        start: 'top 80%',
-        once: true,
+      paused: true,
+      onComplete: () => {
+        innerEls.forEach((el: HTMLElement) => { el.style.willChange = 'auto'; });
       },
     });
 
+    let played = false;
+    const play = () => {
+      if (played) return;
+      played = true;
+      tween.play();
+    };
+
+    /* If the host is already in the viewport at registration time
+       (above-the-fold paragraphs after a route change), play
+       immediately on the next frame. */
+    const rect = host.getBoundingClientRect();
+    const inViewportNow = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inViewportNow) {
+      requestAnimationFrame(play);
+    }
+
+    /* Below-the-fold paragraphs: register with the shared IO pool
+       and fire on first intersection. play()'s `played` guard
+       prevents double-firing if both paths trigger. */
+    const unobserve = observe(host, 0.05, '0px 0px -10% 0px', (entry) => {
+      if (entry.isIntersecting) {
+        play();
+        unobserve();
+      }
+    });
+
     this.destroyRef.onDestroy(() => {
-      tween.scrollTrigger?.kill();
+      unobserve();
       tween.kill();
     });
   }
