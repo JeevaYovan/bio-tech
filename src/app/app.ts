@@ -11,7 +11,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChildrenOutletContexts,
   NavigationEnd,
@@ -63,6 +63,7 @@ export class App implements OnInit, AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly lenis = inject(LenisScrollService);
+  private readonly doc = inject(DOCUMENT);
 
   protected readonly waUrl = WA_URL;
   protected readonly currentYear = new Date().getFullYear();
@@ -98,12 +99,17 @@ export class App implements OnInit, AfterViewInit {
         this.menuOpen.set(false);
         const top = e.urlAfterRedirects.split('?')[0].split('/').filter(Boolean);
         this.routeKey.set(top[0] ? (top[0] === 'products' && top.length > 1 ? 'product-detail' : top[0]) : 'home');
+        /* Routes that lead with a dark-green hero get a class on
+           <html> so the html background is dark green too. We do this
+           via the DOCUMENT token (not raw `document`) so it ALSO runs
+           during SSR — otherwise the prerendered HTML ships without
+           rt-dark-hero, the body's mint bg paints over the html's
+           dark green, and the user sees a mint surface behind the
+           transparent header on first paint until JS hydrates. */
+        const darkHero = ['home', 'products', 'wholesale', 'about', 'contact', 'why-rathika'].includes(this.routeKey());
+        this.doc.documentElement.classList.toggle('rt-dark-hero', darkHero);
         if (isPlatformBrowser(this.platformId)) {
-          document.body.dataset['route'] = this.routeKey();
-          /* Routes that lead with a dark-green hero get a class on
-             <html> so the html background is dark green too. */
-          const darkHero = ['home', 'products', 'wholesale', 'about', 'contact', 'why-rathika'].includes(this.routeKey());
-          document.documentElement.classList.toggle('rt-dark-hero', darkHero);
+          this.doc.body.dataset['route'] = this.routeKey();
           /* Coordinate Lenis with Angular Router on route change. */
           this.lenis.scrollToTop({ immediate: true });
         }

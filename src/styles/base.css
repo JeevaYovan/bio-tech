@@ -21,10 +21,18 @@ html {
    at scrollY = 0, and any rubber-band / scroll-overflow area) reads as
    the hero colour rather than a thin white line. Class is set by
    App.ts on every NavigationEnd — more reliable than :has() across
-   browser versions. Body stays mint so sections without their own
-   background fall through to the page bg. */
+   browser versions. Plus we transparentise the body so the html's
+   dark green shows through behind the transparent sticky header
+   (which is why the previous fix wasn't visible: body's mint bg was
+   painting over the html's dark green, so the header had a mint
+   surface behind it instead of dark green). Sections inside the
+   page set their own backgrounds, so body-transparent doesn't bleed
+   through anywhere visible. */
 html.rt-dark-hero {
   background: var(--color-bg-dark);
+}
+html.rt-dark-hero body {
+  background: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
