@@ -43,7 +43,16 @@ main { flex: 1 0 auto; }
   z-index: 40;
   background: var(--color-bg-card);
   border-block-end: 1px solid var(--color-rule);
-  transition: background 250ms ease, box-shadow 250ms ease, color 200ms ease, border-color 200ms ease;
+  /* No transition on the header — transitioning bg + box-shadow +
+     color + border across the is-over-hero ↔ is-scrolled flip
+     created a 250ms in-between state where the brand mark sat on
+     a half-mint half-transparent surface, which read as a
+     "logo overlapping" glitch. Snap the swap instead. Hover/link
+     micro-transitions are handled by the elements themselves. */
+
+  /* Limit paint + layout cost — sticky header with backdrop-filter
+     is expensive without containment. */
+  contain: layout paint;
 
   padding: var(--space-3) var(--container-px);
 
@@ -55,13 +64,16 @@ main { flex: 1 0 auto; }
   }
 
   &.is-scrolled {
-    /* Glassmorphism: more translucent base + stronger blur + subtle
-       saturate so the underlying greens read through. 1px hairline
-       border at the bottom adds depth without becoming a hard line. */
-    background: color-mix(in srgb, var(--color-bg-card) 78%, transparent);
-    backdrop-filter: blur(16px) saturate(1.4);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    box-shadow: 0 8px 32px rgba(27, 77, 62, 0.10);
+    /* Glass-mint when past the hero. Lighter blur + dropped saturate
+       compared to the previous 16px+saturate combo — backdrop-filter
+       is the dominant per-frame cost on lower-end devices, and 8px
+       blur looks visually identical at the header's small height
+       while costing roughly half. The shadow is also dialled back
+       (heavy rgba shadows force a separate composite layer). */
+    background: color-mix(in srgb, var(--color-bg-card) 82%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 18px rgba(27, 77, 62, 0.08);
     border-block-end: 1px solid rgba(255, 255, 255, 0.18);
   }
 

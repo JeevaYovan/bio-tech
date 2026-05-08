@@ -48,8 +48,11 @@ export class LenisScrollService {
     if (reduce) return;
 
     this.lenis = new Lenis({
-      /* Snappier scroll — 0.9s feels more direct, less rubber-band. */
-      duration: 0.9,
+      /* Tighter scroll feel — 0.6s is short enough that a quick wheel
+         flick lands in the new position without rubber-banding, but
+         still smooths out single-line scrolls. Was 0.9s which felt
+         laggy on lower-end devices. */
+      duration: 0.6,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
