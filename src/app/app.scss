@@ -478,13 +478,19 @@ html.rt-dark-hero .site-header:not(.is-scrolled) {
    then reach-us full. Desktop ≥1024: 4-col (brand 1.6fr, catalog,
    company, reach). Bottom padding clears the sticky WA FAB on mobile. */
 .site-footer {
-  padding: var(--space-12) var(--container-px) var(--space-16);
+  /* Bottom padding clears the sticky WA FAB on mobile (button is at
+     bottom: 1rem and ~56px tall, so its top edge is at ~5rem). With
+     6.5rem of padding the button can never overlap text — last lines
+     of footer always sit above it. Desktop has the FABs in the
+     bottom corners but more screen real estate, so the footer's own
+     padding doubles as visual breathing room. */
+  padding: var(--space-12) var(--container-px) 6.5rem;
   background: var(--color-primary-deep);
   color: rgba(255, 255, 255, 0.78);
   font-size: var(--type-sm);
 
   @media (min-width: 1024px) {
-    padding: var(--space-16) var(--container-px) var(--space-8);
+    padding: var(--space-16) var(--container-px) var(--space-12);
   }
 
   &__inner {

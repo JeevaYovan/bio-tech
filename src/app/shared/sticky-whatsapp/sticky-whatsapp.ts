@@ -47,12 +47,22 @@ export class StickyWhatsappComponent {
   }
 
   /** Animation #10: hide on continuous scroll-down past 400 px;
-      reveal when direction reverses. Coarse — no rAF — fine for a
-      single host listener. */
+      reveal when direction reverses. ALSO hide when the user is
+      within 120 px of the bottom of the page — the button would
+      otherwise overlay the footer's contact text + nav links
+      (audit feedback). Coarse — no rAF — fine for a single host
+      listener. */
   @HostListener('window:scroll')
   onScroll(): void {
     if (!this.isBrowser) return;
     const y = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const nearBottom = y > max - 120;
+    if (nearBottom) {
+      this.visible.set(false);
+      this.lastY = y;
+      return;
+    }
     const goingDown = y > this.lastY;
     if (goingDown && y > 400) {
       this.visible.set(false);
