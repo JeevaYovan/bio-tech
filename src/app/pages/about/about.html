@@ -20,7 +20,7 @@
     <h2 id="opener-title" appKineticText>
       A workshop, an honest loop, and the field next door.
     </h2>
-    <p class="about-opener__lede" appWordReveal>
+    <p class="about-opener__lede" revealOnScroll [revealDelay]="120">
       We are a small, family-run manufacturer in Neelambur on the
       outskirts of Coimbatore. Our work is to turn the agricultural
       by-products of Tamil Nadu — banana fiber, sugarcane bagasse,
@@ -39,14 +39,14 @@
     <div class="about-story__copy" revealOnScroll="fadeInRight" [revealDelay]="100">
       <app-section-badge label="Our story" />
       <h2 id="story-title">A simple loop, run honestly</h2>
-      <p appWordReveal>
+      <p revealOnScroll [revealDelay]="0">
         The materials are local and unmodified. Banana fiber comes from the
         stems of the banana plant after the fruit is harvested. Sugarcane
         bagasse is the dry, fibrous residue left after the juice is pressed
         out. Rice husk is the outer shell of the rice grain, removed during
         milling.
       </p>
-      <p appWordReveal>
+      <p revealOnScroll [revealDelay]="80">
         Across Tamil Nadu, all three are routinely set on fire because there
         is no profitable secondary use, and the resulting smoke is one of the
         largest contributors to seasonal air pollution in the region. We buy
@@ -55,7 +55,7 @@
         restaurants, weddings, and households that would otherwise be using
         single-use plastic or paper.
       </p>
-      <p appWordReveal>
+      <p revealOnScroll [revealDelay]="160">
         Three things we are careful about: the products must be strong enough
         to hold hot food without leaking, they must contain no synthetic
         coatings or adhesives so they can biodegrade and compost cleanly, and
@@ -303,18 +303,18 @@
     </p>
     <div class="about-buyers__ctas">
       <a [href]="waUrl" target="_blank" rel="noopener noreferrer" class="btn btn--accent"
-         revealOnScroll [revealDelay]="320">
+         revealOnScroll [revealDelay]="240">
         <span>Ask on WhatsApp</span>
         <span class="btn__arrow" aria-hidden="true">→</span>
         <span class="visually-hidden"> (opens in new tab)</span>
       </a>
       <a routerLink="/products" class="btn btn--ghost"
-         revealOnScroll [revealDelay]="400">
+         revealOnScroll [revealDelay]="280">
         <span>See the catalog</span>
         <span class="btn__arrow" aria-hidden="true">→</span>
       </a>
       <a routerLink="/contact" class="btn btn--ghost"
-         revealOnScroll [revealDelay]="480">
+         revealOnScroll [revealDelay]="320">
         <span>Visit the workshop</span>
         <span class="btn__arrow" aria-hidden="true">→</span>
       </a>

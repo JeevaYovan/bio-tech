@@ -6,7 +6,6 @@ import { SectionBadgeComponent } from '../../shared/section-badge/section-badge'
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
 import { ParallaxImageDirective } from '../../shared/parallax-image/parallax-image.directive';
 import { KineticTextDirective } from '../../shared/kinetic-text/kinetic-text.directive';
-import { WordRevealDirective } from '../../shared/word-reveal/word-reveal.directive';
 import { TimelineComponent, TimelineEntry } from '../../shared/timeline/timeline';
 import { NatureParallaxHeroComponent } from '../../shared/nature-parallax-hero/nature-parallax-hero';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
@@ -20,7 +19,6 @@ import { revealDelayFor } from '../../shared/reveal/reveal.util';
     RevealOnScrollDirective,
     ParallaxImageDirective,
     KineticTextDirective,
-    WordRevealDirective,
     TimelineComponent,
     NatureParallaxHeroComponent,
   ],
