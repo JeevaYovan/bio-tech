@@ -55,7 +55,11 @@
     Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
   </a>
 
-  <!-- Hamburger toggle (mobile only). -->
+  <!-- Mobile menu toggle — 4-petal mark + MENU/CLOSE label, dark
+       green pill. Replaces the standard 3-line hamburger for a
+       more on-brand affordance. The petal icon rotates 45° when
+       open so it reads as an X (close), and the label flips
+       MENU ↔ CLOSE. -->
   <button
     #hamburgerBtn
     type="button"
@@ -65,9 +69,16 @@
     aria-controls="primary-drawer"
     aria-label="Toggle navigation menu"
     (click)="toggleMenu()">
-    <span class="hamburger__line"></span>
-    <span class="hamburger__line"></span>
-    <span class="hamburger__line"></span>
+    <svg class="hamburger__mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <!-- 4-petal flower: four overlapping rounded ovals at 0/90/180/270°. -->
+      <g fill="currentColor">
+        <ellipse cx="12" cy="6"  rx="3" ry="5" />
+        <ellipse cx="18" cy="12" rx="5" ry="3" />
+        <ellipse cx="12" cy="18" rx="3" ry="5" />
+        <ellipse cx="6"  cy="12" rx="5" ry="3" />
+      </g>
+    </svg>
+    <span class="hamburger__label">{{ menuOpen() ? 'CLOSE' : 'MENU' }}</span>
   </button>
 </header>
 
