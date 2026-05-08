@@ -55,7 +55,7 @@ export class StatsCounterComponent implements AfterViewInit {
   readonly suffix = input<string>('');
   readonly label = input.required<string>();
   readonly note = input<string>('');
-  readonly duration = input<number>(1800);
+  readonly duration = input<number>(1100);
   /** When true, the number scrubs 0 → target as the user scrolls
    *  through the host's viewport range (via GSAP ScrollTrigger). */
   readonly scrollScrubbed = input<boolean>(false);

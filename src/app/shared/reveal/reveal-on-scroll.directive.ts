@@ -39,7 +39,7 @@ export class RevealOnScrollDirective implements OnInit, OnDestroy {
       attribute (defaults to fadeInUp). */
   @Input() revealOnScroll: RevealKeyframe | '' = 'fadeInUp';
   @Input() revealDelay = 0;
-  @Input() revealDuration = 500;
+  @Input() revealDuration = 350;
   @Input() revealThreshold = 0.15;
   @Input() revealOnce = true;
 

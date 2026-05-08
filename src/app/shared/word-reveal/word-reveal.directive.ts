@@ -30,9 +30,9 @@ gsap.registerPlugin(ScrollTrigger);
 })
 export class WordRevealDirective implements AfterViewInit {
   /** Stagger between words, ms. */
-  @Input() wordStagger = 50;
+  @Input() wordStagger = 25;
   /** Animation duration per word, ms. */
-  @Input() wordDuration = 700;
+  @Input() wordDuration = 400;
 
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly platformId = inject(PLATFORM_ID);

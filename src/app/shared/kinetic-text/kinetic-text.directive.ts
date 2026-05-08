@@ -28,9 +28,9 @@ import { observe } from '../observer-pool/observer-pool';
 })
 export class KineticTextDirective implements AfterViewInit {
   /** Stagger between characters (ms). */
-  @Input() kineticStagger = 30;
+  @Input() kineticStagger = 18;
   /** Animation duration per character (ms). */
-  @Input() kineticDuration = 800;
+  @Input() kineticDuration = 450;
 
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly platformId = inject(PLATFORM_ID);
