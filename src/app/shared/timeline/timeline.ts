@@ -11,9 +11,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { observe } from '../observer-pool/observer-pool';
 
 export interface TimelineEntry {
   readonly year: string;
@@ -76,7 +74,14 @@ export class TimelineComponent implements AfterViewInit {
     const nodeEls = hostEl.querySelectorAll<HTMLElement>('.tl__item');
 
     /* Stroke draw setup: dasharray = full length, dashoffset = full
-       length, then scrub down to 0 as user scrolls through the section. */
+       length, then animate to 0. We previously scrubbed this against
+       scroll position via ScrollTrigger, but on route navigation the
+       trigger races with Lenis's scroll-to-top and sometimes never
+       fires — leaving the line hidden AND every node at scale(0.6)
+       opacity:0, which is the empty-section bug the user reported.
+       Now: when the timeline enters the viewport (or is already in
+       it on mount, typical for a route landing on About), we play
+       a normal duration-based animation. No scroll dependency. */
     const length = lineEl.getTotalLength?.() ?? 1000;
     lineEl.style.strokeDasharray = `${length}`;
     lineEl.style.strokeDashoffset = `${length}`;
@@ -86,36 +91,47 @@ export class TimelineComponent implements AfterViewInit {
 
     const lineTween = gsap.to(lineEl, {
       strokeDashoffset: 0,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: hostEl,
-        start: 'top 80%',
-        end: 'bottom 70%',
-        scrub: 1,
-      },
+      duration: 1.2,
+      ease: 'power2.out',
+      paused: true,
+    });
+    const nodeTween = gsap.to(nodeEls, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.5,
+      ease: 'back.out(1.6)',
+      stagger: 0.12,
+      paused: true,
     });
 
-    /* Each node pops in at its own scroll position. */
-    const nodeTriggers: ScrollTrigger[] = [];
-    nodeEls.forEach((el: HTMLElement) => {
-      const tween = gsap.to(el, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.5,
-        ease: 'back.out(1.6)',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 80%',
-          once: true,
-        },
-      });
-      if (tween.scrollTrigger) nodeTriggers.push(tween.scrollTrigger);
+    let played = false;
+    const play = () => {
+      if (played) return;
+      played = true;
+      lineTween.play();
+      /* Slight delay so the line starts drawing before nodes pop in. */
+      gsap.delayedCall(0.15, () => nodeTween.play());
+    };
+
+    /* Immediate-fire if already in viewport at mount time. */
+    const rect = hostEl.getBoundingClientRect();
+    const inViewportNow = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inViewportNow) {
+      requestAnimationFrame(play);
+    }
+
+    /* Pooled IO fallback for below-the-fold landings. */
+    const unobserve = observe(hostEl, 0.05, '0px 0px -10% 0px', (entry) => {
+      if (entry.isIntersecting) {
+        play();
+        unobserve();
+      }
     });
 
     this.destroyRef.onDestroy(() => {
-      lineTween.scrollTrigger?.kill();
+      unobserve();
       lineTween.kill();
-      nodeTriggers.forEach((t) => t.kill());
+      nodeTween.kill();
     });
   }
 }
