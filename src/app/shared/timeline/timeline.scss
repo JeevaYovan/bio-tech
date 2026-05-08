@@ -1,0 +1,86 @@
+:host { display: block; }
+
+.tl {
+  position: relative;
+  max-width: 720px;
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+}
+
+/* The drawn vertical stroke line. SVG sits absolutely behind the
+   content and stretches the full height of the timeline. */
+.tl__line {
+  position: absolute;
+  inset-inline-start: calc(var(--container-px) + 16px);
+  inset-block: 0;
+  width: 4px;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.tl__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.tl__item {
+  position: relative;
+  padding-inline-start: var(--space-10);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.tl__node {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.4rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-bg-card);
+  border: 3px solid var(--color-accent);
+  box-shadow: 0 0 0 6px rgba(139, 195, 74, 0.18);
+  z-index: 1;
+}
+
+.tl__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.tl__year {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-earth-warm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tl__title {
+  font-family: var(--font-display);
+  font-size: var(--type-xl);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.tl__body {
+  color: var(--color-muted);
+  line-height: 1.65;
+  margin: 0;
+  max-width: 56ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl__line line { stroke-dashoffset: 0 !important; }
+  .tl__item { opacity: 1 !important; transform: none !important; }
+}

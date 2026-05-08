@@ -34,6 +34,12 @@
   --rathika-star:     #FFC107;
   --rathika-overlay-dark: rgba(26, 60, 43, 0.6);
 
+  /* Earth tones — accent only (warmer counterweight to the greens) */
+  --rathika-earth:  #8B7355;   /* warm brown for accents, eyebrow underlines */
+  --rathika-beige:  #F5F0E8;   /* paper-cream for ingredient blocks, alt sections */
+  --color-earth-warm: var(--rathika-earth);
+  --color-paper:    var(--rathika-beige);
+
   /* Semantic aliases — use these in component CSS, not the brand vars */
   --color-bg:           var(--rathika-cream);
   --color-bg-alt:       var(--rathika-paper);
@@ -122,6 +128,38 @@
      transparent-on-hero header so the dark green band reaches the
      top of the viewport without a cream gap. */
   --header-h: 64px;
+
+  /* ===== Award-tier additions (motion + depth + accent + display) ===== */
+
+  /* Motion durations + curated easing curves */
+  --motion-duration-instant:  0.15s;
+  --motion-duration-fast:     0.3s;
+  --motion-duration-normal:   0.6s;
+  --motion-duration-slow:     1.2s;
+  --motion-duration-dramatic: 2.0s;
+  --motion-ease-out-expo:    cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-out-quart:   cubic-bezier(0.22, 0.61, 0.36, 1);
+  --motion-ease-elastic:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-ease-smooth:      cubic-bezier(0.62, 0.05, 0.01, 0.99);
+
+  /* Glassmorphism depth */
+  --glass-bg:     rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur:   blur(20px) saturate(1.8);
+  --glass-shadow: 0 8px 32px rgba(26, 60, 43, 0.12);
+
+  /* Accent expansion */
+  --rathika-gold:       #D4A843;
+  --rathika-terracotta: #C67B5C;
+  --rathika-slate:      #2C3E50;
+  --rathika-ivory:      #FAF9F6;
+
+  /* Display type scale */
+  --type-hero-mega:    clamp(3rem, 10vw, 7rem);
+  --type-section-mega: clamp(2rem, 6vw, 4.5rem);
+
+  /* Generous section padding */
+  --section-pad-xl: clamp(6rem, 12vw, 10rem);
 }
 
 @media (min-width: 768px) {

@@ -8,6 +8,23 @@
   width: 100%;
   overflow: hidden;
   padding-block: var(--space-4);
+  /* Soft fade on the leading and trailing edges so items emerge from
+     and disappear into the band rather than hard-clipping at the
+     viewport edges. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+          mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
 }
 
 .marquee__track {
@@ -34,6 +51,9 @@
 @media (prefers-reduced-motion: no-preference) {
   .marquee__track {
     animation: rt-marquee-x linear infinite;
+  }
+  .marquee__track.is-reverse {
+    animation-direction: reverse;
   }
   .marquee:hover .marquee__track,
   .marquee:focus-within .marquee__track {

@@ -9,6 +9,7 @@ import {
   inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { observe } from '../observer-pool/observer-pool';
 
 export type RevealKeyframe = 'fadeInUp' | 'fadeInLeft' | 'fadeInRight';
 
@@ -17,10 +18,11 @@ export type RevealKeyframe = 'fadeInUp' | 'fadeInLeft' | 'fadeInRight';
  * the host element scrolls into view, with optional per-element delay.
  *
  * Used to orchestrate the "Sellsmart-style" cascade: heading first, then
- * sub-heading, then siblings with short delays. Native IntersectionObserver
- * — no third-party library, no jQuery, no AOS / WOW.
+ * sub-heading, then siblings with short delays. Backed by a shared
+ * IntersectionObserver pool (see top of file) so a page with N reveals
+ * uses 2-3 observers total instead of N.
  *
- * Defaults are tuned for premium editorial feel: 600ms duration, 15%
+ * Defaults are tuned for premium editorial feel: 500ms duration, 15%
  * threshold, 10% bottom rootMargin (trigger slightly before fully visible).
  *
  * Honours `prefers-reduced-motion: reduce` at two layers — TS skips the
@@ -37,11 +39,11 @@ export class RevealOnScrollDirective implements OnInit, OnDestroy {
       attribute (defaults to fadeInUp). */
   @Input() revealOnScroll: RevealKeyframe | '' = 'fadeInUp';
   @Input() revealDelay = 0;
-  @Input() revealDuration = 600;
+  @Input() revealDuration = 500;
   @Input() revealThreshold = 0.15;
   @Input() revealOnce = true;
 
-  private observer?: IntersectionObserver;
+  private unobserve?: () => void;
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
   private readonly platformId = inject(PLATFORM_ID);
@@ -70,28 +72,21 @@ export class RevealOnScrollDirective implements OnInit, OnDestroy {
       return;
     }
 
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            this.renderer.addClass(host, 'reveal-visible');
-            if (this.revealOnce) {
-              this.observer?.disconnect();
-              this.observer = undefined;
-            }
-          } else if (!this.revealOnce) {
-            this.renderer.removeClass(host, 'reveal-visible');
-          }
+    this.unobserve = observe(host, this.revealThreshold, '0px 0px -10% 0px', (entry) => {
+      if (entry.isIntersecting) {
+        this.renderer.addClass(host, 'reveal-visible');
+        if (this.revealOnce) {
+          this.unobserve?.();
+          this.unobserve = undefined;
         }
-      },
-      { threshold: this.revealThreshold, rootMargin: '0px 0px -10% 0px' },
-    );
-
-    this.observer.observe(host);
+      } else if (!this.revealOnce) {
+        this.renderer.removeClass(host, 'reveal-visible');
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    this.observer?.disconnect();
-    this.observer = undefined;
+    this.unobserve?.();
+    this.unobserve = undefined;
   }
 }

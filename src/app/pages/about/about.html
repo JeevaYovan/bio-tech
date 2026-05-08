@@ -1,17 +1,34 @@
 <!-- ===================== HERO ===================== -->
-<section class="about-hero" aria-labelledby="about-title">
-  <div class="about-hero__bg" aria-hidden="true"></div>
-  <div class="container about-hero__inner hero-stagger">
-    <app-section-badge label="About us" />
-    <h1 id="about-title" class="about-hero__title">
-      We turn farm waste<br />
-      into tableware.
-    </h1>
-    <p class="about-hero__lead">
-      Rathika Biotech Products is based in Neelambur, on the Avinashi Road
-      outskirts of Coimbatore, Tamil Nadu. We manufacture biodegradable
-      tableware from agricultural by-products that would otherwise be burned
-      at the end of each harvest season.
+<app-nature-parallax-hero titleId="about-title">
+  <app-section-badge label="About us" />
+  <h1 id="about-title" class="hero__title" appKineticText>
+    Giving Back More To Nature, Than Taking From It.
+  </h1>
+  <p class="hero__lead">
+    Rathika Biotech Products is based in Neelambur, on the Avinashi Road
+    outskirts of Coimbatore, Tamil Nadu. We manufacture biodegradable
+    tableware from agricultural by-products that would otherwise be burned
+    at the end of each harvest season.
+  </p>
+</app-nature-parallax-hero>
+
+<!-- ===================== BRAND OPENER ===================== -->
+<section class="section section--dark about-opener" aria-labelledby="opener-title">
+  <div class="container about-opener__inner">
+    <app-section-badge label="The shop"
+      revealOnScroll [revealDelay]="0" />
+    <h2 id="opener-title" appKineticText>
+      A workshop, an honest loop, and the field next door.
+    </h2>
+    <p class="about-opener__lede" appWordReveal>
+      We are a small, family-run manufacturer in Neelambur on the
+      outskirts of Coimbatore. Our work is to turn the agricultural
+      by-products of Tamil Nadu — banana fiber, sugarcane bagasse,
+      rice husk, rice straw — into tableware that performs in real
+      restaurants and weddings, and composts back into the soil it
+      came from. No paint, no plastic film, no chemical sealer. The
+      design is pragmatic; the engineering is plain; the price is
+      kept low enough that switching from plastic isn't a sacrifice.
     </p>
   </div>
 </section>
@@ -22,14 +39,14 @@
     <div class="about-story__copy" revealOnScroll="fadeInRight" [revealDelay]="100">
       <app-section-badge label="Our story" />
       <h2 id="story-title">A simple loop, run honestly</h2>
-      <p>
+      <p appWordReveal>
         The materials are local and unmodified. Banana fiber comes from the
         stems of the banana plant after the fruit is harvested. Sugarcane
         bagasse is the dry, fibrous residue left after the juice is pressed
         out. Rice husk is the outer shell of the rice grain, removed during
         milling.
       </p>
-      <p>
+      <p appWordReveal>
         Across Tamil Nadu, all three are routinely set on fire because there
         is no profitable secondary use, and the resulting smoke is one of the
         largest contributors to seasonal air pollution in the region. We buy
@@ -38,7 +55,7 @@
         restaurants, weddings, and households that would otherwise be using
         single-use plastic or paper.
       </p>
-      <p>
+      <p appWordReveal>
         Three things we are careful about: the products must be strong enough
         to hold hot food without leaking, they must contain no synthetic
         coatings or adhesives so they can biodegrade and compost cleanly, and
@@ -47,7 +64,7 @@
       </p>
     </div>
     <div class="about-story__media-wrap" revealOnScroll="fadeInLeft" [revealDelay]="0">
-      <picture class="about-story__media">
+      <picture class="about-story__media" appParallax [parallaxSpeed]="40">
         <source type="image/avif"
                 srcset="assets/lifestyle/story-fiber-texture-600.avif 600w,
                         assets/lifestyle/story-fiber-texture-1200.avif 1200w"
@@ -123,7 +140,7 @@
 <!-- ===================== PRODUCTION ===================== -->
 <section class="section about-production" aria-labelledby="production-title">
   <div class="container about-production__inner">
-    <picture class="about-production__media" revealOnScroll="fadeInLeft" [revealDelay]="0">
+    <picture class="about-production__media" appParallax [parallaxSpeed]="50" revealOnScroll="fadeInLeft" [revealDelay]="0">
       <source type="image/avif"
               srcset="assets/lifestyle/parcel-food-use-case-600.avif 600w,
                       assets/lifestyle/parcel-food-use-case-1200.avif 1200w"
@@ -157,6 +174,69 @@
         plastic or chemical residue at any stage of disposal.
       </p>
     </div>
+  </div>
+</section>
+
+<!-- ===================== TEAM (placeholders) ===================== -->
+<!-- TODO: replace placeholder names + photos with real team details
+     once the founders are happy with on-camera bios. -->
+<section class="section section--paper about-team" aria-labelledby="team-title">
+  <div class="container">
+    <header class="about-team__head">
+      <app-section-badge label="The people"
+        revealOnScroll [revealDelay]="0" />
+      <h2 id="team-title"
+          revealOnScroll [revealDelay]="100">
+        Small team. Daily contact. No middle layer.
+      </h2>
+      <p class="about-team__lead"
+         revealOnScroll [revealDelay]="200">
+        The same people who run the press also pick up the phone,
+        ship the carton, and sign the invoice. If you order from us,
+        you talk to one of these four.
+      </p>
+    </header>
+    <ul class="team-grid" role="list">
+      <li class="team-card" revealOnScroll [revealDelay]="0">
+        <div class="team-card__avatar" aria-hidden="true">RF</div>
+        <h3 class="team-card__name">Rathika founders<!-- TODO: real name --></h3>
+        <p class="team-card__role">Direction, design, customer relationships</p>
+        <p class="team-card__bio">Set the brand and make every call on what we do and don't ship. Family-run; the workshop sits behind the family home in Neelambur.</p>
+      </li>
+      <li class="team-card" revealOnScroll [revealDelay]="80">
+        <div class="team-card__avatar" aria-hidden="true">PL</div>
+        <h3 class="team-card__name">Production lead<!-- TODO: real name --></h3>
+        <p class="team-card__role">Press operations and quality</p>
+        <p class="team-card__bio">Runs the moulding line, checks every batch for cleanliness and rim-finish, and signs off cartons before they ship.</p>
+      </li>
+      <li class="team-card" revealOnScroll [revealDelay]="160">
+        <div class="team-card__avatar" aria-hidden="true">OL</div>
+        <h3 class="team-card__name">Operations lead<!-- TODO: real name --></h3>
+        <p class="team-card__role">Sourcing, scheduling, customer orders</p>
+        <p class="team-card__bio">Co-ordinates with the farm and mill suppliers, schedules production runs, and is most often the voice on the WhatsApp line.</p>
+      </li>
+      <li class="team-card" revealOnScroll [revealDelay]="240">
+        <div class="team-card__avatar" aria-hidden="true">LD</div>
+        <h3 class="team-card__name">Logistics<!-- TODO: real name --></h3>
+        <p class="team-card__role">Packing, dispatch, deliveries</p>
+        <p class="team-card__bio">Packs every carton by hand, books the courier, and follows the parcel until it lands at the customer's address.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== TIMELINE ===================== -->
+<section class="section about-journey" aria-labelledby="journey-title">
+  <div class="container">
+    <header class="about-journey__head">
+      <app-section-badge label="The journey"
+        revealOnScroll [revealDelay]="0" />
+      <h2 id="journey-title"
+          revealOnScroll [revealDelay]="100">
+        From a kitchen-counter trial to a workshop with a phone line.
+      </h2>
+    </header>
+    <app-timeline [items]="milestones" />
   </div>
 </section>
 

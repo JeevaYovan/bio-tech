@@ -1,0 +1,183 @@
+:host { display: block; }
+
+.seq {
+  position: relative;
+  background: var(--color-bg-dark);
+  color: var(--color-ink-on-dark);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* ===== Pinned canvas mode (desktop) ===== */
+.seq__pin {
+  position: relative;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
+  padding-inline: max(var(--container-px), calc((100% - var(--container-max)) / 2));
+}
+
+.seq__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: block;
+}
+.seq__canvas::after {
+  /* Pseudo not visible — kept as anchor for future overlays. */
+  content: "";
+}
+
+/* Subtle vignette + dark overlay so the text reads on any frame */
+.seq::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgba(26, 60, 43, 0.55) 0%,
+      rgba(26, 60, 43, 0.25) 45%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse at 30% 50%,
+      transparent 30%,
+      rgba(26, 60, 43, 0.4) 100%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.seq__overlay {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 540px;
+  padding-block: var(--space-8);
+}
+
+.seq__main-title {
+  color: #FFFFFF;
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.seq__steps {
+  position: relative;
+  min-height: 220px;
+}
+.seq__step {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 400ms var(--motion-ease-out-quart),
+    transform 400ms var(--motion-ease-out-quart);
+  pointer-events: none;
+}
+.seq__step.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.seq__step-num {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.seq__step-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin: 0;
+}
+.seq__step-body {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.65;
+  font-size: var(--type-base);
+  margin: 0;
+  max-width: 48ch;
+}
+
+/* Thin progress bar hugging the bottom of the viewport */
+.seq__progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  z-index: 2;
+}
+.seq__progress-bar {
+  width: 100%;
+  height: 100%;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 80ms linear;
+  box-shadow: 0 0 12px rgba(139, 195, 74, 0.6);
+}
+
+/* ===== Mobile / fallback stack ===== */
+.seq.is-mobile-fallback {
+  /* No pin, just a flowing dark section with photo+caption pairs. */
+  padding-block: var(--section-py);
+  padding-inline: var(--container-px);
+}
+.seq__fallback {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+.seq.is-mobile-fallback .seq__main-title {
+  margin-block-end: var(--space-6);
+  text-align: center;
+}
+.seq__fallback-item {
+  display: grid;
+  gap: var(--space-5);
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  picture {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+}
+.seq__fallback-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}

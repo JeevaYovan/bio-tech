@@ -1,62 +1,16 @@
 :host { display: block; }
 
-/* ===================== HERO (dark green) ===================== */
-.cat-hero {
-  position: relative;
-  isolation: isolate;
-  background: var(--color-bg-dark);
-  color: var(--color-ink-on-dark);
-  margin-top: calc(-1 * var(--header-h));
-  padding:
-    calc(var(--header-h) + clamp(1.5rem, 3vw, 2.5rem))
-    0
-    clamp(2.5rem, 5vw, 4rem);
-  overflow: hidden;
+/* Hero now uses <app-nature-parallax-hero> with .hero__title /
+   .hero__lead from base.css. Inline-link styling for the lead lives
+   here so the "Ask on WhatsApp" link inside the lead reads correctly
+   on the dark parallax background. */
+.hero__lead a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
 }
-.cat-hero__bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 80% 20%, rgba(139, 195, 74, 0.18), transparent 60%),
-    radial-gradient(ellipse at 10% 90%, rgba(45, 106, 79, 0.5), transparent 55%);
-  z-index: -1;
-}
-.cat-hero__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-4);
-  max-width: 760px;
-}
-.cat-hero__title {
-  color: #FFFFFF;
-  font-size: clamp(2.25rem, 5.2vw, 3.75rem);
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  font-weight: 800;
-  margin: 0;
-  max-width: 22ch;
-}
-.cat-hero__lead {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: var(--type-lg);
-  max-width: 64ch;
-  line-height: 1.7;
-  margin: 0;
-
-  a {
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    font-weight: 600;
-    &:hover { color: #FFFFFF; }
-  }
-}
-.cat-hero ::ng-deep .eyebrow {
-  background: rgba(139, 195, 74, 0.18);
-  color: #FFFFFF;
-}
-.cat-hero ::ng-deep .eyebrow::before { color: var(--color-accent); }
+.hero__lead a:hover { color: #FFFFFF; }
 
 /* ===================== CATALOG BODY ===================== */
 .catalog {
@@ -214,6 +168,28 @@
     }
   }
 }
+
+/* ===== Products FAQ section ===== */
+.catalog-faq__inner {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: start;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1.4fr;
+  }
+}
+.catalog-faq__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+.catalog-faq__lead {
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+.catalog-faq__list { width: 100%; }
 
 /* ===== Filter pill ===== */
 .filter-pill {

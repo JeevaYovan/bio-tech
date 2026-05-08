@@ -1,0 +1,203 @@
+:host {
+  display: block;
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.ps {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* ===== LEFT: sticky pinned image ===== */
+.ps__sticky {
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 20vh;
+    align-self: start;
+  }
+}
+
+.ps__visual {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-lg);
+  overflow: visible;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.ps__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-tint);
+  box-shadow: var(--shadow-card);
+}
+.ps__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ps__placeholder {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: var(--color-tint);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+}
+.ps__ph-eyebrow {
+  font-size: var(--type-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0;
+  font-weight: 600;
+}
+.ps__ph-name {
+  font-family: var(--font-display);
+  font-size: var(--type-3xl);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.ps__ph-size {
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ===== Feature beats — float over the image ===== */
+.ps__beats {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.ps__beat {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px) saturate(1.4);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-card-hover);
+  font-size: var(--type-sm);
+  font-weight: 600;
+  color: var(--color-primary-deep);
+  transform: translate3d(0, 0, 0);
+
+  /* Beats anchored to three positions around the image. */
+  &[data-beat="0"] { top: 8%; right: -10%; }
+  &[data-beat="1"] { top: 48%; left: -12%; }
+  &[data-beat="2"] { bottom: 8%; right: -8%; }
+}
+
+.ps__beat-icon {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  font-size: 0.95rem;
+}
+
+/* ===== RIGHT: scrollable narrative ===== */
+.ps__narrative {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-height: 100vh;        /* gives the sticky image enough scroll room */
+  padding-block: var(--space-4);
+
+  @media (min-width: 1024px) {
+    min-height: 130vh;
+  }
+}
+
+/* ===== Mega price + magnetic CTA ===== */
+.ps__price-block {
+  margin-top: var(--space-10);
+  padding-block-start: var(--space-8);
+  border-block-start: 1px solid var(--color-rule);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  overflow: visible; /* don't clip the 2x scaled price */
+}
+
+.ps__price-label {
+  font-size: var(--type-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-muted);
+  font-weight: 600;
+  margin: 0;
+}
+
+.ps__price {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--color-accent-deep);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0;
+  will-change: transform;
+}
+
+.ps__price-per {
+  font-family: var(--font-body);
+  font-size: var(--type-sm);
+  font-weight: 400;
+  color: var(--color-muted);
+  text-transform: lowercase;
+}
+
+.ps__cta {
+  align-self: flex-start;
+  transition: transform 200ms var(--motion-ease-elastic), box-shadow 200ms ease;
+}
+
+.ps__cta.is-pulsing {
+  animation: rt-cta-soft-pulse 2s ease-in-out infinite;
+}
+
+@keyframes rt-cta-soft-pulse {
+  0%, 100% { box-shadow: var(--shadow-button); }
+  50%      { box-shadow: 0 0 0 8px rgba(139, 195, 74, 0.18), var(--shadow-button); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ps__visual { transform: none !important; }
+  .ps__beat   { opacity: 1 !important; transform: none !important; }
+  .ps__price  { transform: none !important; }
+  .ps__cta.is-pulsing { animation: none; }
+}

@@ -7,7 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { formatINR } from '../../../data/products';
+import { formatINR, type ProductCategory } from '../../../data/products';
 import {
   displayableProducts,
   getMedia,
@@ -18,6 +18,10 @@ import { SeoService, SITE_ORIGIN } from '../../services/seo.service';
 import { whatsappOrderUrlForProduct } from '../../shared/constants';
 import { HorizontalSliderComponent } from '../../shared/horizontal-slider/horizontal-slider';
 import { HorizontalSliderItemDirective } from '../../shared/horizontal-slider/horizontal-slider-item.directive';
+import {
+  ProductShowcaseComponent,
+  type ProductShowcaseData,
+} from '../../shared/product-showcase/product-showcase';
 
 interface ImageBundle {
   readonly avifSrcset: string;
@@ -43,7 +47,18 @@ interface ViewModel {
   readonly waUrl: string;
   readonly image: ImageBundle | null;
   readonly related: ReadonlyArray<RelatedItem>;
+  readonly showcase: ProductShowcaseData;
 }
+
+/** Compost-time defaults per category, mirrored from the catalog page. */
+const COMPOST_DAYS: Record<ProductCategory, number> = {
+  cups:     28,
+  plates:   35,
+  bowls:    30,
+  boxes:    30,
+  utensils: 35,
+  decor:    42,
+};
 
 function buildImage(slug: string): ImageBundle | null {
   const media = getMedia(slug);
@@ -63,7 +78,12 @@ function buildImage(slug: string): ImageBundle | null {
 @Component({
   selector: 'app-product-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective],
+  imports: [
+    RouterLink,
+    HorizontalSliderComponent,
+    HorizontalSliderItemDirective,
+    ProductShowcaseComponent,
+  ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
 })
@@ -76,6 +96,8 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
     const product = getProductView(slug);
     if (!product) return null;
     const image = buildImage(product.slug);
+    const priceLabel = formatINR(product.price);
+    const waUrl = whatsappOrderUrlForProduct(product.name, product.size);
 
     /* Related = same-category, displayable, excluding self. Up to 4. */
     const related: ReadonlyArray<RelatedItem> = displayableProducts
@@ -89,13 +111,19 @@ export default class ProductDetailComponent implements OnInit, OnDestroy {
         image: buildImage(p.slug),
       }));
 
-    return {
-      product,
-      priceLabel: formatINR(product.price),
-      waUrl: whatsappOrderUrlForProduct(product.name, product.size),
+    const showcase: ProductShowcaseData = {
+      name: product.name,
+      size: product.size,
+      priceLabel,
+      waUrl,
       image,
-      related,
+      compostsInDays: COMPOST_DAYS[product.category] ?? 30,
+      animalEdible: true,
+      chemicalFree: true,
+      material: product.content.material,
     };
+
+    return { product, priceLabel, waUrl, image, related, showcase };
   });
 
   ngOnInit(): void {

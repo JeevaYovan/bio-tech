@@ -1,19 +1,16 @@
 <!-- ===================== HERO ===================== -->
-<section class="cat-hero" aria-labelledby="catalog-title">
-  <div class="cat-hero__bg" aria-hidden="true"></div>
-  <div class="container cat-hero__inner hero-stagger">
-    <app-section-badge label="Full catalog" />
-    <h1 id="catalog-title" class="cat-hero__title">
-      Tableware made from farm waste
-    </h1>
-    <p class="cat-hero__lead">
-      Hand-pressed in our Neelambur workshop. All prices in INR. Bulk
-      orders welcome on WhatsApp; the smallest order is one carton.
-      Looking for a size we don't show?
-      <a [href]="askUrl" target="_blank" rel="noopener noreferrer">Ask on WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a>.
-    </p>
-  </div>
-</section>
+<app-nature-parallax-hero titleId="catalog-title">
+  <app-section-badge label="Full catalog" />
+  <h1 id="catalog-title" class="hero__title" appKineticText>
+    Tableware made from farm waste
+  </h1>
+  <p class="hero__lead">
+    Hand-pressed in our Neelambur workshop. All prices in INR. Bulk
+    orders welcome on WhatsApp; the smallest order is one carton.
+    Looking for a size we don't show?
+    <a [href]="askUrl" target="_blank" rel="noopener noreferrer">Ask on WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a>.
+  </p>
+</app-nature-parallax-hero>
 
 <section class="catalog">
 
@@ -61,6 +58,7 @@
           type="button"
           role="tab"
           class="filter-pill"
+          appMagnetic [magneticRadius]="80" [magneticStrength]="0.25"
           [class.is-active]="filter() === tab.value"
           [attr.aria-selected]="filter() === tab.value"
           (click)="setFilter(tab.value)">
@@ -105,52 +103,34 @@
   } @else {
     <ul class="catalog__grid" role="list">
       @for (p of visibleProducts(); track p.slug; let i = $index) {
-        <li class="product-card"
+        <li class="catalog__grid-item"
             revealOnScroll [revealDelay]="revealDelayFor(i)">
-          <a class="product-card__link" [routerLink]="['/products', p.slug]">
-            <span class="product-card__chip">{{ p.category }}</span>
-            @if (p.hasPhoto) {
-              <picture class="product-card__media">
-                <source type="image/avif"
-                        [attr.srcset]="p.avifSrcset"
-                        sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-                <source type="image/webp"
-                        [attr.srcset]="p.webpSrcset"
-                        sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
-                <img
-                  [src]="p.fallback"
-                  [attr.srcset]="p.jpgSrcset"
-                  sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
-                  [attr.width]="p.width"
-                  [attr.height]="p.height"
-                  loading="lazy" decoding="async"
-                  [attr.alt]="p.alt" />
-              </picture>
-            } @else {
-              <div class="product-card__placeholder" aria-hidden="true">
-                <p class="product-card__placeholder-eyebrow">Studio photo coming soon</p>
-                <p class="product-card__placeholder-name">{{ p.name }}</p>
-                <p class="product-card__placeholder-size">{{ p.size }}</p>
-              </div>
-            }
-            <div class="product-card__body">
-              <p class="product-card__name">{{ p.name }}</p>
-              <p class="product-card__size">{{ p.size }}</p>
-              <p class="product-card__price">
-                {{ p.priceLabel }} <span class="product-card__per">per piece</span>
-              </p>
-            </div>
-          </a>
-          <a
-            class="product-card__wa"
-            [href]="p.waUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            [attr.aria-label]="'Order ' + p.name + ' on WhatsApp (opens in new tab)'">
-            Order on WhatsApp
-          </a>
+          <app-product-flip-card [p]="p" />
         </li>
       }
     </ul>
   }
+</section>
+
+<!-- ===================== PRODUCTS FAQ ===================== -->
+<section class="section section--mint catalog-faq" aria-labelledby="catalog-faq-title">
+  <div class="container catalog-faq__inner">
+    <header class="catalog-faq__head">
+      <app-section-badge label="Common questions"
+        revealOnScroll [revealDelay]="0" />
+      <h2 id="catalog-faq-title"
+          revealOnScroll [revealDelay]="100">
+        Before you place a bulk order.
+      </h2>
+      <p class="catalog-faq__lead"
+         revealOnScroll [revealDelay]="200">
+        Materials, compost time, microwave safety, custom embossing —
+        the things buyers ask before their first carton. Anything not
+        covered here, message us on WhatsApp.
+      </p>
+    </header>
+    <div class="catalog-faq__list">
+      <app-faq-accordion [items]="productFaqs" />
+    </div>
+  </div>
 </section>

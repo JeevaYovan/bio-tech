@@ -6,7 +6,8 @@
   class="site-header"
   role="banner"
   [class.is-scrolled]="scrolled()"
-  [class.is-over-hero]="!scrolled() && (routeKey() === 'home' || routeKey() === 'products' || routeKey() === 'wholesale' || routeKey() === 'about' || routeKey() === 'contact')">
+  [class.is-over-hero]="!scrolled() && (routeKey() === 'home' || routeKey() === 'products' || routeKey() === 'wholesale' || routeKey() === 'why-rathika' || routeKey() === 'about' || routeKey() === 'contact')"
+  [attr.inert]="menuOpen() ? '' : null">
   <a routerLink="/" class="brand" aria-label="Rathika Biotech Products home">
     <img
       class="brand__mark"
@@ -35,6 +36,10 @@
        routerLinkActive="is-active"
        #wholesaleRla="routerLinkActive"
        [attr.aria-current]="wholesaleRla.isActive ? 'page' : null">Wholesale</a>
+    <a routerLink="/why-rathika"
+       routerLinkActive="is-active"
+       #whyRla="routerLinkActive"
+       [attr.aria-current]="whyRla.isActive ? 'page' : null">Why Rathika</a>
     <a routerLink="/about"
        routerLinkActive="is-active"
        #aboutRla="routerLinkActive"
@@ -45,7 +50,8 @@
        [attr.aria-current]="contactRla.isActive ? 'page' : null">Contact</a>
   </nav>
 
-  <a [href]="waUrl" class="header-cta" target="_blank" rel="noopener noreferrer">
+  <a [href]="waUrl" class="header-cta" target="_blank" rel="noopener noreferrer"
+     appMagnetic [magneticRadius]="100" [magneticStrength]="0.35">
     Order on WhatsApp<span class="visually-hidden"> (opens in new tab)</span>
   </a>
 
@@ -87,7 +93,7 @@
     aria-label="Navigation menu"
     [attr.aria-modal]="menuOpen() ? 'true' : null">
     <div class="mobile-drawer__head">
-      <span class="mobile-drawer__title">Menu</span>
+      <span class="mobile-drawer__index">Index</span>
       <button
         #drawerCloseBtn
         type="button"
@@ -102,34 +108,40 @@
 
     <nav aria-label="Primary mobile">
     <ul class="mobile-drawer__list">
-      <li>
+      <li class="m-link" style="--n: 0">
         <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="is-active" (click)="closeMenu()">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 7l6-5 6 5v7H2z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
-          <span>Home</span>
+          <span class="m-link__num">01 / 06</span>
+          <span class="m-link__mask"><span class="m-link__text">Home</span></span>
         </a>
       </li>
-      <li>
+      <li class="m-link" style="--n: 1">
         <a routerLink="/products" routerLinkActive="is-active" (click)="closeMenu()">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 4h12l-1 9H3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
-          <span>Products</span>
+          <span class="m-link__num">02 / 06</span>
+          <span class="m-link__mask"><span class="m-link__text">Products</span></span>
         </a>
       </li>
-      <li>
+      <li class="m-link" style="--n: 2">
         <a routerLink="/wholesale" routerLinkActive="is-active" (click)="closeMenu()">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 5h12v8H2zM2 5l2-3h8l2 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
-          <span>Wholesale</span>
+          <span class="m-link__num">03 / 06</span>
+          <span class="m-link__mask"><span class="m-link__text">Wholesale</span></span>
         </a>
       </li>
-      <li>
+      <li class="m-link" style="--n: 3">
+        <a routerLink="/why-rathika" routerLinkActive="is-active" (click)="closeMenu()">
+          <span class="m-link__num">04 / 06</span>
+          <span class="m-link__mask"><span class="m-link__text">Why Rathika</span></span>
+        </a>
+      </li>
+      <li class="m-link" style="--n: 4">
         <a routerLink="/about" routerLinkActive="is-active" (click)="closeMenu()">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4" /><path d="M8 6.5v4M8 4.5v.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg>
-          <span>About</span>
+          <span class="m-link__num">05 / 06</span>
+          <span class="m-link__mask"><span class="m-link__text">About</span></span>
         </a>
       </li>
-      <li>
+      <li class="m-link" style="--n: 5">
         <a routerLink="/contact" routerLinkActive="is-active" (click)="closeMenu()">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 5l6 4 6-4M2 5v6h12V5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
-          <span>Contact</span>
+          <span class="m-link__num">06 / 06</span>
+          <span class="m-link__mask"><span class="m-link__text">Contact</span></span>
         </a>
       </li>
     </ul>
@@ -142,7 +154,7 @@
   </div>
 </div>
 
-<main id="main" tabindex="-1">
+<main id="main" tabindex="-1" [attr.inert]="menuOpen() ? '' : null">
   <div class="route-shell" [@routeFade]="getRouteKey()">
     <router-outlet />
   </div>
@@ -189,6 +201,7 @@
     <div class="site-footer__col">
       <h2 class="site-footer__heading">Company</h2>
       <ul role="list">
+        <li><a routerLink="/why-rathika">Why Rathika</a></li>
         <li><a routerLink="/about">About</a></li>
         <li><a routerLink="/wholesale">Wholesale</a></li>
         <li><a routerLink="/contact">Contact</a></li>

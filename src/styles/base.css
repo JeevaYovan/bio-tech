@@ -238,13 +238,13 @@ a:hover { color: var(--color-primary-deep); }
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-stagger > * {
-    animation: rt-hero-fade 600ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation: rt-hero-fade 500ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
-  .hero-stagger > *:nth-child(1) { animation-delay: 60ms; }
-  .hero-stagger > *:nth-child(2) { animation-delay: 160ms; }
-  .hero-stagger > *:nth-child(3) { animation-delay: 260ms; }
-  .hero-stagger > *:nth-child(4) { animation-delay: 360ms; }
-  .hero-stagger > *:nth-child(5) { animation-delay: 460ms; }
+  .hero-stagger > *:nth-child(1) { animation-delay: 40ms; }
+  .hero-stagger > *:nth-child(2) { animation-delay: 120ms; }
+  .hero-stagger > *:nth-child(3) { animation-delay: 200ms; }
+  .hero-stagger > *:nth-child(4) { animation-delay: 280ms; }
+  .hero-stagger > *:nth-child(5) { animation-delay: 360ms; }
 }
 
 /* ======================================================================
@@ -277,6 +277,96 @@ a:hover { color: var(--color-primary-deep); }
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+}
+
+/* ======================================================================
+   Shared page-hero typography — every route uses
+   <app-nature-parallax-hero> as the hero shell, and the inner content
+   uses these classes so the heading size, lead width, and CTA cluster
+   line up identically across Home, Products, Wholesale, Why Rathika,
+   About, and Contact.
+   ====================================================================== */
+.hero__title {
+  color: #FFFFFF;
+  font-size: clamp(2.5rem, 6.4vw, 4.25rem);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  font-weight: 800;
+  margin: 0;
+}
+.hero__lead {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--type-lg);
+  max-width: 52ch;
+  line-height: 1.6;
+  margin: 0;
+}
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* ======================================================================
+   Mega CTA band — closing-section heading gets display-mega type and a
+   subtle scroll-into-view scale (handled by [appMegaCta]). Adds
+   visual weight to the final CTA without changing layout.
+   ====================================================================== */
+.cta--mega h2 {
+  font-size: var(--type-section-mega);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  font-weight: 800;
+  max-width: 18ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+.cta--mega .home-cta__lead,
+.cta--mega .why-cta__lead {
+  font-size: var(--type-lg);
+  max-width: 56ch;
+  margin-inline: auto;
+}
+
+/* ======================================================================
+   Section clip-path wipe — diagonal reveal when the section enters
+   viewport. Used to mark transitions between major narrative sections
+   on Why Rathika and About. The section's contents stay statically
+   rendered; only the rendering box clips into view diagonally on the
+   first scroll-into-view via IntersectionObserver-applied `.is-visible`.
+   We use a generous initial clip so the section is not invisible on
+   reduced-motion / no-JS users — full visibility is the safe default
+   and the keyframe only animates the clip when the class lands.
+   ====================================================================== */
+.section--clip-wipe {
+  --clip-wipe-duration: 1100ms;
+}
+
+/* The initial hidden state is ONLY applied when the browser supports
+   animation-timeline: view() — otherwise the section would stay
+   permanently invisible (a section that never enters the scroll range
+   never triggers the animation, so `forwards` never lands). The
+   @supports gate ensures unsupported browsers (Safari ≤17.4, Firefox
+   ≤110) and any edge case where the timeline doesn't fire fall back
+   to "fully visible" as the safe default (a11y SC 1.3.1 / 1.4.1). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section--clip-wipe {
+      clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+      animation: rt-clip-wipe var(--clip-wipe-duration) cubic-bezier(0.62, 0.05, 0.01, 0.99) forwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+@keyframes rt-clip-wipe {
+  from {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 }
 

@@ -1,5 +1,6 @@
 :host { display: contents; }
 
+/* All cursor layers share the fixed-position fast-path */
 .cursor {
   position: fixed;
   top: 0;
@@ -9,42 +10,112 @@
   will-change: transform;
 }
 
+/* ===== Core dot — follows mouse exactly ===== */
 .cursor--dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: var(--color-accent);
   border-radius: 50%;
   box-shadow: 0 0 12px rgba(139, 195, 74, 0.7);
-  transition: transform 50ms linear;
+  transition: transform 50ms linear, background 200ms ease, box-shadow 200ms ease;
+}
+.cursor--dot.is-cta {
+  background: var(--rathika-gold);
+  box-shadow: 0 0 18px rgba(212, 168, 67, 0.85);
 }
 
+/* ===== Outer ring — main hover affordance ===== */
 .cursor--ring {
   width: 36px;
   height: 36px;
-  border: 1.6px solid var(--color-accent);
+  border: 1.5px solid var(--color-accent);
   border-radius: 50%;
   background: transparent;
+  display: grid;
+  place-items: center;
   transition:
-    width 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    height 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    width var(--motion-duration-fast) var(--motion-ease-elastic),
+    height var(--motion-duration-fast) var(--motion-ease-elastic),
     background 200ms ease,
     border-color 200ms ease,
     border-width 200ms ease;
 }
 
-.cursor--ring.is-hover {
+.cursor--ring.is-link {
+  width: 58px;
+  height: 58px;
+  background: rgba(139, 195, 74, 0.16);
+  border-color: var(--color-accent-deep);
+  border-width: 1.8px;
+}
+
+.cursor--ring.is-image {
   width: 64px;
   height: 64px;
-  background: rgba(139, 195, 74, 0.18);
-  border-color: var(--color-accent-deep);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.5);
+  border-width: 1.5px;
+}
+
+.cursor--ring.is-cta {
+  width: 72px;
+  height: 72px;
+  background: rgba(212, 168, 67, 0.14);
+  border-color: var(--rathika-gold);
   border-width: 2px;
+  box-shadow: 0 0 24px rgba(212, 168, 67, 0.35);
+  animation: rt-cta-pulse 1.6s ease-in-out infinite;
 }
 
 .cursor--ring.is-press {
   width: 28px;
   height: 28px;
-  background: rgba(139, 195, 74, 0.28);
+  background: rgba(139, 195, 74, 0.32);
 }
 
-/* The native cursor-hiding rule lives in styles/base.css (must be
-   global, not component-scoped, since it targets html). */
+/* "VIEW" label inside the ring when over a product image */
+.cursor__label {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ===== Trail dots — progressively slower, fading ===== */
+.cursor--trail {
+  width: 4px;
+  height: 4px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.cursor--trail-1 { opacity: 0.45; transform: scale(0.85); }
+.cursor--trail-2 { opacity: 0.30; transform: scale(0.70); }
+.cursor--trail-3 { opacity: 0.18; transform: scale(0.55); }
+
+/* ===== Mix-blend-mode toggle ===== */
+.cursor--ring.is-blend,
+.cursor--dot.is-blend {
+  mix-blend-mode: difference;
+  border-color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== CTA pulse ===== */
+@keyframes rt-cta-pulse {
+  0%, 100% {
+    box-shadow: 0 0 24px rgba(212, 168, 67, 0.35);
+    transform: translate3d(var(--rt-x, 0), var(--rt-y, 0), 0) translate(-50%, -50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 0 36px rgba(212, 168, 67, 0.55);
+  }
+}
+
+/* ===== Reduced motion: disable trail entirely ===== */
+@media (prefers-reduced-motion: reduce) {
+  .cursor--trail { display: none; }
+  .cursor--ring { transition: none; animation: none; }
+}

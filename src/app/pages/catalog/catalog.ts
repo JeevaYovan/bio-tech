@@ -16,34 +16,48 @@ import {
   productCategories,
   type ProductCategory,
 } from '../../../data/products';
-import { displayableProducts, getMedia } from '../../../data/product-content';
+import { displayableProducts, getMedia, getProductView } from '../../../data/product-content';
 import { SeoService } from '../../services/seo.service';
 import { WA_URL, whatsappOrderUrlForProduct } from '../../shared/constants';
 import { HorizontalSliderComponent } from '../../shared/horizontal-slider/horizontal-slider';
 import { HorizontalSliderItemDirective } from '../../shared/horizontal-slider/horizontal-slider-item.directive';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
+import { ProductFlipCardComponent, type FlipCardData } from '../../shared/product-flip-card/product-flip-card';
+import { FaqAccordionComponent, type FaqItem } from '../../shared/faq-accordion/faq-accordion';
+import { MagneticDirective } from '../../shared/magnetic/magnetic.directive';
+import { NatureParallaxHeroComponent } from '../../shared/nature-parallax-hero/nature-parallax-hero';
+import { KineticTextDirective } from '../../shared/kinetic-text/kinetic-text.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 type Filter = 'all' | ProductCategory;
 
 const titleCase = (s: string): string => s[0].toUpperCase() + s.slice(1);
 
-interface CatalogItem {
-  readonly slug: string;
-  readonly name: string;
-  readonly size: string;
-  readonly priceLabel: string;
+/** Catalog item — superset of the flip-card shape so a single record
+ *  drives both the featured slider and the main grid. */
+interface CatalogItem extends FlipCardData {
   readonly category: ProductCategory;
-  readonly hasPhoto: boolean;
-  readonly avifSrcset: string;
-  readonly webpSrcset: string;
-  readonly jpgSrcset: string;
-  readonly fallback: string;
-  readonly width: number;
-  readonly height: number;
-  readonly alt: string;
-  readonly waUrl: string;
+}
+
+/** Compost time defaults by category. The reference range from PROMPT
+ *  text is "four to six weeks" — we pick a per-category midpoint so
+ *  each card shows a concrete number on the back face. */
+const COMPOST_DAYS: Record<ProductCategory, number> = {
+  cups:     28,
+  plates:   35,
+  bowls:    30,
+  boxes:    30,
+  utensils: 35,
+  decor:    42,
+};
+
+/** Take the first sentence of a description (period or em-dash). Used
+ *  as the short summary on the back of the flip card. */
+function firstSentence(text: string | undefined, fallback: string): string {
+  if (!text) return fallback;
+  const m = text.match(/^[^.!?—]+[.!?]/);
+  return m ? m[0].trim() : text.split(/\s+/).slice(0, 24).join(' ') + '…';
 }
 
 interface FilterTab {
@@ -55,7 +69,18 @@ interface FilterTab {
 @Component({
   selector: 'app-catalog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, HorizontalSliderComponent, HorizontalSliderItemDirective, SectionBadgeComponent, RevealOnScrollDirective],
+  imports: [
+    RouterLink,
+    HorizontalSliderComponent,
+    HorizontalSliderItemDirective,
+    SectionBadgeComponent,
+    RevealOnScrollDirective,
+    ProductFlipCardComponent,
+    FaqAccordionComponent,
+    MagneticDirective,
+    NatureParallaxHeroComponent,
+    KineticTextDirective,
+  ],
   templateUrl: './catalog.html',
   styleUrl: './catalog.scss',
 })
@@ -161,11 +186,59 @@ export default class CatalogComponent implements OnInit {
 
   protected readonly revealDelayFor = revealDelayFor;
 
+  /** Product-focused FAQ shown at the bottom of the catalog page. */
+  protected readonly productFaqs: ReadonlyArray<FaqItem> = [
+    {
+      q: 'What materials do you press from?',
+      a: 'Four agricultural by-products: banana fiber from the pseudo-stem, sugarcane bagasse from local sugar mills, rice husk and rice straw from paddy. Every input is sourced from farms and mills within Tamil Nadu.',
+    },
+    {
+      q: 'Are the products biodegradable and compostable?',
+      a: 'Yes, both. Discarded outdoors, every piece breaks down in roughly 30 days. In a commercial composter the cycle is 2–3 weeks. There is no synthetic liner or chemical sealer to slow it down.',
+    },
+    {
+      q: 'How long does composting take?',
+      a: 'About 30 days in open soil outdoors. 2–3 weeks in a commercial composter. Pieces left dry indoors stay intact indefinitely — the breakdown only kicks in once they meet moisture and microbes.',
+    },
+    {
+      q: 'Are they safe for hot and cold food?',
+      a: 'Yes. Plates, bowls, cups, and parcel boxes are rated for hot, oily, and saucy food at typical Indian serving temperatures. The natural fiber walls insulate the contents and resist gravy soak-through for the duration of a meal.',
+    },
+    {
+      q: 'Microwave and freezer safe?',
+      a: 'Yes for short-burst microwave heating and freezer storage. Avoid sustained high-heat cycles above 160°C — the binder is plant starch.',
+    },
+    {
+      q: 'Are they reusable?',
+      a: 'Designed for single use. A light wipe-and-reuse for dry food (snacks, dessert) is fine, but the products aren\'t dishwasher rated.',
+    },
+    {
+      q: 'Can we get custom embossing for events or businesses?',
+      a: 'Yes. Custom embossing is available on bulk orders above 5,000 units. Message us on WhatsApp with the size, quantity, and event date for a quote.',
+    },
+    {
+      q: 'Where can I buy?',
+      a: 'Direct via WhatsApp for bulk orders, the wholesale form for catered events, weddings, and festival vendors, or the contact form for general enquiries. We don\'t run a retail storefront yet — every order is fulfilled from the Neelambur workshop.',
+    },
+    {
+      q: 'How do they compare to plastic tableware?',
+      a: 'Roughly 90% lower manufacturing carbon footprint. 30 days to compost versus ~500 years for plastic. No microplastic shedding into food or soil. Safe for animals to consume if discarded outdoors.',
+    },
+    {
+      q: 'Will they hold up like plastic?',
+      a: 'Rigid for the duration of a meal, including curries and gravies. The fiber doesn\'t bend or leak under typical serving load. Heavier-duty options like the 10×12 partition plate hold a full thali.',
+    },
+  ];
+
   private toItem(p: { slug: string; name: string; size: string; price: number; category: ProductCategory }): CatalogItem {
     const media = getMedia(p.slug);
     const hasPhoto = !!media?.hasPhoto && !!media.imageSlug;
     const slug = media?.imageSlug ?? '';
     const base = `assets/${slug}`;
+    /* Pull richer fields (material + description) from product-content
+       — they're already authored per SKU and we use them on the
+       flip-card back face. */
+    const view = getProductView(p.slug);
     return {
       slug: p.slug,
       name: p.name,
@@ -181,6 +254,13 @@ export default class CatalogComponent implements OnInit {
       height: media?.intrinsic?.h ?? 400,
       alt: media?.alt ?? '',
       waUrl: whatsappOrderUrlForProduct(p.name, p.size),
+      compostsInDays: COMPOST_DAYS[p.category] ?? 30,
+      animalEdible: true,
+      material: view?.content.material ?? 'Natural plant fiber',
+      summary: firstSentence(
+        view?.content.description,
+        'Hand-pressed in our Neelambur workshop from agricultural by-products.',
+      ),
     };
   }
 }

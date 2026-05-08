@@ -1,0 +1,270 @@
+:host {
+  display: block;
+  height: 100%;
+  perspective: 1200px;
+}
+
+.flip {
+  position: relative;
+  height: 100%;
+  min-height: 480px;
+}
+
+.flip__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+/* Auto-flip on hover for fine-pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  .flip:hover .flip__inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Manual flip via the Details / close buttons */
+.flip.is-flipped .flip__inner {
+  transform: rotateY(180deg);
+}
+
+/* prefers-reduced-motion: drop the 3D, stack faces vertically */
+.flip.is-static .flip__inner {
+  transform: none !important;
+  transform-style: flat;
+  height: auto;
+}
+.flip.is-static .flip__face--back {
+  position: relative;
+  transform: none;
+  margin-top: var(--space-4);
+}
+
+/* ===== Faces ===== */
+.flip__face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.flip__face--back {
+  transform: rotateY(180deg);
+  padding: var(--space-5);
+  background: linear-gradient(180deg, var(--color-bg-card), var(--color-tint));
+}
+
+/* ===== FRONT ===== */
+.flip__media-link {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: var(--color-tint);
+  text-decoration: none;
+  overflow: hidden;
+}
+.flip__media,
+.flip__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .flip:hover .flip__media img { transform: scale(1.06); }
+}
+
+.flip__placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--color-primary-deep);
+  font-weight: 600;
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.flip__chip {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  padding: 0.375rem 0.875rem;
+  background: var(--color-bg-card);
+  color: var(--color-primary-deep);
+  border-radius: var(--radius-pill);
+  font-size: var(--type-xs);
+  font-weight: 600;
+  text-transform: capitalize;
+  box-shadow: var(--shadow-soft);
+}
+
+.flip__body {
+  padding: var(--space-5) var(--space-5) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 0 auto;
+}
+.flip__name {
+  font-family: var(--font-display);
+  font-size: var(--type-xl);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+.flip__size {
+  font-size: var(--type-sm);
+  color: var(--color-muted);
+  margin: 0;
+}
+.flip__price {
+  margin-top: var(--space-2);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.flip__price-num {
+  font-family: var(--font-display);
+  font-size: var(--type-2xl);
+  font-weight: 800;
+  color: var(--color-accent-deep);
+  letter-spacing: -0.01em;
+}
+.flip__price-per {
+  font-size: var(--type-xs);
+  color: var(--color-muted);
+}
+
+/* Details button — only visible on touch / non-hover devices */
+.flip__details {
+  margin: 0 var(--space-5) var(--space-5);
+  padding: 0.65rem 1.25rem;
+  background: var(--color-primary);
+  color: var(--color-ink-on-dark);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--type-sm);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  transition: background 200ms ease;
+}
+.flip__details:hover { background: var(--color-accent); color: var(--color-accent-ink); }
+
+@media (hover: hover) and (pointer: fine) {
+  /* On true hover devices the auto-flip handles it; hide the manual button. */
+  .flip__details { display: none; }
+}
+
+/* ===== BACK ===== */
+.flip__close {
+  align-self: flex-start;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-tint);
+  color: var(--color-primary-deep);
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: background 200ms ease;
+}
+.flip__close:hover { background: var(--color-accent); color: var(--color-accent-ink); }
+
+.flip__back-name {
+  font-family: var(--font-display);
+  font-size: var(--type-xl);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  letter-spacing: -0.01em;
+  margin-top: var(--space-2);
+}
+.flip__back-size {
+  font-size: var(--type-sm);
+  color: var(--color-muted);
+  margin: 0 0 var(--space-2);
+}
+.flip__summary {
+  color: var(--color-muted);
+  font-size: var(--type-sm);
+  line-height: 1.55;
+  margin: 0 0 var(--space-3);
+}
+.flip__specs {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: var(--space-3);
+  row-gap: 4px;
+  font-size: var(--type-xs);
+  margin: 0 0 var(--space-3);
+
+  dt {
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  dd { margin: 0; color: var(--color-ink); font-weight: 500; }
+}
+
+.flip__badges {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.flip__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--type-xs);
+  font-weight: 600;
+  background: var(--color-badge-bg);
+  color: var(--color-primary-deep);
+}
+.flip__badge--animal {
+  background: rgba(139, 195, 74, 0.25);
+  color: var(--color-accent-deep);
+}
+
+.flip__cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0.7rem 1.1rem;
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: var(--type-sm);
+  text-decoration: none;
+  transition: background 200ms ease, transform 200ms ease;
+}
+.flip__cta:hover {
+  background: var(--color-accent-deep);
+  transform: translateY(-1px);
+}

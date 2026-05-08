@@ -16,6 +16,15 @@ import { StatsCounterComponent } from '../../shared/stats-counter/stats-counter'
 import { FaqAccordionComponent, type FaqItem } from '../../shared/faq-accordion/faq-accordion';
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
+import { NatureParallaxHeroComponent } from '../../shared/nature-parallax-hero/nature-parallax-hero';
+import { NatureWebglHeroComponent } from '../../shared/nature-webgl-hero/nature-webgl-hero';
+import { ScrollSequenceComponent, type SequenceFrame } from '../../shared/scroll-sequence/scroll-sequence';
+import { MagneticDirective } from '../../shared/magnetic/magnetic.directive';
+import { TiltDirective } from '../../shared/tilt/tilt.directive';
+import { ParallaxImageDirective } from '../../shared/parallax-image/parallax-image.directive';
+import { MegaCtaDirective } from '../../shared/mega-cta/mega-cta.directive';
+import { KineticTextDirective } from '../../shared/kinetic-text/kinetic-text.directive';
+import { WordRevealDirective } from '../../shared/word-reveal/word-reveal.directive';
 
 interface CategoryCard {
   readonly key: ProductCategory;
@@ -68,6 +77,18 @@ interface EcoTip {
   readonly alt: string;
 }
 
+interface AgroInput {
+  readonly icon: string;   /* unicode/glyph or short letter for the card icon disc */
+  readonly name: string;
+  readonly source: string;
+  readonly role: string;
+}
+
+interface TrustedSegment {
+  readonly label: string;
+  readonly hint: string;
+}
+
 const FEATURED_SPECS: ReadonlyArray<FeaturedSpec> = [
   { slug: 'tea-cup-100ml',        imageSlug: 'products/tea-cup-100ml',        alt: 'Three biodegradable bagasse tea cups stacked on a stone surface',          intrinsic: { w: 400, h: 534 } },
   { slug: 'parcel-box-300ml',     imageSlug: 'products/parcel-box-300ml',     alt: 'Round 300 ml biodegradable parcel box with lid on a desk',                  intrinsic: { w: 400, h: 300 } },
@@ -106,6 +127,15 @@ function buildFeatured(spec: FeaturedSpec): Featured | null {
     StatsCounterComponent,
     FaqAccordionComponent,
     RevealOnScrollDirective,
+    NatureParallaxHeroComponent,
+    NatureWebglHeroComponent,
+    ScrollSequenceComponent,
+    MagneticDirective,
+    TiltDirective,
+    ParallaxImageDirective,
+    MegaCtaDirective,
+    KineticTextDirective,
+    WordRevealDirective,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
@@ -236,6 +266,82 @@ export default class HomeComponent implements OnInit {
       imageSlug: 'workshop/bowls-cluster-sunlit',
       alt: 'Cluster of finished bagasse bowls in afternoon sunlight',
     },
+  ];
+
+  /** Five stages of the manufacturing process, fed to the pinned
+      scroll-sequence canvas. Maps directly to the existing workshop
+      photography. Each stage's title and body is original Rathika copy. */
+  protected readonly sequenceFrames: ReadonlyArray<SequenceFrame> = [
+    {
+      imageSlug: 'lifestyle/story-fiber-texture',
+      title: 'Source the fiber',
+      description: 'Banana stems, sugarcane bagasse, rice husk, and rice straw arrive from farms and mills across Tamil Nadu. By-products that would otherwise be set on fire at the field.',
+      alt: 'Macro detail of natural plant fiber — rice husk and bagasse strands',
+    },
+    {
+      imageSlug: 'workshop/nested-plates-spoons',
+      title: 'Press into form',
+      description: 'The fiber blend is mixed with a food-safe plant binder and pressed in heated moulds. Heat, pressure, and natural starch — no chemicals, no plastic film.',
+      alt: 'Stack of partition plates with bagasse spoons fresh from the press',
+    },
+    {
+      imageSlug: 'workshop/bowls-cluster-sunlit',
+      title: 'Cure and set',
+      description: 'Each piece is checked for cleanliness, rim finish, and structural integrity. Rejects go back into the binder feed for the next batch — the workshop runs a closed loop.',
+      alt: 'Cluster of bagasse bowls with spoons resting in late-afternoon sun',
+    },
+    {
+      imageSlug: 'workshop/square-box-four-spoons',
+      title: 'Emboss and finish',
+      description: 'Finished pieces are embossed with the Rathika mark on the base. Food-safe by virtue of being chemical-free, rigid enough for hot curries and gravies.',
+      alt: 'Square parcel box with four bagasse spoons radiating outward',
+    },
+    {
+      imageSlug: 'workshop/packing-partition-plates',
+      title: 'Pack and ship',
+      description: 'Pre-stacked into cartons of 500 to 2,000 pieces depending on the SKU. Handed off to a courier — most South-India deliveries land within four days. Composts in 30 days outdoors after use.',
+      alt: 'Open carton stacked with finished partition plates ready to ship',
+    },
+  ];
+
+  /** Agricultural by-products that get a second life as tableware.
+      Four-card block beneath the trust marquee on home. */
+  protected readonly agroInputs: ReadonlyArray<AgroInput> = [
+    {
+      icon: '🌾',
+      name: 'Banana fiber',
+      source: 'From the pseudo-stem cut after the banana is harvested.',
+      role: 'Naturally tensile. Binds the press in our cups and bowls.',
+    },
+    {
+      icon: '🌱',
+      name: 'Sugarcane bagasse',
+      source: 'The fibrous residue sugar mills are left with after extraction.',
+      role: 'Light and insulating. Gives parcel boxes their structural body.',
+    },
+    {
+      icon: '🌿',
+      name: 'Rice husk',
+      source: 'The protective hull separated during paddy milling.',
+      role: 'Adds rigidity to plates and partition trays without going brittle.',
+    },
+    {
+      icon: '🌾',
+      name: 'Rice straw',
+      source: 'Cut and gathered from the field after the paddy harvest.',
+      role: 'The bulk fiber for thicker plates and ceremonial pieces.',
+    },
+  ];
+
+  /** Real-world contexts where the tableware ships. Placeholder labels
+      until we have named partners to swap in. */
+  protected readonly trustedSegments: ReadonlyArray<TrustedSegment> = [
+    { label: 'Coimbatore restaurants',         hint: 'Daily parcel + dine-in service' },
+    { label: 'Tamil Nadu wedding caterers',    hint: 'Multi-thousand-piece thali events' },
+    { label: 'Festival & temple committees',   hint: 'Annaprasanna, Ganesh Chaturthi, harvest pongal' },
+    { label: 'Organic stores across South India', hint: 'Retail in cartons of 500–1,000' },
+    { label: 'Food trucks & cafés',            hint: 'Cups + parcel boxes + rectangle boxes' },
+    { label: 'Office canteens',                hint: 'Switching from disposable plastic' },
   ];
 
   protected readonly formatPrice = formatINR;

@@ -1,16 +1,13 @@
 <!-- ===================== HERO ===================== -->
-<section class="contact-hero" aria-labelledby="contact-title">
-  <div class="contact-hero__bg" aria-hidden="true"></div>
-  <div class="container contact-hero__inner hero-stagger">
-    <app-section-badge label="Contact" />
-    <h1 id="contact-title" class="contact-hero__title">Get in touch</h1>
-    <p class="contact-hero__lead">
-      Most orders come through WhatsApp. We respond during working hours,
-      typically same-day. For bulk and custom orders, send the product slugs,
-      quantities, and your delivery location.
-    </p>
-  </div>
-</section>
+<app-nature-parallax-hero titleId="contact-title">
+  <app-section-badge label="Contact" />
+  <h1 id="contact-title" class="hero__title" appKineticText>Get in touch</h1>
+  <p class="hero__lead">
+    Most orders come through WhatsApp. We respond during working hours,
+    typically same-day. For bulk and custom orders, send the product slugs,
+    quantities, and your delivery location.
+  </p>
+</app-nature-parallax-hero>
 
 <!-- ===================== CHANNELS ===================== -->
 <section class="section contact-channels" aria-labelledby="channels-title">
@@ -23,6 +20,8 @@
     </header>
     <ul class="channels" role="list">
       <li class="channel channel--primary"
+          appTilt [tiltMax]="6" [tiltScale]="1.02"
+          appMagnetic [magneticRadius]="120" [magneticStrength]="0.25"
           revealOnScroll [revealDelay]="0">
         <div class="channel__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
@@ -39,7 +38,10 @@
           <span class="visually-hidden"> (opens in new tab)</span>
         </a>
       </li>
-      <li class="channel" revealOnScroll [revealDelay]="100">
+      <li class="channel"
+          appTilt [tiltMax]="6" [tiltScale]="1.02"
+          appMagnetic [magneticRadius]="120" [magneticStrength]="0.25"
+          revealOnScroll [revealDelay]="100">
         <div class="channel__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <path d="M5 4h3l2 5-2.5 1.5a11 11 0 005 5L14 13l5 2v3a2 2 0 01-2 2A14 14 0 013 6a2 2 0 012-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
@@ -50,7 +52,10 @@
         <p class="channel__hint">Tamil and English</p>
         <a [href]="phoneHref" class="channel__link">{{ phone }}</a>
       </li>
-      <li class="channel" revealOnScroll [revealDelay]="200">
+      <li class="channel"
+          appTilt [tiltMax]="6" [tiltScale]="1.02"
+          appMagnetic [magneticRadius]="120" [magneticStrength]="0.25"
+          revealOnScroll [revealDelay]="200">
         <div class="channel__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
@@ -78,6 +83,7 @@
 
     <div class="contact-location__layout">
       <div class="map-card" role="img" aria-label="Stylised map of the Neelambur workshop location."
+           appParallax [parallaxSpeed]="35"
            revealOnScroll="fadeInLeft" [revealDelay]="0">
         <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="map-svg">
           <defs>
@@ -196,18 +202,16 @@
       </label>
 
       <div class="inquiry-actions">
-        <a
+        <button
+          type="button"
+          class="btn btn--accent btn--large"
           [class.is-disabled]="!canSubmit()"
-          [attr.aria-disabled]="!canSubmit() ? 'true' : null"
-          [attr.tabindex]="canSubmit() ? null : '-1'"
-          [href]="canSubmit() ? waMessageUrl() : null"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn--accent btn--large">
+          [disabled]="!canSubmit()"
+          (click)="sendWhatsApp()">
           <span>Send via WhatsApp</span>
           <span class="btn__arrow" aria-hidden="true">→</span>
           <span class="visually-hidden"> (opens in new tab)</span>
-        </a>
+        </button>
         <p class="inquiry-actions__hint">
           We don't store your message. The button opens WhatsApp pre-filled.
         </p>

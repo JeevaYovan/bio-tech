@@ -29,6 +29,8 @@ import { StickyWhatsappComponent } from './shared/sticky-whatsapp/sticky-whatsap
 import { ScrollTopComponent } from './shared/scroll-top/scroll-top';
 import { PageLoaderComponent } from './shared/page-loader/page-loader';
 import { CursorComponent } from './shared/cursor/cursor';
+import { LenisScrollService } from './shared/lenis-scroll/lenis-scroll.service';
+import { MagneticDirective } from './shared/magnetic/magnetic.directive';
 
 @Component({
   selector: 'app-root',
@@ -41,6 +43,7 @@ import { CursorComponent } from './shared/cursor/cursor';
     ScrollTopComponent,
     PageLoaderComponent,
     CursorComponent,
+    MagneticDirective,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -59,6 +62,7 @@ export class App implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly lenis = inject(LenisScrollService);
 
   protected readonly waUrl = WA_URL;
   protected readonly currentYear = new Date().getFullYear();
@@ -97,22 +101,40 @@ export class App implements OnInit, AfterViewInit {
         if (isPlatformBrowser(this.platformId)) {
           document.body.dataset['route'] = this.routeKey();
           /* Routes that lead with a dark-green hero get a class on
-             <html> so the html background is dark green too — masks the
-             1-2px white strip some browsers paint at the very top of
-             the viewport (above the sticky header) and during rubber-
-             band overscroll. */
-          const darkHero = ['home', 'products', 'wholesale', 'about', 'contact'].includes(this.routeKey());
+             <html> so the html background is dark green too. */
+          const darkHero = ['home', 'products', 'wholesale', 'about', 'contact', 'why-rathika'].includes(this.routeKey());
           document.documentElement.classList.toggle('rt-dark-hero', darkHero);
+          /* Coordinate Lenis with Angular Router on route change. */
+          this.lenis.scrollToTop({ immediate: true });
         }
       });
   }
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const onScroll = () => this.scrolled.set(window.scrollY > 80);
+    /* Lenis smooth-scroll — initialised browser-only, after view paints
+       so it can read the document height correctly. */
+    this.lenis.init();
+    /* Header opacity threshold (>80px = "scrolled" state). Throttled
+       via rAF so a scroll burst at 60fps still only triggers ONE
+       signal write per frame instead of one per scroll event. The
+       Angular signal then no-ops set() calls that don't change the
+       value, so CD only fires at the threshold crossing. */
+    let scrollPending = false;
+    const onScroll = () => {
+      if (scrollPending) return;
+      scrollPending = true;
+      requestAnimationFrame(() => {
+        scrollPending = false;
+        this.scrolled.set(window.scrollY > 80);
+      });
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    this.destroyRef.onDestroy(() => window.removeEventListener('scroll', onScroll));
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('scroll', onScroll);
+      this.lenis.destroy();
+    });
   }
 
   protected toggleMenu(): void {

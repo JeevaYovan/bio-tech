@@ -1,58 +1,8 @@
 :host { display: block; }
 
-/* ===================== HERO ===================== */
-.wh-hero {
-  position: relative;
-  isolation: isolate;
-  background: var(--color-bg-dark);
-  color: var(--color-ink-on-dark);
-  margin-top: calc(-1 * var(--header-h));
-  padding:
-    calc(var(--header-h) + clamp(1.5rem, 3vw, 2.5rem))
-    0
-    clamp(2.5rem, 5vw, 4rem);
-  overflow: hidden;
-}
-.wh-hero__bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 80% 20%, rgba(139, 195, 74, 0.18), transparent 60%),
-    radial-gradient(ellipse at 10% 90%, rgba(45, 106, 79, 0.5), transparent 55%);
-  z-index: -1;
-}
-.wh-hero__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-5);
-  max-width: 720px;
-}
-.wh-hero__title {
-  color: #FFFFFF;
-  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  font-weight: 800;
-  margin: 0;
-}
-.wh-hero__lead {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: var(--type-lg);
-  max-width: 56ch;
-  line-height: 1.65;
-  margin: 0;
-}
-.wh-hero__ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-}
-.wh-hero ::ng-deep .eyebrow {
-  background: rgba(139, 195, 74, 0.18);
-  color: #FFFFFF;
-}
+/* Hero now uses <app-nature-parallax-hero> with .hero__title /
+   .hero__lead / .hero__ctas from base.css — see Why Rathika / Catalog
+   for the same canonical pattern. */
 
 /* ===================== STATS ===================== */
 .wh-stats__head {
@@ -139,6 +89,16 @@
     font-weight: 600;
     color: var(--color-primary-deep);
     letter-spacing: 0.01em;
+    transform-origin: left center;
+    transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                color 220ms ease,
+                letter-spacing 220ms ease;
+  }
+
+  &:focus-within &__label {
+    transform: translateY(-2px) scale(1.02);
+    color: var(--color-accent-deep);
+    letter-spacing: 0.025em;
   }
 
   &__optional {

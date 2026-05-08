@@ -45,28 +45,8 @@
   gap: var(--space-5);
 }
 
-.hero__title {
-  color: #FFFFFF;
-  font-size: clamp(2.5rem, 6.4vw, 4.25rem);
-  letter-spacing: -0.025em;
-  line-height: 1.05;
-  font-weight: 800;
-  margin: 0;
-}
-
-.hero__lead {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: var(--type-lg);
-  max-width: 52ch;
-  line-height: 1.6;
-}
-
-.hero__ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-}
+/* .hero__title / .hero__lead / .hero__ctas now live in base.css so
+   every page-hero matches identically. Don't re-declare here. */
 
 .hero__media-wrap {
   position: relative;
@@ -276,6 +256,19 @@
 .story__media-wrap {
   position: relative;
   border-radius: var(--radius-lg);
+}
+/* Atmospheric back layer behind the story media — drifts at the
+   slowest parallax speed for depth. */
+.story__bg-layer {
+  position: absolute;
+  inset: -8% -6% -8% -6%;
+  z-index: -1;
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(139, 195, 74, 0.18), transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(45, 106, 79, 0.22), transparent 55%);
+  filter: blur(40px);
+  pointer-events: none;
 }
 .story__media {
   display: block;
@@ -730,6 +723,177 @@
   font-size: var(--type-sm);
   line-height: 1.6;
 }
+
+/* ===================== AGRO-WASTE 4 CARDS ===================== */
+.agro-waste { background: var(--color-bg); }
+.agro-waste__head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+.agro-waste__lead {
+  color: var(--color-muted);
+  max-width: 60ch;
+  margin: 0;
+}
+.agro-waste__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 540px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); }
+}
+.agro-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border: 1px solid transparent;
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--color-accent);
+  }
+}
+.agro-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-badge-bg);
+  display: grid;
+  place-items: center;
+  font-size: var(--type-2xl);
+  line-height: 1;
+}
+.agro-card__name {
+  font-family: var(--font-display);
+  font-size: var(--type-xl);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.agro-card__source {
+  font-size: var(--type-sm);
+  color: var(--color-earth-warm);
+  font-weight: 600;
+  margin: 0;
+}
+.agro-card__role {
+  color: var(--color-muted);
+  line-height: 1.6;
+  font-size: var(--type-sm);
+  margin: 0;
+}
+
+/* ===================== TRUSTED BY ===================== */
+.trusted-by { background: var(--color-paper); }
+.trusted-by__head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+.trusted-by__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); }
+}
+.trusted-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-earth-warm);
+  transition: transform 200ms ease, border-left-color 200ms ease;
+
+  &:hover {
+    transform: translateX(3px);
+    border-left-color: var(--color-accent);
+  }
+}
+.trusted-card__dot {
+  grid-row: 1 / span 2;
+  align-self: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.trusted-card__label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  font-size: var(--type-base);
+  letter-spacing: -0.01em;
+}
+.trusted-card__hint {
+  color: var(--color-muted);
+  font-size: var(--type-sm);
+}
+
+/* ===================== ANIMAL-SAFE CALLOUT ===================== */
+.animal-safe { background: var(--color-paper); }
+.animal-safe__inner {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1.1fr 1fr;
+  }
+}
+.animal-safe__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+
+  p {
+    color: var(--color-muted);
+    line-height: 1.7;
+    max-width: 56ch;
+  }
+}
+.animal-safe__cta-row { margin: 0; }
+.animal-safe__media {
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms ease;
+  }
+}
+.animal-safe:hover .animal-safe__media img { transform: scale(1.03); }
 
 /* ===================== HOME CTA BAND ===================== */
 .home-cta {

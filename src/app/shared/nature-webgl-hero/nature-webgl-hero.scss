@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+.webgl-wrap {
+  position: relative;
+  isolation: isolate;
+  contain: paint layout;
+}
+
+.webgl-canvas-host {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms var(--motion-ease-out-quart);
+}
+
+.webgl-wrap.is-active .webgl-canvas-host {
+  opacity: 1;
+}
+
+/* Ensure the projected hero content sits above the WebGL canvas. The
+   nature-parallax-hero internally has its own z-index stack; we only
+   need to make sure the canvas slot doesn't capture clicks or sit
+   on top of the badge / heading / CTA layer. */
+.webgl-canvas-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

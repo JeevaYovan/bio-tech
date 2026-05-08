@@ -1,52 +1,126 @@
 :host { display: block; }
 
-/* ===================== HERO ===================== */
-.about-hero {
+/* ===================== BRAND OPENER (dark) ===================== */
+.about-opener {
   position: relative;
   isolation: isolate;
-  background: var(--color-bg-dark);
-  color: var(--color-ink-on-dark);
-  margin-top: calc(-1 * var(--header-h));
-  padding:
-    calc(var(--header-h) + clamp(1.5rem, 3vw, 2.5rem))
-    0
-    clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
 }
-.about-hero__bg {
+.about-opener::before {
+  content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 80% 20%, rgba(139, 195, 74, 0.18), transparent 60%),
-    radial-gradient(ellipse at 10% 90%, rgba(45, 106, 79, 0.5), transparent 55%);
+    radial-gradient(ellipse at 80% 30%, rgba(139, 195, 74, 0.18), transparent 60%),
+    radial-gradient(ellipse at 10% 90%, rgba(45, 106, 79, 0.4), transparent 55%);
   z-index: -1;
 }
-.about-hero__inner {
+.about-opener__inner {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-5);
-  max-width: 720px;
+  gap: var(--space-4);
+  max-width: 880px;
 }
-.about-hero__title {
-  color: #FFFFFF;
-  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
-  letter-spacing: -0.025em;
+.about-opener__inner h2 {
+  font-size: clamp(2rem, 4.6vw, 3.25rem);
   line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: #FFFFFF;
   font-weight: 800;
   margin: 0;
 }
-.about-hero__lead {
+.about-opener__lede {
   color: rgba(255, 255, 255, 0.85);
   font-size: var(--type-lg);
-  max-width: 56ch;
-  line-height: 1.65;
+  line-height: 1.7;
+  max-width: 64ch;
   margin: 0;
 }
-.about-hero ::ng-deep .eyebrow {
-  background: rgba(139, 195, 74, 0.18);
-  color: #FFFFFF;
+
+/* ===================== TEAM ===================== */
+.section--paper { background: var(--color-paper); }
+
+.about-team__head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
 }
+.about-team__lead {
+  color: var(--color-muted);
+  max-width: 60ch;
+  margin: 0;
+}
+.team-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); }
+}
+.team-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+.team-card__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--type-lg);
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+.team-card__name {
+  font-family: var(--font-display);
+  font-size: var(--type-lg);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.team-card__role {
+  font-size: var(--type-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-earth-warm);
+  font-weight: 600;
+  margin: 0;
+}
+.team-card__bio {
+  color: var(--color-muted);
+  line-height: 1.6;
+  font-size: var(--type-sm);
+  margin: 0;
+  flex: 1 0 auto;
+}
+
+
+/* Hero now uses <app-nature-parallax-hero> with .hero__title /
+   .hero__lead from base.css — every page-hero matches identically. */
 
 /* ===================== STORY ===================== */
 .about-story { background: var(--color-bg); }

@@ -4,8 +4,10 @@ import {
   computed,
   inject,
   OnInit,
+  PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 import {
   EMAIL,
@@ -16,17 +18,31 @@ import {
 } from '../../shared/constants';
 import { SectionBadgeComponent } from '../../shared/section-badge/section-badge';
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
+import { ParallaxImageDirective } from '../../shared/parallax-image/parallax-image.directive';
+import { MagneticDirective } from '../../shared/magnetic/magnetic.directive';
+import { TiltDirective } from '../../shared/tilt/tilt.directive';
+import { NatureParallaxHeroComponent } from '../../shared/nature-parallax-hero/nature-parallax-hero';
+import { KineticTextDirective } from '../../shared/kinetic-text/kinetic-text.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
 
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionBadgeComponent, RevealOnScrollDirective],
+  imports: [
+    SectionBadgeComponent,
+    RevealOnScrollDirective,
+    ParallaxImageDirective,
+    MagneticDirective,
+    TiltDirective,
+    NatureParallaxHeroComponent,
+    KineticTextDirective,
+  ],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
 export default class ContactComponent implements OnInit {
   private readonly seo = inject(SeoService);
+  private readonly platformId = inject(PLATFORM_ID);
 
   protected readonly waUrl = WA_URL;
   protected readonly phone = PHONE_DISPLAY;
@@ -63,6 +79,17 @@ export default class ContactComponent implements OnInit {
       canonicalPath: '/contact/',
       ogTitle: 'Contact Rathika Biotech Products, Neelambur, Coimbatore',
     });
+  }
+
+  /** Open the WhatsApp deep link in a new tab. Called by the Send
+   *  button — only fires when canSubmit() is true (the template guards
+   *  the click). Uses window.open so the host element can be a real
+   *  <button>, which gives screen readers correct disabled semantics
+   *  via the native `disabled` attribute (a11y SC 4.1.2). */
+  protected sendWhatsApp(): void {
+    if (!this.canSubmit()) return;
+    if (!isPlatformBrowser(this.platformId)) return;
+    window.open(this.waMessageUrl(), '_blank', 'noopener,noreferrer');
   }
 
   protected onFieldInput(field: 'name' | 'phone' | 'message', value: string): void {

@@ -41,6 +41,11 @@ export const routes: Routes = [
     title: 'Wholesale — Bulk Biodegradable Tableware | Rathika Biotech',
   },
   {
+    path: 'why-rathika',
+    loadComponent: () => import('./pages/why-rathika/why-rathika'),
+    title: 'Why Rathika — Upcycling Farm Waste into Tableware',
+  },
+  {
     path: 'privacy',
     loadComponent: () => import('./pages/privacy/privacy'),
     title: 'Privacy notice — Rathika Biotech Products',
