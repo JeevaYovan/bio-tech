@@ -115,18 +115,24 @@ export class App implements OnInit, AfterViewInit {
     /* Lenis smooth-scroll — initialised browser-only, after view paints
        so it can read the document height correctly. */
     this.lenis.init();
-    /* Header opacity threshold (>80px = "scrolled" state). Throttled
-       via rAF so a scroll burst at 60fps still only triggers ONE
-       signal write per frame instead of one per scroll event. The
-       Angular signal then no-ops set() calls that don't change the
-       value, so CD only fires at the threshold crossing. */
+    /* Header opacity threshold — flip to "scrolled" state only AFTER
+       the user has cleared the dark hero (which is 60-72vh tall). At
+       80px the header used to flip to mint while the user was still
+       inside the dark hero, creating a jarring light strip against
+       the dark page bg. Threshold = 55vh covers the desktop hero
+       (72vh × 0.76) and mobile hero (60vh × 0.92).
+       Throttled via rAF so a scroll burst at 60fps still only
+       triggers ONE signal write per frame; the Angular signal no-ops
+       set() calls that don't change the value, so CD only fires at
+       the threshold crossing. */
     let scrollPending = false;
     const onScroll = () => {
       if (scrollPending) return;
       scrollPending = true;
       requestAnimationFrame(() => {
         scrollPending = false;
-        this.scrolled.set(window.scrollY > 80);
+        const threshold = window.innerHeight * 0.55;
+        this.scrolled.set(window.scrollY > threshold);
       });
     };
     onScroll();

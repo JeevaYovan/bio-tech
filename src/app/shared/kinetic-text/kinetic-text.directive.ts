@@ -9,9 +9,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { observe } from '../observer-pool/observer-pool';
 
 /**
  * Character-stagger reveal — splits the host element's text into one
@@ -81,26 +79,49 @@ export class KineticTextDirective implements AfterViewInit {
     host.innerHTML = lines
       .map((line: string) => {
         const text = decodeHtml(stripTags(line));
-        
-        // Split by words to keep characters of a word from breaking across lines
-        const words = text.split(' ');
+
+        /* Split into words, render each word as a single inline-block
+           with white-space:nowrap so characters never break mid-word.
+           Words are joined with a regular space (NOT &nbsp;) so the
+           browser has a real break opportunity between them — this is
+           what allows the heading to wrap to multiple visual lines.
+           Previously we used a `<span class="kt-space">&nbsp;</span>`
+           between words, which: (1) used a non-breaking space, (2) had
+           no whitespace in the source between sibling spans, so the
+           browser had zero break opportunities and the entire heading
+           tried to render on one line, with overflow then clipped by
+           `.kt-line { overflow: hidden }`. */
+        const words = text.split(/\s+/).filter(Boolean);
         const wordHtml = words.map((word: string) => {
           const chars = Array.from(word)
             .map((ch: string) => `<span class="kt-char">${escape(ch)}</span>`)
             .join('');
-          return `<span class="kt-word" style="display: inline-block; white-space: nowrap;">${chars}</span>`;
-        }).join('<span class="kt-space" style="display: inline-block;">&nbsp;</span>');
-        
+          return `<span class="kt-word">${chars}</span>`;
+        }).join(' ');
+
         return `<span class="kt-line">${wordHtml}</span>`;
       })
       .join('');
 
     const lineEls: NodeListOf<HTMLElement> = host.querySelectorAll('.kt-line');
+    const wordEls: NodeListOf<HTMLElement> = host.querySelectorAll('.kt-word');
     const charEls: NodeListOf<HTMLElement> = host.querySelectorAll('.kt-char');
 
+    /* Line is the masking box. Allow normal text wrapping inside it
+       — multi-line headings get correct visual heights, while the
+       overflow:hidden masks each char's translateY(120%) starting
+       position before the rise tween fires. */
     lineEls.forEach((el: HTMLElement) => {
       el.style.display = 'block';
       el.style.overflow = 'hidden';
+      el.style.lineHeight = 'inherit';
+    });
+    /* Word is non-breaking — characters within a word never split
+       across visual lines, but the browser CAN wrap between words
+       (the regular-space join in the innerHTML above). */
+    wordEls.forEach((el: HTMLElement) => {
+      el.style.display = 'inline-block';
+      el.style.whiteSpace = 'nowrap';
       el.style.lineHeight = 'inherit';
     });
     charEls.forEach((el: HTMLElement) => {
@@ -109,26 +130,53 @@ export class KineticTextDirective implements AfterViewInit {
       el.style.willChange = 'transform';
     });
 
+    /* Build the rise tween but DO NOT start it yet — we kick it
+       manually based on viewport visibility. */
     const tween = gsap.to(Array.from(charEls), {
       y: 0,
       duration: this.kineticDuration / 1000,
       ease: 'power3.out',
       stagger: this.kineticStagger / 1000,
-      /* Drop will-change once the cascade completes — characters don't
-         need to stay on their own compositor layer indefinitely (perf
-         agent / code review nit). */
+      paused: true,
       onComplete: () => {
         charEls.forEach((el: HTMLElement) => { el.style.willChange = 'auto'; });
       },
-      scrollTrigger: {
-        trigger: host,
-        start: 'top 85%',
-        once: true,
-      },
+    });
+
+    /* Fire mechanism — single-shot, defensive against the timing
+       issue that broke renders during route changes:
+       1. If the host is already in the viewport at registration
+          time (typical for above-the-fold heroes), fire immediately
+          on the next frame. No reliance on ScrollTrigger / Lenis
+          settling.
+       2. Otherwise observe via the shared IntersectionObserver pool
+          and fire on first intersection. */
+    let played = false;
+    const play = () => {
+      if (played) return;
+      played = true;
+      tween.play();
+    };
+
+    const rect = host.getBoundingClientRect();
+    const inViewportNow = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inViewportNow) {
+      requestAnimationFrame(play);
+    }
+
+    /* Always observe too — covers the case where the host starts
+       offscreen (e.g. a kinetic h2 mid-page). Cheap because IO is
+       pooled. The play() guard ensures we don't double-fire if
+       inViewportNow already triggered. */
+    const unobserve = observe(host, 0.05, '0px 0px -10% 0px', (entry) => {
+      if (entry.isIntersecting) {
+        play();
+        unobserve();
+      }
     });
 
     this.destroyRef.onDestroy(() => {
-      tween.scrollTrigger?.kill();
+      unobserve();
       tween.kill();
     });
   }
