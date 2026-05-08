@@ -102,10 +102,75 @@ export class NatureParallaxHeroComponent implements AfterViewInit {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
 
+    /* Mouse parallax — items in the backdrop shift slightly
+       toward the cursor with smooth lerp, so the layer feels
+       interactive (the "click moving" effect the user asked
+       for). Two CSS custom properties drive the .np__bg-leaves
+       transform: --rt-mx and --rt-my, range -1..+1. The CSS
+       layer reads these alongside its own keyframe drift. */
+    const fine = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches;
+    let mxTarget = 0, myTarget = 0;
+    let mx = 0, my = 0;
+    let mouseRaf = 0;
+    let active = false;
+
+    const onMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      mxTarget = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      myTarget = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      if (!active) {
+        active = true;
+        mouseRaf = requestAnimationFrame(tickMouse);
+      }
+    };
+
+    const tickMouse = () => {
+      const nx = mx + (mxTarget - mx) * 0.08;
+      const ny = my + (myTarget - my) * 0.08;
+      mx = nx;
+      my = ny;
+      el.style.setProperty('--rt-mx', mx.toFixed(3));
+      el.style.setProperty('--rt-my', my.toFixed(3));
+      if (Math.abs(mxTarget - mx) < 0.002 && Math.abs(myTarget - my) < 0.002) {
+        active = false;
+        return;
+      }
+      mouseRaf = requestAnimationFrame(tickMouse);
+    };
+
+    const onLeave = () => { mxTarget = 0; myTarget = 0; if (!active) { active = true; mouseRaf = requestAnimationFrame(tickMouse); } };
+
+    if (fine) {
+      el.addEventListener('mousemove', onMove, { passive: true });
+      el.addEventListener('mouseleave', onLeave);
+    }
+
+    /* Click pulse — clicking anywhere on the hero adds the
+       .is-clicked class to the host for 900ms, which triggers
+       the np-blueprint-pulse keyframe in SCSS. Lets the user
+       "tap" the surface and see it react. Works on touch too
+       (touchstart-derived click). */
+    let clickTimer = 0;
+    const onClick = () => {
+      el.classList.add('is-clicked');
+      window.clearTimeout(clickTimer);
+      clickTimer = window.setTimeout(() => {
+        el.classList.remove('is-clicked');
+      }, 900);
+    };
+    el.addEventListener('click', onClick);
+
     this.destroyRef.onDestroy(() => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(mouseRaf);
+      window.clearTimeout(clickTimer);
+      el.removeEventListener('click', onClick);
+      if (fine) {
+        el.removeEventListener('mousemove', onMove);
+        el.removeEventListener('mouseleave', onLeave);
+      }
     });
   }
 }
