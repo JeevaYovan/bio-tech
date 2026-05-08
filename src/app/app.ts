@@ -116,11 +116,11 @@ export class App implements OnInit, AfterViewInit {
        so it can read the document height correctly. */
     this.lenis.init();
     /* Header opacity threshold — flip to "scrolled" state only AFTER
-       the user has cleared the dark hero (which is 60-72vh tall). At
-       80px the header used to flip to mint while the user was still
-       inside the dark hero, creating a jarring light strip against
-       the dark page bg. Threshold = 55vh covers the desktop hero
-       (72vh × 0.76) and mobile hero (60vh × 0.92).
+       the user has fully cleared the dark hero. The hero is 60vh on
+       mobile and 72vh on desktop; 80vh covers both with margin so
+       the header NEVER flips to its glass-mint state while any part
+       of the dark hero is still under it (which is what was creating
+       the visible "white strip" against the dark hero behind it).
        Throttled via rAF so a scroll burst at 60fps still only
        triggers ONE signal write per frame; the Angular signal no-ops
        set() calls that don't change the value, so CD only fires at
@@ -131,7 +131,7 @@ export class App implements OnInit, AfterViewInit {
       scrollPending = true;
       requestAnimationFrame(() => {
         scrollPending = false;
-        const threshold = window.innerHeight * 0.55;
+        const threshold = window.innerHeight * 0.8;
         this.scrolled.set(window.scrollY > threshold);
       });
     };

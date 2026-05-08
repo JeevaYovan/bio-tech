@@ -81,6 +81,30 @@ main { flex: 1 0 auto; }
   }
 }
 
+/* Defense in depth — `html.rt-dark-hero` is toggled by the App
+   component on every NavigationEnd for the 6 dark-hero routes
+   (home, products, wholesale, why-rathika, about, contact). The
+   Angular binding `is-over-hero` should normally cover this, but
+   on a stale-cached browser session or during the brief hydration
+   window where the binding hasn't reconciled yet, the header was
+   briefly painting white over the dark hero. This rule pins the
+   transparent + light-text state for as long as the user is on a
+   dark-hero route AND not yet scrolled — matching the binding's
+   intent without depending on its timing. The is-scrolled state
+   below still wins (higher specificity) for the past-hero glass. */
+html.rt-dark-hero .site-header:not(.is-scrolled) {
+  background: transparent;
+  border-block-end-color: transparent;
+  color: var(--color-ink-on-dark);
+
+  .brand__name { color: #FFFFFF; }
+  .brand__sub { color: rgba(255, 255, 255, 0.65); }
+  .site-nav a { color: rgba(255, 255, 255, 0.85); }
+  .site-nav a:hover,
+  .site-nav a.is-active { color: #FFFFFF; }
+  .hamburger__line { background: #FFFFFF; }
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
@@ -390,7 +414,11 @@ main { flex: 1 0 auto; }
   &__text {
     display: block;
     font-family: var(--font-display);
-    font-size: clamp(2rem, 9vw, 3.5rem);
+    /* Right-sized for mobile drawers: was clamp(2rem, 9vw, 3.5rem)
+       which on iPhone XR (414px) computed to ~37px and made the
+       items feel huge. Now ~26-44px range — still display-weight,
+       still tappable, no longer overpowering the drawer surface. */
+    font-size: clamp(1.5rem, 6vw, 2.75rem);
     font-weight: 800;
     letter-spacing: -0.025em;
     line-height: 1;
