@@ -18,13 +18,17 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   </noscript>
-  <link rel="icon" type="image/jpeg" href="assets/brand/logo.jpeg">
-  <link rel="apple-touch-icon" href="assets/brand/logo.jpeg">
-  <link rel="preload" as="image" type="image/avif"
-        href="assets/lifestyle/hero-tea-cup-haystack-768.avif"
-        imagesrcset="assets/lifestyle/hero-tea-cup-haystack-768.avif 768w, assets/lifestyle/hero-tea-cup-haystack-1280.avif 1280w"
-        imagesizes="(min-width: 1024px) 60vw, 100vw"
-        fetchpriority="high">
+  <!-- Favicons + PWA — use the transparent PNG variants (logo.jpeg
+       was JPEG, no transparency, blurry on hi-DPI). Sizes ensure
+       Chrome / Safari / iOS / Android all pick the right asset. -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <!-- The previous <link rel="preload"> for hero-tea-cup-haystack
+       was wasted bandwidth — the asset is not actually rendered on
+       any route. The real LCP hero image is now the WebGL/parallax
+       hero, and below-the-fold images use NgOptimizedImage. -->
   <meta name="format-detection" content="telephone=yes">
   <noscript>
     <style>

@@ -35,16 +35,10 @@
 
   &:active { transform: scale(0.95); }
 
-  /* The default chevron points DOWN. Flip it 180° when in up-mode so
-     the same SVG serves both states — single source of truth, smooth
-     CSS transition between them. */
   svg {
     width: 18px;
     height: 18px;
-    transition: transform var(--rt-dur-200) var(--rt-ease-out);
   }
-
-  &.is-up svg { transform: rotate(180deg); }
 
   /* Lift above the sticky-bottom WA price bar on product detail (mobile). */
   :host-context(body[data-route="product-detail"]) & {

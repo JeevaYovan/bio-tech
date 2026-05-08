@@ -9,16 +9,24 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 
 /**
- * Smart scroll button — single floating action that flips its mode
- * based on where the user is on the page.
+ * Scroll-to-top button — single floating action that appears once
+ * the user has scrolled meaningfully into the page, and jumps back
+ * to the top on click. Standard pattern; previously this component
+ * also offered a "scroll to bottom" mode at the top of the page,
+ * which was non-standard UX (audit feedback) and confused users
+ * who expected only the conventional behaviour.
  *
- *   • At the top of the page (scrollY < 80) → arrow points DOWN.
- *     Click jumps to the bottom of the page (footer).
- *   • Scrolled past 80 px → arrow points UP. Click jumps back to top.
+ * Hidden when:
+ *   - The page barely scrolls (< 200px of headroom — short routes
+ *     like /privacy don't need the button).
+ *   - The user is within 80px of the top (no point scrolling up
+ *     when you're already there).
+ *   - The user is within 100px of the bottom — at that point the
+ *     bottom-right sticky WhatsApp button is also visible and the
+ *     two would crowd each other in the same thumb zone.
  *
- * Only renders if the page is actually long enough to scroll — short
- * pages don't need it.  Bottom-left so it doesn't fight the bottom-
- * right WhatsApp CTA. SSR-safe (no DOM access during prerender).
+ * Bottom-left position keeps it out of the way of the bottom-right
+ * WhatsApp CTA. SSR-safe.
  */
 @Component({
   selector: 'app-scroll-top',
@@ -31,10 +39,9 @@ export class ScrollTopComponent {
   private readonly platformId = inject(PLATFORM_ID);
 
   protected readonly isBrowser = isPlatformBrowser(this.platformId);
-  /** True when the user is near the top — button shows DOWN arrow. */
-  protected readonly atTop = signal(true);
-  /** True when the page is long enough to need either jump. */
-  protected readonly hasScrollableContent = signal(false);
+  /** True when the page is long enough AND the user is past 80px
+   *  AND not already near the bottom. */
+  protected readonly visible = signal(false);
 
   @HostListener('window:scroll')
   @HostListener('window:resize')
@@ -42,24 +49,16 @@ export class ScrollTopComponent {
     if (!this.isBrowser) return;
     const y = window.scrollY;
     const max = document.documentElement.scrollHeight - window.innerHeight;
-    this.atTop.set(y < 80);
-    /* Hide the button if the page barely scrolls — e.g. a 404 page or
-       a privacy notice. Threshold is 200 px of headroom. */
-    this.hasScrollableContent.set(max > 200);
+    const longEnough = max > 200;
+    const pastTop = y > 80;
+    const nearBottom = y > max - 100;
+    this.visible.set(longEnough && pastTop && !nearBottom);
   }
 
   protected onClick(): void {
     if (!this.isBrowser) return;
     const reduce =
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-    const behavior: ScrollBehavior = reduce ? 'auto' : 'smooth';
-    if (this.atTop()) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior,
-      });
-    } else {
-      window.scrollTo({ top: 0, behavior });
-    }
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   }
 }
