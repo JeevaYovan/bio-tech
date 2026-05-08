@@ -17,7 +17,6 @@ import { FaqAccordionComponent, type FaqItem } from '../../shared/faq-accordion/
 import { RevealOnScrollDirective } from '../../shared/reveal/reveal-on-scroll.directive';
 import { revealDelayFor } from '../../shared/reveal/reveal.util';
 import { NatureParallaxHeroComponent } from '../../shared/nature-parallax-hero/nature-parallax-hero';
-import { NatureWebglHeroComponent } from '../../shared/nature-webgl-hero/nature-webgl-hero';
 import { ScrollSequenceComponent, type SequenceFrame } from '../../shared/scroll-sequence/scroll-sequence';
 import { MagneticDirective } from '../../shared/magnetic/magnetic.directive';
 import { TiltDirective } from '../../shared/tilt/tilt.directive';
@@ -128,7 +127,6 @@ function buildFeatured(spec: FeaturedSpec): Featured | null {
     FaqAccordionComponent,
     RevealOnScrollDirective,
     NatureParallaxHeroComponent,
-    NatureWebglHeroComponent,
     ScrollSequenceComponent,
     MagneticDirective,
     TiltDirective,
