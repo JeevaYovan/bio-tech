@@ -120,6 +120,13 @@ a:hover { color: var(--color-primary-deep); }
 
 .section {
   padding-block: var(--section-py);
+  /* Default section bg is the page mint. Without this, sections
+     that don't add their own modifier (--mint, --paper, --dark)
+     fall through to the body bg, which is transparent on
+     dark-hero routes — so the section's text would render over
+     the html's dark green and become unreadable. This rule pins
+     the default bg explicitly. Modifier classes below override. */
+  background: var(--color-bg);
 }
 .section--tight {
   padding-block: var(--section-py-tight);

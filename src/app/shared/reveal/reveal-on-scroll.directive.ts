@@ -39,7 +39,11 @@ export class RevealOnScrollDirective implements OnInit, OnDestroy {
       attribute (defaults to fadeInUp). */
   @Input() revealOnScroll: RevealKeyframe | '' = 'fadeInUp';
   @Input() revealDelay = 0;
-  @Input() revealDuration = 350;
+  /** 500ms is a smooth, premium-feel reveal — not snappy enough to
+   *  feel "popped in", not slow enough to feel like the page is
+   *  loading. Combined with stagger delays capped under 1000ms in
+   *  templates, total cascade per section stays within ~1.5s. */
+  @Input() revealDuration = 500;
   @Input() revealThreshold = 0.15;
   @Input() revealOnce = true;
 
